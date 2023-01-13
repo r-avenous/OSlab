@@ -5,5 +5,3 @@ for ch in {a..z} ; do
   echo $fname
  done
 done
-
-
