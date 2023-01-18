@@ -6,21 +6,21 @@ while read line;do
     student=${record[0]}
     major=${record[1]}
 
-    majors[$major]=$((majors[$major]+1))
+    majors[$major]=$((majors[${major}]+1))
     students[$student]=$((students[$student]+1))
 done<$1
 
 for major in ${!majors[@]};do
-    echo "$major ${majors[$major]}" 
+    echo "$major ${majors["$major"]}" 
 done|sort -t$' ' -k2rn -k1;echo
 
 count=0
 
 for student in ${!students[@]};do
-    if [ "${students[$student]}" -ge 2 ];then
+    if [ "${students["$student"]}" -ge 2 ];then
         echo $student
     fi
-    if [ "${students[$student]}" == 1 ];then
+    if [ "${students["$student"]}" == 1 ];then
         count=$((count+1))
     fi 
 done;echo $count
