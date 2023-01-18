@@ -1,66 +1,96 @@
 nmt-master/nmt/attention_model.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/attention_model.py:2:#
+nmt-master/nmt/attention_model.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/attention_model.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/attention_model.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/attention_model.py:6:#
 nmt-master/nmt/attention_model.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/attention_model.py:8:#
 nmt-master/nmt/attention_model.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/attention_model.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/attention_model.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/attention_model.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/attention_model.py:13:# limitations under the License.
 nmt-master/nmt/attention_model.py:14:# ==============================================================================
+nmt-master/nmt/attention_model.py:15:"""Attention-based sequence-to-sequence model with dynamic RNN support."""
+nmt-master/nmt/attention_model.py:29:  """Sequence-to-sequence dynamic model with attention.
 nmt-master/nmt/attention_model.py:49:    # Set attention_mechanism_fn
+nmt-master/nmt/attention_model.py:79:    """Build a RNN cell with attention mechanism that can be used by decoder."""
 nmt-master/nmt/attention_model.py:80:    # No Attention
 nmt-master/nmt/attention_model.py:95:    # Ensure memory is batch-major
 nmt-master/nmt/attention_model.py:110:    # Attention
 nmt-master/nmt/attention_model.py:125:    # Only generate alignment in greedy INFER mode.
 nmt-master/nmt/attention_model.py:136:    # TODO(thangluong): do we need num_layers, num_gpus?
+nmt-master/nmt/attention_model.py:157:  """Create attention mechanism based on the attention_option."""
 nmt-master/nmt/attention_model.py:158:  del mode  # unused
 nmt-master/nmt/attention_model.py:160:  # Mechanism
+nmt-master/nmt/attention_model.py:186:  """create attention image and attention summary."""
 nmt-master/nmt/attention_model.py:188:  # Reshape to (batch, src_seq_len, tgt_seq_len,1)
 nmt-master/nmt/attention_model.py:191:  # Scale to range [0, 255]
 nmt-master/nmt/gnmt_model.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/gnmt_model.py:2:#
+nmt-master/nmt/gnmt_model.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/gnmt_model.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/gnmt_model.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/gnmt_model.py:6:#
 nmt-master/nmt/gnmt_model.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/gnmt_model.py:8:#
 nmt-master/nmt/gnmt_model.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/gnmt_model.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/gnmt_model.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/gnmt_model.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/gnmt_model.py:13:# limitations under the License.
 nmt-master/nmt/gnmt_model.py:14:# ==============================================================================
+nmt-master/nmt/gnmt_model.py:16:"""GNMT attention sequence-to-sequence model with dynamic RNN support."""
+nmt-master/nmt/gnmt_model.py:32:  """Sequence-to-sequence dynamic model with GNMT attention architecture.
+nmt-master/nmt/gnmt_model.py:58:    """Build a GNMT encoder."""
 nmt-master/nmt/gnmt_model.py:65:    # Build GNMT encoder.
 nmt-master/nmt/gnmt_model.py:83:      # Execute _build_bidirectional_rnn from Model class
 nmt-master/nmt/gnmt_model.py:90:          num_bi_residual_layers=0,  # no residual connection
 nmt-master/nmt/gnmt_model.py:93:      # Build unidirectional layers
 nmt-master/nmt/gnmt_model.py:101:      # Pass all encoder states to the decoder
 nmt-master/nmt/gnmt_model.py:102:      #   except the first bi-directional layer
+nmt-master/nmt/gnmt_model.py:110:    """Build encoder layers all at once."""
 nmt-master/nmt/gnmt_model.py:129:    # Use the top layer for now
+nmt-master/nmt/gnmt_model.py:136:    """Run each of the encoder layer separately, not used in general seq2seq."""
+nmt-master/nmt/gnmt_model.py:172:    """Build a RNN cell with GNMT attention architecture."""
 nmt-master/nmt/gnmt_model.py:173:    # Standard attention
 nmt-master/nmt/gnmt_model.py:178:    # GNMT attention
 nmt-master/nmt/gnmt_model.py:203:    cell_list = model_helper._cell_list(  # pylint: disable=protected-access
 nmt-master/nmt/gnmt_model.py:216:    # Only wrap the bottom layer with the attention mechanism.
 nmt-master/nmt/gnmt_model.py:219:    # Only generate alignment in greedy INFER mode.
 nmt-master/nmt/gnmt_model.py:225:        attention_layer_size=None,  # don't use attention layer.
+nmt-master/nmt/gnmt_model.py:262:  """A MultiCell with GNMT attention style."""
+nmt-master/nmt/gnmt_model.py:265:    """Creates a GNMTAttentionMultiCell.
+nmt-master/nmt/gnmt_model.py:278:    """Run the cell with bottom layer's attention copied to all upper layers."""
+nmt-master/nmt/gnmt_model.py:311:  """Residual function that handles different inputs and outputs inner dims.
 nmt-master/nmt/inference.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/inference.py:2:#
+nmt-master/nmt/inference.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/inference.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/inference.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/inference.py:6:#
 nmt-master/nmt/inference.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/inference.py:8:#
 nmt-master/nmt/inference.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/inference.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/inference.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/inference.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/inference.py:13:# limitations under the License.
 nmt-master/nmt/inference.py:14:# ==============================================================================
+nmt-master/nmt/inference.py:16:"""To perform inference on test set given a trained model."""
+nmt-master/nmt/inference.py:40:  """Decoding only a specific set of sentences."""
+nmt-master/nmt/inference.py:46:    trans_f.write("")  # Write empty string to ensure file is created.
 nmt-master/nmt/inference.py:50:      # get text translation
 nmt-master/nmt/inference.py:58:      if infer_summary is not None:  # Attention models
+nmt-master/nmt/inference.py:72:  """Load inference data."""
+nmt-master/nmt/inference.py:84:  """Get the right model class depending on configuration."""
+nmt-master/nmt/inference.py:99:  """Start session and load model."""
+nmt-master/nmt/inference.py:115:  """Perform translation."""
+nmt-master/nmt/inference.py:150:  """Inference with a single worker."""
 nmt-master/nmt/inference.py:153:  # Read data
 nmt-master/nmt/inference.py:163:    # Decode
+nmt-master/nmt/inference.py:197:  """Inference using multiple workers."""
 nmt-master/nmt/inference.py:204:  # Read data
 nmt-master/nmt/inference.py:207:  # Split data to multiple workers
 nmt-master/nmt/inference.py:220:    # Decode
@@ -69,16 +99,19 @@ nmt-master/nmt/inference.py:238:    # Job 0 is responsible for the clean up.
 nmt-master/nmt/inference.py:241:    # Now write all translations
 nmt-master/nmt/inference_test.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/inference_test.py:2:#
+nmt-master/nmt/inference_test.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/inference_test.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/inference_test.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/inference_test.py:6:#
 nmt-master/nmt/inference_test.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/inference_test.py:8:#
 nmt-master/nmt/inference_test.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/inference_test.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/inference_test.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/inference_test.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/inference_test.py:13:# limitations under the License.
 nmt-master/nmt/inference_test.py:14:# ==============================================================================
+nmt-master/nmt/inference_test.py:16:"""Tests for model inference."""
 nmt-master/nmt/inference_test.py:38:    # Prepare
 nmt-master/nmt/inference_test.py:47:    # Create check point
 nmt-master/nmt/inference_test.py:115:    # There are 5 examples, make batch_size=3 makes job0 has 3 examples, job1
@@ -89,28 +122,39 @@ nmt-master/nmt/inference_test.py:130:    # thread.
 nmt-master/nmt/inference_test.py:161:    # TODO(rzhao): Make infer indices support batch_size > 1.
 nmt-master/nmt/model.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/model.py:2:#
+nmt-master/nmt/model.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/model.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/model.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/model.py:6:#
 nmt-master/nmt/model.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/model.py:8:#
 nmt-master/nmt/model.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/model.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/model.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/model.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/model.py:13:# limitations under the License.
 nmt-master/nmt/model.py:14:# ==============================================================================
+nmt-master/nmt/model.py:16:"""Basic sequence-to-sequence model with dynamic RNN support."""
+nmt-master/nmt/model.py:41:  """To allow for flexibily in returing different outputs."""
+nmt-master/nmt/model.py:47:  """To allow for flexibily in returing different outputs."""
+nmt-master/nmt/model.py:54:  """To allow for flexibily in returing different outputs."""
+nmt-master/nmt/model.py:59:  """Sequence-to-sequence base class.
+nmt-master/nmt/model.py:71:    """Create the model.
 nmt-master/nmt/model.py:85:    # Set params
 nmt-master/nmt/model.py:90:    # Not used in general seq2seq models; when True, ignore decoder & training
 nmt-master/nmt/model.py:94:    # Train graph
 nmt-master/nmt/model.py:99:    # Saver
+nmt-master/nmt/model.py:111:    """Set various params for self and initialize."""
 nmt-master/nmt/model.py:130:    # extra_args: to make it flexible for adding external customizable code
 nmt-master/nmt/model.py:135:    # Set num units
 nmt-master/nmt/model.py:138:    # Set num layers
 nmt-master/nmt/model.py:144:    # Set num residual layers
+nmt-master/nmt/model.py:145:    if hasattr(hparams, "num_residual_layers"):  # compatible common_test_utils
 nmt-master/nmt/model.py:152:    # Batch size
 nmt-master/nmt/model.py:155:    # Global step
 nmt-master/nmt/model.py:158:    # Initializer
 nmt-master/nmt/model.py:164:    # Embeddings
+nmt-master/nmt/model.py:172:    """Set up training and inference."""
 nmt-master/nmt/model.py:186:      ## Count the number of predicted words for compute ppl.
 nmt-master/nmt/model.py:192:    # Gradients and SGD update operation for training the model.
 nmt-master/nmt/model.py:193:    # Arrange for the embedding vars to appear at the beginning.
@@ -120,19 +164,31 @@ nmt-master/nmt/model.py:201:      # Optimizer
 nmt-master/nmt/model.py:209:      # Gradients
 nmt-master/nmt/model.py:223:      # Summary
 nmt-master/nmt/model.py:228:    # Print trainable variables
+nmt-master/nmt/model.py:236:    """Get learning rate warmup."""
 nmt-master/nmt/model.py:242:    # Apply inverse decay if global steps less than warmup steps.
 nmt-master/nmt/model.py:243:    # Inspired by https://arxiv.org/pdf/1706.03762.pdf (Section 5.3)
 nmt-master/nmt/model.py:244:    # When step < warmup_steps,
 nmt-master/nmt/model.py:245:    #   learing_rate *= warmup_factor ** (warmup_steps - step)
 nmt-master/nmt/model.py:247:      # 0.01^(1/warmup_steps): we start with a lr, 100 times smaller
+nmt-master/nmt/model.py:261:    """Return decay info based on decay_scheme."""
 nmt-master/nmt/model.py:275:    elif not hparams.decay_scheme:  # no decay
+nmt-master/nmt/model.py:284:    """Get learning rate decay."""
+nmt-master/nmt/model.py:302:    """Init embeddings."""
+nmt-master/nmt/model.py:320:    """Get train summary."""
+nmt-master/nmt/model.py:328:    """Execute train graph."""
+nmt-master/nmt/model.py:341:    """Execute eval graph."""
+nmt-master/nmt/model.py:349:    """Subclass must implement this method.
 nmt-master/nmt/model.py:371:    # Projection
 nmt-master/nmt/model.py:379:      # Encoder
 nmt-master/nmt/model.py:380:      if hparams.language_model:  # no encoder for language modeling
 nmt-master/nmt/model.py:387:      # Skip decoder if extracting only encoder layers
 nmt-master/nmt/model.py:391:      ## Decoder
 nmt-master/nmt/model.py:395:      ## Loss
+nmt-master/nmt/model.py:407:    """Subclass must implement this.
+nmt-master/nmt/model.py:421:    """Build a multi-layer RNN cell that can be used by encoder."""
+nmt-master/nmt/model.py:436:    """Maximum decoding steps at inference time."""
 nmt-master/nmt/model.py:441:      # TODO(thangluong): add decoding_length_factor flag
+nmt-master/nmt/model.py:449:    """Build and run a RNN decoder with a final projection layer.
 nmt-master/nmt/model.py:466:    # maximum_iteration: The maximum decoding steps.
 nmt-master/nmt/model.py:470:    ## Decoder.
 nmt-master/nmt/model.py:476:      # Optional ops depends on which mode we are in and which loss function we
@@ -156,33 +212,55 @@ nmt-master/nmt/model.py:531:      ## Inference
 nmt-master/nmt/model.py:558:          # Helper
 nmt-master/nmt/model.py:578:              output_layer=self.output_layer  # applied per timestep
 nmt-master/nmt/model.py:581:        # Dynamic decoding
+nmt-master/nmt/model.py:604:    """Subclass must implement this.
+nmt-master/nmt/model.py:620:    """Compute softmax loss or sampled softmax loss."""
+nmt-master/nmt/model.py:652:    """Compute optimization loss."""
+nmt-master/nmt/model.py:683:    """Decode a batch.
 nmt-master/nmt/model.py:696:    # make sure outputs is of shape [batch_size, time] or [beam_width,
 nmt-master/nmt/model.py:697:    # batch_size, time] when using beam search.
 nmt-master/nmt/model.py:701:      # beam search output in [batch_size, time, beam_width] shape.
+nmt-master/nmt/model.py:706:    """Stack encoder states and return tensor [batch, length, layer, size]."""
 nmt-master/nmt/model.py:714:    # transform from [length, batch, ...] -> [batch, length, ...]
+nmt-master/nmt/model.py:722:  """Sequence-to-sequence dynamic model.
+nmt-master/nmt/model.py:728:    """Build an encoder from a sequence.
 nmt-master/nmt/model.py:754:      # Encoder_outputs: [max_time, batch_size, num_units]
 nmt-master/nmt/model.py:786:          # alternatively concat forward and backward states
 nmt-master/nmt/model.py:789:            encoder_state.append(bi_encoder_state[0][layer_id])  # forward
 nmt-master/nmt/model.py:790:            encoder_state.append(bi_encoder_state[1][layer_id])  # backward
 nmt-master/nmt/model.py:795:    # Use the top layer for now
+nmt-master/nmt/model.py:801:    """Build encoder from source."""
+nmt-master/nmt/model.py:811:    """Create and call biddirectional RNN cells.
 nmt-master/nmt/model.py:826:    # Construct forward and backward cells
+nmt-master/nmt/model.py:849:    """Build an RNN cell that can be used by decoder."""
 nmt-master/nmt/model.py:850:    # We only make use of encoder_outputs in attention-based models
 nmt-master/nmt/model.py:873:    # For beam search, we need to replicate encoder infos beam_width times
 nmt-master/nmt/model_helper.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/model_helper.py:2:#
+nmt-master/nmt/model_helper.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/model_helper.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/model_helper.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/model_helper.py:6:#
 nmt-master/nmt/model_helper.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/model_helper.py:8:#
 nmt-master/nmt/model_helper.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/model_helper.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/model_helper.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/model_helper.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/model_helper.py:13:# limitations under the License.
 nmt-master/nmt/model_helper.py:14:# ==============================================================================
+nmt-master/nmt/model_helper.py:16:"""Utility functions for building models."""
 nmt-master/nmt/model_helper.py:39:# If a vocab size is greater than this value, put the embedding on cpu instead
+nmt-master/nmt/model_helper.py:44:  """Create an initializer. init_weight is only for uniform."""
+nmt-master/nmt/model_helper.py:60:  """Return a device string for multi-GPU setup."""
+nmt-master/nmt/model_helper.py:82:  """Create train graph, model, and iterator."""
 nmt-master/nmt/model_helper.py:115:    # Note: One can set model_device_fn to
 nmt-master/nmt/model_helper.py:116:    # `tf.train.replica_device_setter(ps_tasks)` for distributed training.
+nmt-master/nmt/model_helper.py:144:  """Create train graph, model, src/tgt file holders, and iterator."""
+nmt-master/nmt/model_helper.py:197:  """Create inference model."""
+nmt-master/nmt/model_helper.py:238:  """Decide on which device to place an embed matrix given its vocab size."""
+nmt-master/nmt/model_helper.py:248:  """Load pretrain embeding from embed_file, and return an embedding matrix.
+nmt-master/nmt/model_helper.py:280:  """Create a new or load an existing embedding matrix."""
+nmt-master/nmt/model_helper.py:304:  """Create embedding matrix for both encoder and decoder.
 nmt-master/nmt/model_helper.py:333:    # Note: num_partitions > 1 is required for distributed training due to
 nmt-master/nmt/model_helper.py:334:    # embedding_lookup tries to colocate single partition-ed embedding variable
 nmt-master/nmt/model_helper.py:335:    # with lookup ops. This may cause embedding variables being placed on worker
@@ -192,31 +270,43 @@ nmt-master/nmt/model_helper.py:343:    # embedding_lookup tries to colocate sing
 nmt-master/nmt/model_helper.py:344:    # with lookup ops. This may cause embedding variables being placed on worker
 nmt-master/nmt/model_helper.py:345:    # jobs.
 nmt-master/nmt/model_helper.py:360:    # Share embedding
+nmt-master/nmt/model_helper.py:393:  """Create an instance of a single RNN cell."""
 nmt-master/nmt/model_helper.py:394:  # dropout (= 1 - keep_prob) is set to 0 during eval and infer
 nmt-master/nmt/model_helper.py:397:  # Cell Type
 nmt-master/nmt/model_helper.py:419:  # Dropout (= 1 - keep_prob)
 nmt-master/nmt/model_helper.py:426:  # Residual
 nmt-master/nmt/model_helper.py:432:  # Device Wrapper
+nmt-master/nmt/model_helper.py:444:  """Create a list of RNN cells."""
 nmt-master/nmt/model_helper.py:448:  # Multi-GPU
+nmt-master/nmt/model_helper.py:471:  """Create multi-layer RNN cell.
 nmt-master/nmt/model_helper.py:505:  if len(cell_list) == 1:  # Single layer.
 nmt-master/nmt/model_helper.py:507:  else:  # Multi layers
+nmt-master/nmt/model_helper.py:512:  """Clipping gradients of a model."""
+nmt-master/nmt/model_helper.py:523:  """Print a list of variables in a checkpoint together with their shapes."""
+nmt-master/nmt/model_helper.py:532:  """Load model from a checkpoint."""
+nmt-master/nmt/model_helper.py:550:  """Average the last N checkpoints in the model_dir."""
 nmt-master/nmt/model_helper.py:556:  # Checkpoints are ordered from oldest to newest.
 nmt-master/nmt/model_helper.py:592:  # Build a graph with same variables in the checkpoints, and save the averaged
 nmt-master/nmt/model_helper.py:593:  # variables into the avg_model_dir.
 nmt-master/nmt/model_helper.py:612:      # Use the built saver to save the averaged checkpoint. Only keep 1
 nmt-master/nmt/model_helper.py:613:      # checkpoint and the best checkpoint will be moved to avg_best_metric_dir.
+nmt-master/nmt/model_helper.py:622:  """Create translation model and initialize or load parameters in session."""
+nmt-master/nmt/model_helper.py:638:  """Compute perplexity of the output of the model.
 nmt-master/nmt/model_test.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/model_test.py:2:#
+nmt-master/nmt/model_test.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/model_test.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/model_test.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/model_test.py:6:#
 nmt-master/nmt/model_test.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/model_test.py:8:#
 nmt-master/nmt/model_test.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/model_test.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/model_test.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/model_test.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/model_test.py:13:# limitations under the License.
 nmt-master/nmt/model_test.py:14:# ==============================================================================
+nmt-master/nmt/model_test.py:15:"""Tests for model.py."""
 nmt-master/nmt/model_test.py:360:  ## Testing 3 encoders:
 nmt-master/nmt/model_test.py:361:  # uni: no attention, no residual, 1 layers
 nmt-master/nmt/model_test.py:362:  # bi: no attention, with residual, 4 layers
@@ -251,31 +341,76 @@ nmt-master/nmt/model_test.py:897:    # pylint: enable=line-too-long
 nmt-master/nmt/model_test.py:940:  # Test beam search.
 nmt-master/nmt/nmt.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/nmt.py:2:#
+nmt-master/nmt/nmt.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/nmt.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/nmt.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/nmt.py:6:#
 nmt-master/nmt/nmt.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/nmt.py:8:#
 nmt-master/nmt/nmt.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/nmt.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/nmt.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/nmt.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/nmt.py:13:# limitations under the License.
 nmt-master/nmt/nmt.py:14:# ==============================================================================
+nmt-master/nmt/nmt.py:16:"""TensorFlow NMT model implementation."""
 nmt-master/nmt/nmt.py:24:# import matplotlib.image as mpimg
+nmt-master/nmt/nmt.py:46:  """Build ArgumentParser."""
 nmt-master/nmt/nmt.py:49:  # network
+nmt-master/nmt/nmt.py:57:  parser.add_argument("--encoder_type", type=str, default="uni", help="""\
+nmt-master/nmt/nmt.py:62:      """)
 nmt-master/nmt/nmt.py:72:  # attention mechanisms
+nmt-master/nmt/nmt.py:73:  parser.add_argument("--attention", type=str, default="", help="""\
+nmt-master/nmt/nmt.py:76:      """)
+nmt-master/nmt/nmt.py:81:      help="""\
+nmt-master/nmt/nmt.py:88:      """)
+nmt-master/nmt/nmt.py:92:      help="""\
+nmt-master/nmt/nmt.py:96:      """)
+nmt-master/nmt/nmt.py:100:      help="""\
+nmt-master/nmt/nmt.py:103:      """)
 nmt-master/nmt/nmt.py:105:  # optimizer
+nmt-master/nmt/nmt.py:111:  parser.add_argument("--warmup_scheme", type=str, default="t2t", help="""\
+nmt-master/nmt/nmt.py:115:      """)
+nmt-master/nmt/nmt.py:117:      "--decay_scheme", type=str, default="", help="""\
+nmt-master/nmt/nmt.py:125:      """)
 nmt-master/nmt/nmt.py:135:  # initializer
 nmt-master/nmt/nmt.py:142:  # data
 nmt-master/nmt/nmt.py:156:  # Vocab
+nmt-master/nmt/nmt.py:157:  parser.add_argument("--vocab_prefix", type=str, default=None, help="""\
+nmt-master/nmt/nmt.py:159:      """)
+nmt-master/nmt/nmt.py:160:  parser.add_argument("--embed_prefix", type=str, default=None, help="""\
+nmt-master/nmt/nmt.py:163:      """)
+nmt-master/nmt/nmt.py:170:                      help="""\
+nmt-master/nmt/nmt.py:173:      """)
+nmt-master/nmt/nmt.py:175:                      help="""\
+nmt-master/nmt/nmt.py:178:                      """)
 nmt-master/nmt/nmt.py:180:  # Sequence lengths
+nmt-master/nmt/nmt.py:188:                      help="""\
+nmt-master/nmt/nmt.py:191:      """)
 nmt-master/nmt/nmt.py:193:  # Default settings works well (rarely need to change)
 nmt-master/nmt/nmt.py:215:  # SPM
+nmt-master/nmt/nmt.py:218:                      help="""\
+nmt-master/nmt/nmt.py:220:                      """)
 nmt-master/nmt/nmt.py:222:  # Experimental encoding feature.
+nmt-master/nmt/nmt.py:224:                      help="""\
+nmt-master/nmt/nmt.py:228:                      """)
 nmt-master/nmt/nmt.py:230:  # Misc
+nmt-master/nmt/nmt.py:239:                      help="""\
+nmt-master/nmt/nmt.py:242:      """)
+nmt-master/nmt/nmt.py:256:                      const=True, default=False, help=("""\
+nmt-master/nmt/nmt.py:259:                      """))
 nmt-master/nmt/nmt.py:264:  # Inference
+nmt-master/nmt/nmt.py:277:                      help=("""\
+nmt-master/nmt/nmt.py:279:      """))
 nmt-master/nmt/nmt.py:281:  # Advanced inference arguments
+nmt-master/nmt/nmt.py:286:                      help=("""\
+nmt-master/nmt/nmt.py:289:      """))
+nmt-master/nmt/nmt.py:296:                      help=("""\
+nmt-master/nmt/nmt.py:299:      """))
+nmt-master/nmt/nmt.py:301:                      help=("""\
+nmt-master/nmt/nmt.py:304:      """))
 nmt-master/nmt/nmt.py:306:  # Job info
+nmt-master/nmt/nmt.py:318:  """Create training hparams."""
 nmt-master/nmt/nmt.py:320:      # Data
 nmt-master/nmt/nmt.py:330:      # Networks
 nmt-master/nmt/nmt.py:341:      # Attention mechanisms
@@ -286,6 +421,8 @@ nmt-master/nmt/nmt.py:372:      # Advanced inference arguments
 nmt-master/nmt/nmt.py:380:      # Vocab
 nmt-master/nmt/nmt.py:387:      # Misc
 nmt-master/nmt/nmt.py:390:      epoch_step=0,  # record where we were within an epoch.
+nmt-master/nmt/nmt.py:407:  """Add an argument to hparams; if exists, change the value if update==True."""
+nmt-master/nmt/nmt.py:416:  """Add new arguments to hparams."""
 nmt-master/nmt/nmt.py:417:  # Sanity checks
 nmt-master/nmt/nmt.py:435:  # Different number of encoder / decoder layers
 nmt-master/nmt/nmt.py:444:  # Set residual layers
@@ -301,13 +438,16 @@ nmt-master/nmt/nmt.py:495:  # Target vocab
 nmt-master/nmt/nmt.py:513:  # Num embedding partitions
 nmt-master/nmt/nmt.py:518:  # Pretrained Embeddings
 nmt-master/nmt/nmt.py:545:  # Evaluation
+nmt-master/nmt/nmt.py:562:  """Make sure the loaded hparams is compatible with new changes."""
 nmt-master/nmt/nmt.py:566:  # Set num encoder/decoder layers (for old checkpoints)
 nmt-master/nmt/nmt.py:573:  # For compatible reason, if there are new fields in default_hparams,
 nmt-master/nmt/nmt.py:574:  #   we add them to the current hparams
 nmt-master/nmt/nmt.py:581:  # Update all hparams' keys if override_loaded_hparams=True
 nmt-master/nmt/nmt.py:585:    # For inference
+nmt-master/nmt/nmt.py:599:  """Create hparams or load hparams from out_dir."""
 nmt-master/nmt/nmt.py:609:  # Save HParams
 nmt-master/nmt/nmt.py:615:  # Print HParams
+nmt-master/nmt/nmt.py:621:  """Run main."""
 nmt-master/nmt/nmt.py:622:  # Job
 nmt-master/nmt/nmt.py:627:  # GPU device
 nmt-master/nmt/nmt.py:631:  # Random
@@ -323,36 +463,54 @@ nmt-master/nmt/nmt.py:681:    # Evaluation
 nmt-master/nmt/nmt.py:692:    # Train
 nmt-master/nmt/nmt_test.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/nmt_test.py:2:#
+nmt-master/nmt/nmt_test.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/nmt_test.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/nmt_test.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/nmt_test.py:6:#
 nmt-master/nmt/nmt_test.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/nmt_test.py:8:#
 nmt-master/nmt/nmt_test.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/nmt_test.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/nmt_test.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/nmt_test.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/nmt_test.py:13:# limitations under the License.
 nmt-master/nmt/nmt_test.py:14:# ==============================================================================
+nmt-master/nmt/nmt_test.py:15:"""Tests for nmt.py, train.py and inference.py."""
+nmt-master/nmt/nmt_test.py:32:  """Update flags for basic training."""
+nmt-master/nmt/nmt_test.py:51:    """Test the training loop is functional with basic hparams."""
+nmt-master/nmt/nmt_test.py:65:    """Test the training loop is functional with basic hparams."""
+nmt-master/nmt/nmt_test.py:80:    """Test inference is function with basic hparams."""
 nmt-master/nmt/nmt_test.py:87:    # Train one step so we have a checkpoint.
 nmt-master/nmt/nmt_test.py:93:    # Update FLAGS for inference.
 nmt-master/nmt/scripts/bleu.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/scripts/bleu.py:2:#
+nmt-master/nmt/scripts/bleu.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/scripts/bleu.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/scripts/bleu.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/scripts/bleu.py:6:#
 nmt-master/nmt/scripts/bleu.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/scripts/bleu.py:8:#
 nmt-master/nmt/scripts/bleu.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/scripts/bleu.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/scripts/bleu.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/scripts/bleu.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/scripts/bleu.py:13:# limitations under the License.
 nmt-master/nmt/scripts/bleu.py:14:# ==============================================================================
+nmt-master/nmt/scripts/bleu.py:16:"""Python implementation of BLEU and smooth-BLEU.
+nmt-master/nmt/scripts/bleu.py:29:  """Extracts all n-grams upto a given maximum order from an input segment.
+nmt-master/nmt/scripts/bleu.py:50:  """Computes BLEU score of translated segments against one or more references.
+nmt-master/nmt/scripts/rouge.py:1:"""ROUGE metric implementation.
 nmt-master/nmt/scripts/rouge.py:16:#pylint: disable=C0103
+nmt-master/nmt/scripts/rouge.py:20:  """Calcualtes n-grams.
+nmt-master/nmt/scripts/rouge.py:38:  """Splits multiple sentences into words and flattens the result"""
+nmt-master/nmt/scripts/rouge.py:43:  """Calculates word n-grams for multiple sentences.
+nmt-master/nmt/scripts/rouge.py:113:    """private recon calculation"""
 nmt-master/nmt/scripts/rouge.py:152:  # Gets the overlapping ngrams between evaluated and reference
 nmt-master/nmt/scripts/rouge.py:156:  # Handle edge case. This isn't mathematically correct, but it's good enough
 nmt-master/nmt/scripts/rouge.py:169:  # return overlapping_count / reference_count
 nmt-master/nmt/scripts/rouge.py:301:  # total number of words in reference sentences
 nmt-master/nmt/scripts/rouge.py:304:  # total number of words in evaluated sentences
+nmt-master/nmt/scripts/rouge.py:315:  """Calculates average rouge scores for a list of hypotheses and
 nmt-master/nmt/scripts/rouge.py:318:  # Filter out hyps that are of 0 length
 nmt-master/nmt/scripts/rouge.py:319:  # hyps_and_refs = zip(hypotheses, references)
 nmt-master/nmt/scripts/rouge.py:320:  # hyps_and_refs = [_ for _ in hyps_and_refs if len(_[0]) > 0]
@@ -362,22 +520,42 @@ nmt-master/nmt/scripts/rouge.py:329:  # Calculate ROUGE-2 F1, precision, recall 
 nmt-master/nmt/scripts/rouge.py:335:  # Calculate ROUGE-L F1, precision, recall scores
 nmt-master/nmt/train.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/train.py:2:#
+nmt-master/nmt/train.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/train.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/train.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/train.py:6:#
 nmt-master/nmt/train.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/train.py:8:#
 nmt-master/nmt/train.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/train.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/train.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/train.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/train.py:13:# limitations under the License.
 nmt-master/nmt/train.py:14:# ==============================================================================
+nmt-master/nmt/train.py:15:"""For training NMT models."""
+nmt-master/nmt/train.py:45:  """Sample decode a random sentence from src_data."""
+nmt-master/nmt/train.py:64:  """Compute internal evaluation (perplexity) for both dev / test.
+nmt-master/nmt/train.py:127:  """Compute external evaluation for both dev / test.
+nmt-master/nmt/train.py:203:  """Creates an averaged checkpoint and run external eval with it."""
 nmt-master/nmt/train.py:206:    # Convert VariableName:0 to VariableName.
+nmt-master/nmt/train.py:235:  """Compute internal evaluation (perplexity) for both dev / test.
+nmt-master/nmt/train.py:320:  """Wrapper for running sample_decode, internal_eval and external_eval.
+nmt-master/nmt/train.py:345:  """Initialize statistics that we want to accumulate."""
+nmt-master/nmt/train.py:347:          "predict_count": 0.0,  # word count on the target side
+nmt-master/nmt/train.py:348:          "word_count": 0.0,  # word counts for both source and target
+nmt-master/nmt/train.py:349:          "sequence_count": 0.0,  # number of training examples processed
+nmt-master/nmt/train.py:354:  """Update stats: write summary and accumulate statistics."""
 nmt-master/nmt/train.py:357:  # Update statistics
+nmt-master/nmt/train.py:371:  """Print all info at the current global step."""
+nmt-master/nmt/train.py:381:  """Add stuffs in info to summaries."""
+nmt-master/nmt/train.py:389:  """Update info and check for overflow."""
 nmt-master/nmt/train.py:390:  # Per-step info
 nmt-master/nmt/train.py:396:  # Per-predict info
 nmt-master/nmt/train.py:400:  # Check for overflow
+nmt-master/nmt/train.py:413:  """Misc tasks to do before training."""
 nmt-master/nmt/train.py:425:  # Initialize all of the iterators
+nmt-master/nmt/train.py:436:  """Get the right model class depending on configuration."""
+nmt-master/nmt/train.py:451:  """Train a translation model."""
 nmt-master/nmt/train.py:463:  # Create model
 nmt-master/nmt/train.py:469:  # Preload data for sample decoding.
 nmt-master/nmt/train.py:478:  # Log and output files
@@ -394,22 +572,31 @@ nmt-master/nmt/train.py:566:      # Save checkpoint
 nmt-master/nmt/train.py:572:      # Evaluate on dev/test
 nmt-master/nmt/train.py:582:      # Save checkpoint
 nmt-master/nmt/train.py:598:  # Done training
+nmt-master/nmt/train.py:640:  """Format results."""
+nmt-master/nmt/train.py:654:  """Summary of the current best results."""
+nmt-master/nmt/train.py:663:  """Computing perplexity."""
+nmt-master/nmt/train.py:673:  """Pick a sentence and decode."""
 nmt-master/nmt/train.py:686:    # get the top translation.
 nmt-master/nmt/train.py:698:  # Summary
+nmt-master/nmt/train.py:706:  """External evaluation such as BLEU and ROUGE scores."""
 nmt-master/nmt/train.py:731:  # Save on best metrics
 nmt-master/nmt/train.py:741:      # metric: larger is better
 nmt-master/nmt/utils/common_test_utils.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/common_test_utils.py:2:#
+nmt-master/nmt/utils/common_test_utils.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/common_test_utils.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/common_test_utils.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/common_test_utils.py:6:#
 nmt-master/nmt/utils/common_test_utils.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/common_test_utils.py:8:#
 nmt-master/nmt/utils/common_test_utils.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/common_test_utils.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/common_test_utils.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/common_test_utils.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/common_test_utils.py:13:# limitations under the License.
 nmt-master/nmt/utils/common_test_utils.py:14:# ==============================================================================
+nmt-master/nmt/utils/common_test_utils.py:16:"""Common utility functions for tests."""
+nmt-master/nmt/utils/common_test_utils.py:40:  """Create training and inference test hparams."""
 nmt-master/nmt/utils/common_test_utils.py:43:    # TODO(rzhao): Put num_residual_layers computation logic into
 nmt-master/nmt/utils/common_test_utils.py:44:    # `model_utils.py`, so we can also test it here.
 nmt-master/nmt/utils/common_test_utils.py:49:  # Networks
@@ -419,24 +606,35 @@ nmt-master/nmt/utils/common_test_utils.py:68:  # Infer
 nmt-master/nmt/utils/common_test_utils.py:73:  # Misc
 nmt-master/nmt/utils/common_test_utils.py:78:  # Vocab
 nmt-master/nmt/utils/common_test_utils.py:88:  # For inference.py test
+nmt-master/nmt/utils/common_test_utils.py:99:  """Create test iterator."""
 nmt-master/nmt/utils/evaluation_utils.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/evaluation_utils.py:2:#
+nmt-master/nmt/utils/evaluation_utils.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/evaluation_utils.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/evaluation_utils.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/evaluation_utils.py:6:#
 nmt-master/nmt/utils/evaluation_utils.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/evaluation_utils.py:8:#
 nmt-master/nmt/utils/evaluation_utils.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/evaluation_utils.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/evaluation_utils.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/evaluation_utils.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/evaluation_utils.py:13:# limitations under the License.
 nmt-master/nmt/utils/evaluation_utils.py:14:# ==============================================================================
+nmt-master/nmt/utils/evaluation_utils.py:16:"""Utility for evaluating various tasks, e.g., translation & summarization."""
+nmt-master/nmt/utils/evaluation_utils.py:32:  """Pick a metric and evaluate depending on task."""
 nmt-master/nmt/utils/evaluation_utils.py:33:  # BLEU scores for translation task
 nmt-master/nmt/utils/evaluation_utils.py:37:  # ROUGE scores for summarization tasks
+nmt-master/nmt/utils/evaluation_utils.py:52:  """Clean and handle BPE or SPM outputs."""
 nmt-master/nmt/utils/evaluation_utils.py:55:  # BPE
 nmt-master/nmt/utils/evaluation_utils.py:59:  # SPM
 nmt-master/nmt/utils/evaluation_utils.py:66:# Follow //transconsole/localization/machine_translation/metrics/bleu_calc.py
+nmt-master/nmt/utils/evaluation_utils.py:68:  """Compute BLEU scores and handling BPE."""
 nmt-master/nmt/utils/evaluation_utils.py:93:  # bleu_score, precisions, bp, ratio, translation_length, reference_length
+nmt-master/nmt/utils/evaluation_utils.py:100:  """Compute ROUGE scores and handling BPE."""
+nmt-master/nmt/utils/evaluation_utils.py:118:  """Compute accuracy, each line contains a label."""
+nmt-master/nmt/utils/evaluation_utils.py:134:  """Compute accuracy on per word basis."""
+nmt-master/nmt/utils/evaluation_utils.py:154:  """Compute BLEU scores using Moses multi-bleu.perl script."""
 nmt-master/nmt/utils/evaluation_utils.py:156:  # TODO(thangluong): perform rewrite using python
 nmt-master/nmt/utils/evaluation_utils.py:157:  # BPE
 nmt-master/nmt/utils/evaluation_utils.py:161:      # TODO(thangluong): not use shell=True, can be a security hazard
@@ -445,28 +643,34 @@ nmt-master/nmt/utils/evaluation_utils.py:177:  # TODO(thangluong): not use shell
 nmt-master/nmt/utils/evaluation_utils.py:180:  # extract BLEU score
 nmt-master/nmt/utils/evaluation_utils_test.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/evaluation_utils_test.py:2:#
+nmt-master/nmt/utils/evaluation_utils_test.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/evaluation_utils_test.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/evaluation_utils_test.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/evaluation_utils_test.py:6:#
 nmt-master/nmt/utils/evaluation_utils_test.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/evaluation_utils_test.py:8:#
 nmt-master/nmt/utils/evaluation_utils_test.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/evaluation_utils_test.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/evaluation_utils_test.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/evaluation_utils_test.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/evaluation_utils_test.py:13:# limitations under the License.
 nmt-master/nmt/utils/evaluation_utils_test.py:14:# ==============================================================================
+nmt-master/nmt/utils/evaluation_utils_test.py:16:"""Tests for evaluation_utils.py."""
 nmt-master/nmt/utils/iterator_utils.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/iterator_utils.py:2:#
+nmt-master/nmt/utils/iterator_utils.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/iterator_utils.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/iterator_utils.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/iterator_utils.py:6:#
 nmt-master/nmt/utils/iterator_utils.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/iterator_utils.py:8:#
 nmt-master/nmt/utils/iterator_utils.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/iterator_utils.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/iterator_utils.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/iterator_utils.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/iterator_utils.py:13:# limitations under the License.
 nmt-master/nmt/utils/iterator_utils.py:14:# ==============================================================================
+nmt-master/nmt/utils/iterator_utils.py:15:"""For loading data into NMT models."""
 nmt-master/nmt/utils/iterator_utils.py:28:# NOTE(ebrevdo): When we subclass this, instances' __dict__ becomes empty.
 nmt-master/nmt/utils/iterator_utils.py:53:    # Convert the word strings to character ids
 nmt-master/nmt/utils/iterator_utils.py:57:    # Convert the word strings to ids
@@ -511,17 +715,21 @@ nmt-master/nmt/utils/iterator_utils.py:225:      # Bucket sentence pairs by the 
 nmt-master/nmt/utils/iterator_utils.py:226:      # sentence.
 nmt-master/nmt/utils/iterator_utils_test.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/iterator_utils_test.py:2:#
+nmt-master/nmt/utils/iterator_utils_test.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/iterator_utils_test.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/iterator_utils_test.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/iterator_utils_test.py:6:#
 nmt-master/nmt/utils/iterator_utils_test.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/iterator_utils_test.py:8:#
 nmt-master/nmt/utils/iterator_utils_test.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/iterator_utils_test.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/iterator_utils_test.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/iterator_utils_test.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/iterator_utils_test.py:13:# limitations under the License.
 nmt-master/nmt/utils/iterator_utils_test.py:14:# ==============================================================================
+nmt-master/nmt/utils/iterator_utils_test.py:16:"""Tests for iterator_utils.py"""
 nmt-master/nmt/utils/iterator_utils_test.py:77:          [[2, 0, 3],   # c a eos -- eos is padding
+nmt-master/nmt/utils/iterator_utils_test.py:78:          [-1, -1, 0]], # "f" == unknown, "e" == unknown, a
 nmt-master/nmt/utils/iterator_utils_test.py:82:          [[4, 1, 2],   # sos b c
 nmt-master/nmt/utils/iterator_utils_test.py:83:           [4, 2, 2]],  # sos c c
 nmt-master/nmt/utils/iterator_utils_test.py:86:          [[1, 2, 3],   # b c eos
@@ -530,13 +738,16 @@ nmt-master/nmt/utils/iterator_utils_test.py:95:          [[2, 2, 0]],  # c c a
 nmt-master/nmt/utils/iterator_utils_test.py:99:          [[4, 0, 1]],  # sos a b
 nmt-master/nmt/utils/iterator_utils_test.py:102:          [[0, 1, 3]],  # a b eos
 nmt-master/nmt/utils/iterator_utils_test.py:157:          [[2, 0, 3],     # c a eos -- eos is padding
+nmt-master/nmt/utils/iterator_utils_test.py:158:           [-1, -1, 0]],  # "f" == unknown, "e" == unknown, a
 nmt-master/nmt/utils/iterator_utils_test.py:162:          [[4, 1, 2],   # sos b c
 nmt-master/nmt/utils/iterator_utils_test.py:163:           [4, 2, 2]],  # sos c c
 nmt-master/nmt/utils/iterator_utils_test.py:166:          [[1, 2, 3],   # b c eos
 nmt-master/nmt/utils/iterator_utils_test.py:167:           [2, 2, 3]],  # c c eos
+nmt-master/nmt/utils/iterator_utils_test.py:222:          [[-1, -1, 0]], # "f" == unknown, "e" == unknown, a
 nmt-master/nmt/utils/iterator_utils_test.py:226:          [[4, 2, 2]],   # sos c c
 nmt-master/nmt/utils/iterator_utils_test.py:229:          [[2, 2, 3]],   # c c eos
 nmt-master/nmt/utils/iterator_utils_test.py:236:      # Re-init iterator with skip_count=0.
+nmt-master/nmt/utils/iterator_utils_test.py:243:          [[-1, -1, 0],  # "f" == unknown, "e" == unknown, a
 nmt-master/nmt/utils/iterator_utils_test.py:244:           [2, 0, 3]],   # c a eos -- eos is padding
 nmt-master/nmt/utils/iterator_utils_test.py:248:          [[4, 2, 2],   # sos c c
 nmt-master/nmt/utils/iterator_utils_test.py:249:           [4, 1, 2]],  # sos b c
@@ -547,65 +758,97 @@ nmt-master/nmt/utils/iterator_utils_test.py:265:          [[4, 0, 1]],  # sos a 
 nmt-master/nmt/utils/iterator_utils_test.py:268:          [[0, 1, 3]],  # a b eos
 nmt-master/nmt/utils/iterator_utils_test.py:304:          [[2, 2, 0],   # c c a
 nmt-master/nmt/utils/iterator_utils_test.py:305:           [2, 0, 3]],  # c a eos
+nmt-master/nmt/utils/iterator_utils_test.py:311:          [[-1, 3, 3],    # "d" == unknown, eos eos
+nmt-master/nmt/utils/iterator_utils_test.py:312:           [-1, -1, 0]],  # "f" == unknown, "e" == unknown, a
 nmt-master/nmt/utils/misc_utils.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/misc_utils.py:2:#
+nmt-master/nmt/utils/misc_utils.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/misc_utils.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/misc_utils.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/misc_utils.py:6:#
 nmt-master/nmt/utils/misc_utils.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/misc_utils.py:8:#
 nmt-master/nmt/utils/misc_utils.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/misc_utils.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/misc_utils.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/misc_utils.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/misc_utils.py:13:# limitations under the License.
 nmt-master/nmt/utils/misc_utils.py:14:# ==============================================================================
+nmt-master/nmt/utils/misc_utils.py:16:"""Generally useful utility functions."""
 nmt-master/nmt/utils/misc_utils.py:34:  # LINT.IfChange
 nmt-master/nmt/utils/misc_utils.py:36:  # LINT.ThenChange(<pwd>/nmt/copy.bara.sky)
+nmt-master/nmt/utils/misc_utils.py:43:  """Exponentiation with catching of overflow error."""
+nmt-master/nmt/utils/misc_utils.py:52:  """Take a start time, print elapsed duration, and return a new time."""
+nmt-master/nmt/utils/misc_utils.py:59:  """Similar to print but with support to flush and output to a file."""
 nmt-master/nmt/utils/misc_utils.py:68:  # stdout
+nmt-master/nmt/utils/misc_utils.py:80:  """Print hparams, can skip keys based on pattern."""
+nmt-master/nmt/utils/misc_utils.py:90:  """Load hparams from an existing model directory."""
+nmt-master/nmt/utils/misc_utils.py:107:  """Override hparams values with existing standard hparams config."""
+nmt-master/nmt/utils/misc_utils.py:116:  """Save hparams."""
+nmt-master/nmt/utils/misc_utils.py:124:  """Print the shape and value of a tensor at test time. Return a new tensor."""
+nmt-master/nmt/utils/misc_utils.py:131:  """Add a new summary to the current summary_writer.
 nmt-master/nmt/utils/misc_utils.py:140:  # GPU options:
 nmt-master/nmt/utils/misc_utils.py:141:  # https://www.tensorflow.org/versions/r0.10/how_tos/using_gpu/index.html
 nmt-master/nmt/utils/misc_utils.py:147:  # CPU threads options
+nmt-master/nmt/utils/misc_utils.py:157:  """Convert a sequence words into sentence."""
+nmt-master/nmt/utils/misc_utils.py:158:  if (not hasattr(words, "__len__") and  # for numpy array
+nmt-master/nmt/utils/misc_utils.py:165:  """Convert a sequence of bpe words into sentence."""
 nmt-master/nmt/utils/misc_utils.py:174:    else:  # end of a word
+nmt-master/nmt/utils/misc_utils.py:182:  """Decode a text in SPM (https://github.com/google/sentencepiece) format."""
 nmt-master/nmt/utils/misc_utils_test.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/misc_utils_test.py:2:#
+nmt-master/nmt/utils/misc_utils_test.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/misc_utils_test.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/misc_utils_test.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/misc_utils_test.py:6:#
 nmt-master/nmt/utils/misc_utils_test.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/misc_utils_test.py:8:#
 nmt-master/nmt/utils/misc_utils_test.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/misc_utils_test.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/misc_utils_test.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/misc_utils_test.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/misc_utils_test.py:13:# limitations under the License.
 nmt-master/nmt/utils/misc_utils_test.py:14:# ==============================================================================
+nmt-master/nmt/utils/misc_utils_test.py:16:"""Tests for vocab_utils."""
 nmt-master/nmt/utils/nmt_utils.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/nmt_utils.py:2:#
+nmt-master/nmt/utils/nmt_utils.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/nmt_utils.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/nmt_utils.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/nmt_utils.py:6:#
 nmt-master/nmt/utils/nmt_utils.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/nmt_utils.py:8:#
 nmt-master/nmt/utils/nmt_utils.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/nmt_utils.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/nmt_utils.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/nmt_utils.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/nmt_utils.py:13:# limitations under the License.
 nmt-master/nmt/utils/nmt_utils.py:14:# ==============================================================================
+nmt-master/nmt/utils/nmt_utils.py:16:"""Utility functions specifically for NMT."""
+nmt-master/nmt/utils/nmt_utils.py:42:  """Decode a test set and compute a score according to the evaluation task."""
 nmt-master/nmt/utils/nmt_utils.py:43:  # Decode
+nmt-master/nmt/utils/nmt_utils.py:51:      trans_f.write("")  # Write empty string to ensure file is created.
 nmt-master/nmt/utils/nmt_utils.py:81:  # Evaluation
+nmt-master/nmt/utils/nmt_utils.py:97:  """Given batch decoding outputs, select a sentence and turn to text."""
 nmt-master/nmt/utils/nmt_utils.py:99:  # Select a sentence
 nmt-master/nmt/utils/nmt_utils.py:102:  # If there is an eos symbol in outputs, cut them at that point.
+nmt-master/nmt/utils/nmt_utils.py:106:  if subword_option == "bpe":  # BPE
+nmt-master/nmt/utils/nmt_utils.py:108:  elif subword_option == "spm":  # SPM
 nmt-master/nmt/utils/standard_hparams_utils.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/standard_hparams_utils.py:2:#
+nmt-master/nmt/utils/standard_hparams_utils.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/standard_hparams_utils.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/standard_hparams_utils.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/standard_hparams_utils.py:6:#
 nmt-master/nmt/utils/standard_hparams_utils.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/standard_hparams_utils.py:8:#
 nmt-master/nmt/utils/standard_hparams_utils.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/standard_hparams_utils.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/standard_hparams_utils.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/standard_hparams_utils.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/standard_hparams_utils.py:13:# limitations under the License.
 nmt-master/nmt/utils/standard_hparams_utils.py:14:# ==============================================================================
+nmt-master/nmt/utils/standard_hparams_utils.py:16:"""standard hparams utils."""
 nmt-master/nmt/utils/standard_hparams_utils.py:27:      # Data
 nmt-master/nmt/utils/standard_hparams_utils.py:37:      # Networks
 nmt-master/nmt/utils/standard_hparams_utils.py:50:      # Attention mechanisms
@@ -619,16 +862,19 @@ nmt-master/nmt/utils/standard_hparams_utils.py:103:      # For inference
 nmt-master/nmt/utils/standard_hparams_utils.py:110:      # Language model
 nmt-master/nmt/utils/vocab_utils.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/vocab_utils.py:2:#
+nmt-master/nmt/utils/vocab_utils.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/vocab_utils.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/vocab_utils.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/vocab_utils.py:6:#
 nmt-master/nmt/utils/vocab_utils.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/vocab_utils.py:8:#
 nmt-master/nmt/utils/vocab_utils.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/vocab_utils.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/vocab_utils.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/vocab_utils.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/vocab_utils.py:13:# limitations under the License.
 nmt-master/nmt/utils/vocab_utils.py:14:# ==============================================================================
+nmt-master/nmt/utils/vocab_utils.py:16:"""Utility to handle vocabularies."""
 nmt-master/nmt/utils/vocab_utils.py:30:# word level special token
 nmt-master/nmt/utils/vocab_utils.py:36:# char ids 0-255 come from utf-8 encoding bytes
 nmt-master/nmt/utils/vocab_utils.py:37:# assign 256-300 to special chars
@@ -638,21 +884,29 @@ nmt-master/nmt/utils/vocab_utils.py:40:BOW_CHAR_ID = 258  # <begin word>
 nmt-master/nmt/utils/vocab_utils.py:41:EOW_CHAR_ID = 259  # <end word>
 nmt-master/nmt/utils/vocab_utils.py:42:PAD_CHAR_ID = 260  # <padding>
 nmt-master/nmt/utils/vocab_utils.py:44:DEFAULT_CHAR_MAXLEN = 50  # max number of chars for each word.
+nmt-master/nmt/utils/vocab_utils.py:48:  """Given string and length, convert to byte seq of at most max_length.
+nmt-master/nmt/utils/vocab_utils.py:76:  """Given a sequence of strings, map to sequence of bytes.
+nmt-master/nmt/utils/vocab_utils.py:113:  """Check if vocab_file doesn't exist, create from corpus_file."""
 nmt-master/nmt/utils/vocab_utils.py:118:      # Verify if the vocab starts with unk, sos, eos
 nmt-master/nmt/utils/vocab_utils.py:119:      # If not, prepend those tokens & generate a new vocab file
+nmt-master/nmt/utils/vocab_utils.py:144:  """Creates vocab tables for src_vocab_file and tgt_vocab_file."""
+nmt-master/nmt/utils/vocab_utils.py:156:  """Load embed_file into a python dictionary.
 nmt-master/nmt/utils/vocab_utils.py:181:        if len(tokens) == 2:  # header line
 nmt-master/nmt/utils/vocab_utils_test.py:1:# Copyright 2017 Google Inc. All Rights Reserved.
 nmt-master/nmt/utils/vocab_utils_test.py:2:#
+nmt-master/nmt/utils/vocab_utils_test.py:3:# Licensed under the Apache License, Version 2.0 (the "License");
 nmt-master/nmt/utils/vocab_utils_test.py:4:# you may not use this file except in compliance with the License.
 nmt-master/nmt/utils/vocab_utils_test.py:5:# You may obtain a copy of the License at
 nmt-master/nmt/utils/vocab_utils_test.py:6:#
 nmt-master/nmt/utils/vocab_utils_test.py:7:#     http://www.apache.org/licenses/LICENSE-2.0
 nmt-master/nmt/utils/vocab_utils_test.py:8:#
 nmt-master/nmt/utils/vocab_utils_test.py:9:# Unless required by applicable law or agreed to in writing, software
+nmt-master/nmt/utils/vocab_utils_test.py:10:# distributed under the License is distributed on an "AS IS" BASIS,
 nmt-master/nmt/utils/vocab_utils_test.py:11:# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 nmt-master/nmt/utils/vocab_utils_test.py:12:# See the License for the specific language governing permissions and
 nmt-master/nmt/utils/vocab_utils_test.py:13:# limitations under the License.
 nmt-master/nmt/utils/vocab_utils_test.py:14:# ==============================================================================
+nmt-master/nmt/utils/vocab_utils_test.py:16:"""Tests for vocab_utils."""
 nmt-master/nmt/utils/vocab_utils_test.py:32:    # Create a vocab file
 nmt-master/nmt/utils/vocab_utils_test.py:41:    # Call vocab_utils
 nmt-master/nmt/utils/vocab_utils_test.py:47:    # Assert: we expect the code to add  <unk>, <s>, </s> and
