@@ -1,4 +1,3 @@
-Valid usernames are denoted by YES and unvalid usernames are denoted by NO in respective lines
 NO
 NO
 NO
