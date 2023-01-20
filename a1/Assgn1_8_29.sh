@@ -1,7 +1,7 @@
 #!/bin/bash
 if !(test -f "main.csv");
 then
-    echo "Date (dd-mm-yy), Category, Amount, Name">main.csv
+    echo "Date,Category,Amount,Name">main.csv
 fi
 # default_args=($(echo "${@: -4}" | awk '{printf("%s,%s,%s,%s\n",$1,$2,$3,$4)}' >> main.csv))
 default_args=($(echo "${@: -4}" | awk '{print $1,$2,$3,$4}'))
@@ -16,9 +16,9 @@ echo "$date,$category,$amount,$name">>main.csv
 while getopts "c:n:s:h" opt
 do
     case $opt in 
-        c) echo "Option c: $opt, argument: $OPTARG";;
-        n) awk 'BEGIN{ FS = "," ; sum=0} $4 == $OPTARG {sum += $3} END{print sum}' main.csv;;
+        c) awk -v var="$OPTARG" 'BEGIN{ FS = "," ; sum=0 } $2 == var {sum += $3} END{print sum}' main.csv;;
+        n) awk -v var="$OPTARG" 'BEGIN{ FS = "," ; sum=0 } $4 == var {sum += $3} END{print sum}' main.csv;;
         s) sort -t ',' -k 2 main.csv;;
-        h) echo "Option h: $opt, argument: $OPTARG";;
+        h) echo "Option h: $opt";;
     esac
 done
