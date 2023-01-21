@@ -1,12 +1,14 @@
 nmt-master/nmt/attention_model.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -36,12 +38,14 @@ nmt-master/nmt/attention_model.py
 nmt-master/nmt/gnmt_model.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -89,18 +93,21 @@ nmt-master/nmt/gnmt_model.py
 nmt-master/nmt/inference.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
 14 # ==============================================================================
 16 """To perform inference on test set given a trained model."""
 40   """Decoding only a specific set of sentences."""
+46     trans_f.write("")  # Write empty string to ensure file is created.
 50       # get text translation
 58       if infer_summary is not None:  # Attention models
 72   """Load inference data."""
@@ -120,12 +127,14 @@ nmt-master/nmt/inference.py
 nmt-master/nmt/inference_test.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -142,12 +151,14 @@ nmt-master/nmt/inference_test.py
 nmt-master/nmt/model.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -181,6 +192,7 @@ nmt-master/nmt/model.py
 135     # Set num units
 138     # Set num layers
 144     # Set num residual layers
+145     if hasattr(hparams, "num_residual_layers"):  # compatible common_test_utils
 152     # Batch size
 155     # Global step
 158     # Initializer
@@ -356,12 +368,14 @@ nmt-master/nmt/model.py
 nmt-master/nmt/model_helper.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -475,12 +489,14 @@ nmt-master/nmt/model_helper.py
 nmt-master/nmt/model_test.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -521,12 +537,14 @@ nmt-master/nmt/model_test.py
 nmt-master/nmt/nmt.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -693,12 +711,14 @@ nmt-master/nmt/nmt.py
 nmt-master/nmt/nmt_test.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -713,12 +733,14 @@ nmt-master/nmt/nmt_test.py
 nmt-master/nmt/scripts/bleu.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -931,12 +953,14 @@ nmt-master/nmt/scripts/__init__.py
 nmt-master/nmt/train.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1039,6 +1063,9 @@ nmt-master/nmt/train.py
     metrics in this order.
   """
 345   """Initialize statistics that we want to accumulate."""
+347           "predict_count": 0.0,  # word count on the target side
+348           "word_count": 0.0,  # word counts for both source and target
+349           "sequence_count": 0.0,  # number of training examples processed
 354   """Update stats: write summary and accumulate statistics."""
 357   # Update statistics
 371   """Print all info at the current global step."""
@@ -1079,12 +1106,14 @@ nmt-master/nmt/train.py
 nmt-master/nmt/utils/common_test_utils.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1104,12 +1133,14 @@ nmt-master/nmt/utils/common_test_utils.py
 nmt-master/nmt/utils/evaluation_utils.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1137,12 +1168,14 @@ nmt-master/nmt/utils/evaluation_utils.py
 nmt-master/nmt/utils/evaluation_utils_test.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1151,12 +1184,14 @@ nmt-master/nmt/utils/evaluation_utils_test.py
 nmt-master/nmt/utils/iterator_utils.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1207,18 +1242,21 @@ nmt-master/nmt/utils/iterator_utils.py
 nmt-master/nmt/utils/iterator_utils_test.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
 14 # ==============================================================================
 16 """Tests for iterator_utils.py"""
 77           [[2, 0, 3],   # c a eos -- eos is padding
+78           [-1, -1, 0]], # "f" == unknown, "e" == unknown, a
 82           [[4, 1, 2],   # sos b c
 83            [4, 2, 2]],  # sos c c
 86           [[1, 2, 3],   # b c eos
@@ -1227,13 +1265,16 @@ nmt-master/nmt/utils/iterator_utils_test.py
 99           [[4, 0, 1]],  # sos a b
 102           [[0, 1, 3]],  # a b eos
 157           [[2, 0, 3],     # c a eos -- eos is padding
+158            [-1, -1, 0]],  # "f" == unknown, "e" == unknown, a
 162           [[4, 1, 2],   # sos b c
 163            [4, 2, 2]],  # sos c c
 166           [[1, 2, 3],   # b c eos
 167            [2, 2, 3]],  # c c eos
+222           [[-1, -1, 0]], # "f" == unknown, "e" == unknown, a
 226           [[4, 2, 2]],   # sos c c
 229           [[2, 2, 3]],   # c c eos
 236       # Re-init iterator with skip_count=0.
+243           [[-1, -1, 0],  # "f" == unknown, "e" == unknown, a
 244            [2, 0, 3]],   # c a eos -- eos is padding
 248           [[4, 2, 2],   # sos c c
 249            [4, 1, 2]],  # sos b c
@@ -1244,15 +1285,19 @@ nmt-master/nmt/utils/iterator_utils_test.py
 268           [[0, 1, 3]],  # a b eos
 304           [[2, 2, 0],   # c c a
 305            [2, 0, 3]],  # c a eos
+311           [[-1, 3, 3],    # "d" == unknown, eos eos
+312            [-1, -1, 0]],  # "f" == unknown, "e" == unknown, a
 nmt-master/nmt/utils/misc_utils.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1276,18 +1321,21 @@ nmt-master/nmt/utils/misc_utils.py
 141   # https://www.tensorflow.org/versions/r0.10/how_tos/using_gpu/index.html
 147   # CPU threads options
 157   """Convert a sequence words into sentence."""
+158   if (not hasattr(words, "__len__") and  # for numpy array
 165   """Convert a sequence of bpe words into sentence."""
 174     else:  # end of a word
 182   """Decode a text in SPM (https://github.com/google/sentencepiece) format."""
 nmt-master/nmt/utils/misc_utils_test.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1296,12 +1344,14 @@ nmt-master/nmt/utils/misc_utils_test.py
 nmt-master/nmt/utils/nmt_utils.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1309,19 +1359,24 @@ nmt-master/nmt/utils/nmt_utils.py
 16 """Utility functions specifically for NMT."""
 42   """Decode a test set and compute a score according to the evaluation task."""
 43   # Decode
+51       trans_f.write("")  # Write empty string to ensure file is created.
 81   # Evaluation
 97   """Given batch decoding outputs, select a sentence and turn to text."""
 99   # Select a sentence
 102   # If there is an eos symbol in outputs, cut them at that point.
+106   if subword_option == "bpe":  # BPE
+108   elif subword_option == "spm":  # SPM
 nmt-master/nmt/utils/standard_hparams_utils.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1341,12 +1396,14 @@ nmt-master/nmt/utils/standard_hparams_utils.py
 nmt-master/nmt/utils/vocab_utils.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
@@ -1409,12 +1466,14 @@ nmt-master/nmt/utils/vocab_utils.py
 nmt-master/nmt/utils/vocab_utils_test.py
 1 # Copyright 2017 Google Inc. All Rights Reserved.
 2 #
+3 # Licensed under the Apache License, Version 2.0 (the "License");
 4 # you may not use this file except in compliance with the License.
 5 # You may obtain a copy of the License at
 6 #
 7 #     http://www.apache.org/licenses/LICENSE-2.0
 8 #
 9 # Unless required by applicable law or agreed to in writing, software
+10 # distributed under the License is distributed on an "AS IS" BASIS,
 11 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 12 # See the License for the specific language governing permissions and
 13 # limitations under the License.
