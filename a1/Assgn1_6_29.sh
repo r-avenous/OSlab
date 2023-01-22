@@ -21,7 +21,7 @@ do
         prime+=( $p )
     fi
 done
-
+> output.txt
 while read -r n
 do
     pr=()
@@ -31,7 +31,14 @@ do
         then
             break
         fi
-        pr+=( $p )
+        if [[ $((n%p)) -eq 0 ]]
+        then
+            pr+=( $p )
+            while [[ $((n%p)) -eq 0 ]]
+            do
+                n=$((n/p))
+            done
+        fi
     done
     echo ${pr[@]} >> output.txt
 done < input.txt

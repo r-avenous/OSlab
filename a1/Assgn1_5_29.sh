@@ -18,4 +18,4 @@ awk '\''BEGIN{m=0}
     count = gsub(/"/, "", arr[1]);
     {if (count % 2 == 0) print NR, $0; next}
   }}
-/"""/ {m=1; print NR, $0}'\'' {}' > output.txt
+/"""/ {m=1; print NR, $0}'\'' {}'
