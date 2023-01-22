@@ -12,6 +12,8 @@ name=${args[3]}
 
 echo "$date,$category,$amount,$name">>main.csv
 
+tail -n +2 main.csv | sort -n -t ',' -k1.7 -k1.4,1.5 -k1.1,1.2 | sed '1 i\Date,Category,Amount,Name' > main2.csv
+
 while getopts "c:n:s:h" opt
 do
     case $opt in 
@@ -23,6 +25,6 @@ do
                 Category) tail -n +2 main.csv | sort -t ',' -k 2 | sed '1 i\Date,Category,Amount,Name' > main2.csv;;
                 Amount) tail -n +2 main.csv | sort -t ',' -k 3 -n | sed '1 i\Date,Category,Amount,Name' > main2.csv;;
             esac;;
-        h) echo "Option h";;
+        h) printf "\nName : Splitwise \n\nUsage : Pass -c for Category and -n for Name based calculations, -s for sorting by column and -h for displaying help prompt.\n\n";;
     esac
 done
