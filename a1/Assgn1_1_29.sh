@@ -40,6 +40,10 @@
 lcm=1
 while read -r n
 do
+	if [ "$n" == "" ];
+	then
+		continue
+	fi
 	x=$(echo $n | rev)
 	a=$x
 	b=$lcm
@@ -48,6 +52,7 @@ do
 		a=$b
 		b=$r
 	done
-	lcm=$(((x * lcm) / a))
+	lcm=$(((x / a) * lcm))
+	echo $lcm
 done < $1
 echo $lcm
