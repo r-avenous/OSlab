@@ -19,6 +19,7 @@ for file in "$1"/*;
 do
     basename=${file##*/}
     filename=${basename%.*}
+    rm -f "$2/${filename}.csv"
     jq -r "[$k] | @csv" "$file" >>"$2/$filename"".csv"
 done
 
