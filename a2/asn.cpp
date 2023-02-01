@@ -18,16 +18,16 @@ vector<string> split(string s, char delim = ' ')
     return v;
 }
 pid_t pid;
-void childkiller(int sig)
+void handlectrlc(int sig)
 {
-    cout << "HI\n";
-    kill(pid, SIGINT);
+    cout << '\n';
 }
 int main()
 {
     string s, inputfile, outputfile;
     while(1)
     {
+        signal(SIGINT, handlectrlc);
         cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
         getline(cin, s);
         if(s == "exit") break;
@@ -54,7 +54,6 @@ int main()
         }
         if(pid = fork() == 0)
         {
-            signal(SIGCHLD, childkiller);
             char* args[v.size() + 1];
             for(int i = 0; i < v.size(); i++)
             {
