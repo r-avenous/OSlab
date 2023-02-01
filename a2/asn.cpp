@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ vector<string> split(string s, char delim = ' ')
     return v;
 }
 pid_t pid;
+vector<string> cmds;
 void run();
 void handlectrlc(int sig)
 {
@@ -31,6 +33,7 @@ void run()
     cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
     getline(cin, s);
     if(s == "exit") exit(0);
+    cmds.push_back(s);
     vector<string> v = split(s);
     FILE* fpin;
     if(v[0] == "cd")
