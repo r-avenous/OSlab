@@ -43,7 +43,10 @@ void run()
     printf(PROMPT);
     scanf("%[^\n]s", s);
     getchar();
-    if(!strcmp(s, "exit")) exit(0);
+
+    if(!strcmp(s, "exit")) 
+        exit(0);
+        
     push_back(&cmds, s);
     vectorstring v = split(s);
     
