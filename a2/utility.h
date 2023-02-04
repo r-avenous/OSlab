@@ -1,5 +1,5 @@
-#ifndef __MAIN_H__
-#define __MAIN_H__
+#ifndef __UTILITY_H__
+#define __UTILITY_H__
 
 #include <stdio.h>
 #include <unistd.h>
