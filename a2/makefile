@@ -1,2 +1,2 @@
 output:
-	gcc main.c utility.c -o terminal
+	g++ main.cpp utility.cpp -o terminal
