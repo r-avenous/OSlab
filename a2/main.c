@@ -1,12 +1,5 @@
 #include "main.h"
 
-typedef struct __vectorstring 
-{
-    char **data;
-    int size;
-    int capacity;
-}vectorstring;
-
 void push_back(vectorstring *v, char *s)
 {
     if(v->size == v->capacity)
@@ -34,9 +27,6 @@ vectorstring split(char *s)
     return v;
 }
 
-pid_t childPid;
-vectorstring cmds;
-void run();
 void handlectrlc(int sig)
 {
     if(childPid > 0) kill(childPid, SIGINT);
@@ -44,6 +34,7 @@ void handlectrlc(int sig)
     printf("\n");
     run();
 }
+
 void run()
 {
     childPid = -1;
@@ -90,6 +81,7 @@ void run()
     }
     wait(NULL);
 }
+
 int main()
 {
     signal(SIGINT, handlectrlc);

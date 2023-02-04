@@ -1,18 +1,4 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define PROMPT " [#] "
-
-typedef struct __vectorstring 
-{
-    char **data;
-    int size;
-    int capacity;
-}vectorstring;
+#include "history.h"
 
 void push_back(vectorstring *v, char *s)
 {
@@ -51,6 +37,7 @@ void handlectrlc(int sig)
     printf("\n");
     run();
 }
+
 void run()
 {
     childPid = -1;
@@ -59,7 +46,12 @@ void run()
     printf(PROMPT);
     scanf("%[^\n]s", s);
     getchar();
-    if(!strcmp(s, "exit")) exit(0);
+
+
+
+    if(!strcmp(s, "exit")) 
+        exit(0);
+
     push_back(&cmds, s);
     vectorstring v = split(s);
     
@@ -97,6 +89,7 @@ void run()
     }
     wait(NULL);
 }
+
 int main()
 {
     signal(SIGINT, handlectrlc);
