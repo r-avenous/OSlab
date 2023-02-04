@@ -22,8 +22,8 @@ vectorstring cmds;
 
 void push_back(vectorstring *v, char *s);
 vectorstring split(char *s);
-void run();
 void handlectrlc(int sig);
+pid_t childPid;
+vectorstring cmds;
 
 #endif
-
