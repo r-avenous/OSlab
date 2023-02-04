@@ -1,5 +1,8 @@
 #include "utility.h"
 
+pid_t childPid;
+vectorstring cmds;
+
 void run();
 void handlectrlc(int sig)
 {

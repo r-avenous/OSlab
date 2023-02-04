@@ -17,13 +17,9 @@ typedef struct __vectorstring
     int capacity;
 }vectorstring;
 
-pid_t childPid;
-vectorstring cmds;
-
 void push_back(vectorstring *v, char *s);
 vectorstring split(char *s);
 void handlectrlc(int sig);
-pid_t childPid;
-vectorstring cmds;
+int stringEmpty(char *s);
 
 #endif
