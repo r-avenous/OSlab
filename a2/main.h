@@ -1,3 +1,6 @@
+#ifndef __MAIN_H__
+#define __MAIN_H__
+
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -22,4 +25,5 @@ vectorstring split(char *s);
 void run();
 void handlectrlc(int sig);
 
+#endif
 
