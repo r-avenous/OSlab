@@ -72,9 +72,8 @@ void run()
 
 int main()
 {
-    signal(SIGINT, handlectrlc);
-    rl_bind_key(38, handleup);
-    rl_bind_key(40, handledown);
+    // rl_add_defun("handleup", handleup, 38);
+    // rl_add_defun("handledown", handledown, 40);
 
     cmds.capacity = 500;
     cmds.size = 0;

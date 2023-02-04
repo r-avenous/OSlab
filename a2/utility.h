@@ -19,7 +19,6 @@ typedef struct __vectorstring
 
 void push_back(vectorstring *v, char *s);
 vectorstring split(char *s);
-void handlectrlc(int sig);
 int stringEmpty(char *s);
 
 #endif

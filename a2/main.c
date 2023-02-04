@@ -2,29 +2,47 @@
 
 pid_t childPid;
 vectorstring cmds;
+int scaninterrupt = 0, background = 0;
 
-void run();
-void handlectrlc(int sig)
+void sigint_handler(int signum)
 {
-    signal(SIGINT, handlectrlc);
-    printf("\n");
+    scaninterrupt = 1;
+    write(1, "\n", 1);
     if(childPid > 0) 
     {
         kill(childPid, SIGINT);
         childPid = -1;
     }
-    else run();
+    fflush(stdout);
+    fflush(stdin);
 }
-
+void sigtstp_handler(int signum)
+{
+    scaninterrupt = 1;
+    write(1, "\n", 1);
+    fflush(stdout);
+    fflush(stdin);
+}
+void sigchld_handler(int signum)
+{
+    if(!background) return;
+    scaninterrupt = 1;
+    fflush(stdout);
+    fflush(stdin);
+}
 void run()
 {
-    childPid = -1;
     char s[1000], inputfile[1000], outputfile[1000];
     printf("%s", getcwd((char*)NULL, (size_t)0));
     printf(PROMPT);
     scanf("%[^\n]s", s);
+    if(scaninterrupt) 
+    {
+        scaninterrupt = 0;
+        return;
+    }
     getchar();
-    if(stringEmpty(s)) run();
+    if(stringEmpty(s)) return;
     if(!strcmp(s, "exit")) exit(0);
     push_back(&cmds, s);
     vectorstring v = split(s);
@@ -33,7 +51,7 @@ void run()
     if(!strcmp(v.data[0], "cd"))
     {
         chdir(v.data[1]);
-        run();
+        return;
     }
     for(int i=0; i<v.size; i++)
     {
@@ -47,6 +65,10 @@ void run()
         {
             strcpy(outputfile, v.data[i+1]);
             i++;
+        }
+        else if(!strcmp(v.data[i], "&"))
+        {
+            background = 1;
         }
     }
     childPid = fork();
@@ -65,17 +87,28 @@ void run()
             exit(0);
         }
     }
-    wait(NULL);
+    if(!background) waitpid(childPid, NULL, 0);
+    else waitpid(childPid, NULL, WNOHANG);
 }
 
 int main()
 {
-    signal(SIGINT, handlectrlc);
+    signal(SIGINT, sigint_handler);
+    signal(SIGTSTP, sigtstp_handler);
+    signal(SIGCHLD, sigchld_handler);
+    siginterrupt(SIGINT, 1);
+    siginterrupt(SIGTSTP, 1);
+    // siginterrupt(SIGCHLD, 1);
+    
     cmds.capacity = 500;
     cmds.size = 0;
     cmds.data = (char**)malloc(sizeof(char*) * 500);
     while(1)
     {
+        fflush(stdout);
+        fflush(stdin);
+        childPid = -1;
+        background = 0;
         run();
     }
     return 0;
