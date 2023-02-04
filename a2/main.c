@@ -2,20 +2,20 @@
 
 pid_t childPid;
 vectorstring cmds;
+int scaninterrupt = 0;
 
 void run();
-void handlectrlc(int sig)
+void sig_handler(int signum)
 {
-    signal(SIGINT, handlectrlc);
+    scaninterrupt = 1;
     printf("\n");
     if(childPid > 0) 
     {
         kill(childPid, SIGINT);
         childPid = -1;
     }
-    else run();
+    fflush(stdout);
 }
-
 void run()
 {
     childPid = -1;
@@ -23,6 +23,11 @@ void run()
     printf("%s", getcwd((char*)NULL, (size_t)0));
     printf(PROMPT);
     scanf("%[^\n]s", s);
+    if(scaninterrupt) 
+    {
+        scaninterrupt = 0;
+        return;
+    }
     getchar();
     if(stringEmpty(s)) run();
     if(!strcmp(s, "exit")) exit(0);
@@ -33,7 +38,7 @@ void run()
     if(!strcmp(v.data[0], "cd"))
     {
         chdir(v.data[1]);
-        run();
+        return;
     }
     for(int i=0; i<v.size; i++)
     {
@@ -70,7 +75,8 @@ void run()
 
 int main()
 {
-    signal(SIGINT, handlectrlc);
+    signal(SIGINT, sig_handler);
+    siginterrupt(SIGINT, 1);
     cmds.capacity = 500;
     cmds.size = 0;
     cmds.data = (char**)malloc(sizeof(char*) * 500);
