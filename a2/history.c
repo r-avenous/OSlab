@@ -1,4 +1,4 @@
-#include "main.h"
+#include "history.h"
 
 void push_back(vectorstring *v, char *s)
 {
@@ -27,28 +27,15 @@ vectorstring split(char *s)
     return v;
 }
 
-int stringEmpty(char *s)
-{
-    for(int i = 0; s[i]; i++)
-    {
-        if(s[i] != ' ' && s[i] != '\t' && s[i] != '\n') return 0;
-    }
-    return 1;
-}
-
 pid_t childPid;
 vectorstring cmds;
 void run();
 void handlectrlc(int sig)
 {
-    signal(SIGINT, handlectrlc);
+    if(childPid > 0) kill(childPid, SIGINT);
+    childPid = -1;
     printf("\n");
-    if(childPid > 0) 
-    {
-        kill(childPid, SIGINT);
-        childPid = -1;
-    }
-    else run();
+    run();
 }
 
 void run()
@@ -59,8 +46,12 @@ void run()
     printf(PROMPT);
     scanf("%[^\n]s", s);
     getchar();
-    if(stringEmpty(s)) run();
-    if(!strcmp(s, "exit")) exit(0);
+
+
+
+    if(!strcmp(s, "exit")) 
+        exit(0);
+
     push_back(&cmds, s);
     vectorstring v = split(s);
     
@@ -94,11 +85,7 @@ void run()
             strcpy(args[i], v.data[i]);
         }
         args[v.size] = NULL;
-        if(execvp(args[0], args) == -1)
-        {
-            printf("Command not found\n");
-            exit(0);
-        }
+        execvp(args[0], args);
     }
     wait(NULL);
 }
