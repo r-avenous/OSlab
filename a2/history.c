@@ -1,5 +1,7 @@
 #include "history.h"
 
+const char *history_file = ".cmd_history";
+
 void push_back(vectorstring *v, char *s)
 {
     if(v->size == v->capacity)
@@ -47,7 +49,11 @@ void run()
     scanf("%[^\n]s", s);
     getchar();
 
-
+    // add entered commands to history file
+    FILE* fphist = fopen(history_file, "a");
+    fputs(s, fphist);
+    putc('\n', fphist);
+    fclose(fphist);
 
     if(!strcmp(s, "exit")) 
         exit(0);

@@ -1,3 +1,6 @@
+#ifndef __HISTORY_H__
+#define __HISTORY_H__
+
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -22,4 +25,6 @@ vectorstring split(char *s);
 void run();
 void handlectrlc(int sig);
 
-const char *history_file;
+// const char *history_file;
+
+#endif
