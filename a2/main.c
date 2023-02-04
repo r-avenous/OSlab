@@ -41,18 +41,19 @@ vectorstring split(char *s)
     return v;
 }
 
-pid_t pid;
+pid_t childPid;
 vectorstring cmds;
 void run();
 void handlectrlc(int sig)
 {
-    if(pid > 0) kill(pid, SIGINT);
+    if(childPid > 0) kill(childPid, SIGINT);
+    childPid = -1;
     printf("\n");
     run();
 }
 void run()
 {
-    pid = -1;
+    childPid = -1;
     char s[1000], inputfile[1000], outputfile[1000];
     printf("%s", getcwd((char*)NULL, (size_t)0));
     printf(PROMPT);
@@ -82,7 +83,8 @@ void run()
             i++;
         }
     }
-    if(pid = fork() == 0)
+    childPid = fork();
+    if(childPid == 0)
     {
         char* args[v.size + 1];
         for(int i = 0; i < v.size; i++)
