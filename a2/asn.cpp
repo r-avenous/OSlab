@@ -23,6 +23,7 @@ vector<string> cmds;
 void run();
 void handlectrlc(int sig)
 {
+    signal(SIGINT, handlectrlc);
     cout << '\n';
     run();
 }
@@ -65,7 +66,7 @@ void run()
         args[v.size()] = NULL;
         execvp(args[0], args);
     }
-    wait(NULL);
+    waitpid(pid, NULL, WNOHANG);
 }
 int main()
 {
