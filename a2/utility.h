@@ -1,5 +1,5 @@
-#ifndef __MAIN_H__
-#define __MAIN_H__
+#ifndef __UTILITY_H__
+#define __UTILITY_H__
 
 #include <stdio.h>
 #include <unistd.h>
@@ -20,6 +20,5 @@ typedef struct __vectorstring
 void push_back(vectorstring *v, char *s);
 vectorstring split(char *s);
 int stringEmpty(char *s);
-void run();
 
 #endif

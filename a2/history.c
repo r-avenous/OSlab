@@ -1,43 +1,17 @@
 #include "history.h"
 
 const char *history_file = ".cmd_history";
-
-void push_back(vectorstring *v, char *s)
-{
-    if(v->size == v->capacity)
-    {
-        v->capacity *= 2;
-        v->data = (char**)realloc(v->data, sizeof(char*) * v->capacity);
-    }
-    v->data[v->size++] = s;
-}
-
-vectorstring split(char *s)
-{
-    vectorstring v;
-    v.data = (char**)malloc(sizeof(char*) * 100);
-    v.size = 0;
-    v.capacity = 100;
-    char *p = strtok(s, " ");
-    while(p != NULL)
-    {
-        v.data[v.size] = (char*) malloc(1 + strlen(p));
-        strcpy(v.data[v.size], p);
-        v.size++;
-        p = strtok(NULL, " ");
-    }
-    return v;
-}
-
 pid_t childPid;
 vectorstring cmds;
-void run();
-void handlectrlc(int sig)
+
+int handleup(int count, int key)
 {
-    if(childPid > 0) kill(childPid, SIGINT);
-    childPid = -1;
-    printf("\n");
-    run();
+    printf("Hello up!\n");
+}
+
+int handledown(int count, int key)
+{
+    printf("Hello down!\n");
 }
 
 void run()
@@ -67,7 +41,7 @@ void run()
         chdir(v.data[1]);
         run();
     }
-    for(int i=0; i<v.size; i++)
+    for (int i=0; i<v.size; i++)
     {
         if(!strcmp(v.data[i],"<"))
         {
@@ -98,7 +72,9 @@ void run()
 
 int main()
 {
-    signal(SIGINT, handlectrlc);
+    // rl_add_defun("handleup", handleup, 38);
+    // rl_add_defun("handledown", handledown, 40);
+
     cmds.capacity = 500;
     cmds.size = 0;
     cmds.data = (char**)malloc(sizeof(char*) * 500);
