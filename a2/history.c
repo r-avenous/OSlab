@@ -75,6 +75,14 @@ int main()
     // rl_add_defun("handleup", handleup, 38);
     // rl_add_defun("handledown", handledown, 40);
 
+    initscr();
+    int ch;
+
+    if ((ch = getch()) == KEY_UP)
+        handleup(0, 0);
+    else if ((ch = getch()) == KEY_DOWN)
+        handledown(0, 0);
+    
     cmds.capacity = 500;
     cmds.size = 0;
     cmds.data = (char**)malloc(sizeof(char*) * 500);
