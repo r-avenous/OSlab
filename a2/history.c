@@ -3,6 +3,7 @@
 const char *history_file = ".cmd_history";
 pid_t childPid;
 vectorstring cmds;
+FILE* fphist;
 
 int handleup(int count, int key)
 {
@@ -16,20 +17,33 @@ int handledown(int count, int key)
     return 0;
 }
 
+void initialize_readline(){
+
+    // map handleup function to up arrow key
+    rl_bind_keyseq("\e[A", handleup);
+
+    // map handledown function to down arrow key
+    rl_bind_keyseq("\e[B", handledown);
+
+}
+
 void run()
 {
-    // rl_bind_keyseq("\\e[A", handleup);
-    // rl_bind_keyseq("\\e[B", handledown);
 
     childPid = -1;
-    char s[1000], inputfile[1000], outputfile[1000];
-    printf("%s", getcwd((char*)NULL, (size_t)0));
-    printf(PROMPT);
-    scanf("%[^\n]s", s);
-    getchar();
+    char *s, *inputfile, *outputfile;
+    
+    s = (char *)malloc(1000 * sizeof(char));
+    inputfile = (char *)malloc(1000 * sizeof(char));
+    outputfile = (char *)malloc(1000 * sizeof(char));
+
+    s = readline(PROMPT);
+    // getchar();
+
+    printf("Line : %s\n", rl_line_buffer);
 
     // add entered commands to history file
-    FILE* fphist = fopen(history_file, "a");
+    fphist = fopen(history_file, "a");
     fputs(s, fphist);
     putc('\n', fphist);
     fclose(fphist);
@@ -41,7 +55,7 @@ void run()
     vectorstring v = split(s);
     
     FILE* fpin;
-    if(!strcmp(v.data[0], "cd"))
+    if (!strcmp(v.data[0], "cd"))
     {
         chdir(v.data[1]);
         run();
@@ -76,23 +90,8 @@ void run()
 }
 
 int main()
-{
-    // rl_add_defun("handleup", handleup, 38);
-    // rl_add_defun("handledown", handledown, 40);
-
-    // initscr();
-    // int ch;
-
-    // if ((ch = getch()) == KEY_UP)
-    //     handleup(0, 0);
-    // else if ((ch = getch()) == KEY_DOWN)
-    //     handledown(0, 0);
-    
-    // rl_catch_signals = 0;
-    rl_command_func_t handleup, handledown;
-    rl_bind_keyseq("\\e[A", handleup);
-    rl_bind_keyseq("\\e[B", handledown);
-
+{ 
+    initialize_readline();
     cmds.capacity = 500;
     cmds.size = 0;
     cmds.data = (char**)malloc(sizeof(char*) * 500);
@@ -101,9 +100,5 @@ int main()
 
         run();
     }
-    // while(1)
-    // {
-    //     run();
-    // }
     return 0;
 }

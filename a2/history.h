@@ -2,6 +2,7 @@
 #define __HISTORY_H__
 #include "utility.h"
 #include <readline/readline.h>
+// #include <readline/history.h>
 
 // const char *history_file;
 
