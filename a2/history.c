@@ -6,16 +6,21 @@ vectorstring cmds;
 
 int handleup(int count, int key)
 {
-    printf("Hello up!\n");
+    printf("up");
+    return 0;
 }
 
 int handledown(int count, int key)
 {
-    printf("Hello down!\n");
+    printf("down");
+    return 0;
 }
 
 void run()
 {
+    // rl_bind_keyseq("\\e[A", handleup);
+    // rl_bind_keyseq("\\e[B", handledown);
+
     childPid = -1;
     char s[1000], inputfile[1000], outputfile[1000];
     printf("%s", getcwd((char*)NULL, (size_t)0));
@@ -75,20 +80,30 @@ int main()
     // rl_add_defun("handleup", handleup, 38);
     // rl_add_defun("handledown", handledown, 40);
 
-    initscr();
-    int ch;
+    // initscr();
+    // int ch;
 
-    if ((ch = getch()) == KEY_UP)
-        handleup(0, 0);
-    else if ((ch = getch()) == KEY_DOWN)
-        handledown(0, 0);
+    // if ((ch = getch()) == KEY_UP)
+    //     handleup(0, 0);
+    // else if ((ch = getch()) == KEY_DOWN)
+    //     handledown(0, 0);
     
+    // rl_catch_signals = 0;
+    rl_command_func_t handleup, handledown;
+    rl_bind_keyseq("\\e[A", handleup);
+    rl_bind_keyseq("\\e[B", handledown);
+
     cmds.capacity = 500;
     cmds.size = 0;
     cmds.data = (char**)malloc(sizeof(char*) * 500);
-    while(1)
-    {
+
+    while (1){
+
         run();
     }
+    // while(1)
+    // {
+    //     run();
+    // }
     return 0;
 }
