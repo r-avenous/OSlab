@@ -4,7 +4,6 @@ const char *history_file = ".cmd_history";
 pid_t childPid;
 vector<string> cmds;
 int scaninterrupt = 0, background = 0;
-int arrow_count;
 FILE* fphist;
 
 // read history from file
@@ -36,8 +35,10 @@ void read_history(){
 void write_history(){
 
     fphist = fopen(history_file, "w");
-    for (int i=0; i<cmd_history.size; i++)
+    for (int i=0; i<cmd_history.size; i++){
         fputs(cmd_history.history[i].c_str(), fphist);
+        putc('\n', fphist);
+    }
     fclose(fphist);
 }
 
@@ -75,21 +76,10 @@ int backward_history(int count, int key)
 {
     if (cmd_history.index >= 0){
 
-        // if (cmd_history.index == cmd_history.size - 1)
-        //     cout << "\33[2K\r";
-            
-        // cout.flush();
-        // cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
-        // cin.clear();
         string s;
-        // s = string(getcwd((char*)NULL, size_t(0))) + string(PROMPT) + cmd_history.history[cmd_history.index];
-        // cout << PROMPT;
         s = cmd_history.history[cmd_history.index];
         rl_replace_line(s.c_str(), 0);
         rl_redisplay();
-
-        // s = cmd_history.history[cmd_history.index];
-        // rl_line_buffer = strdup(s.c_str());
 
         if (cmd_history.index > 0)
             cmd_history.index--;
@@ -108,19 +98,10 @@ int forward_history(int count, int key)
 {
     if (cmd_history.index <= cmd_history.size - 1) {
 
-        // if (cmd_history.index == cmd_history.size - 1)
-        //     cout << "\33[2K\r";
-
-        // cout.flush();
         string s;
-        // s = string(getcwd((char*)NULL, size_t(0))) + string(PROMPT) + cmd_history.history[cmd_history.index];
-        // cout << PROMPT;
         s = cmd_history.history[cmd_history.index];
         rl_replace_line(s.c_str(), 0);
         rl_redisplay();
-
-        // s = cmd_history.history[cmd_history.index];
-        // rl_line_buffer = strdup(s.c_str());
 
         if (cmd_history.index < cmd_history.size - 1)
             cmd_history.index++;
@@ -165,12 +146,10 @@ void run()
     string s, inputfile, outputfile;
     char input[1000];
     cout.flush();
-    // cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
-
-    arrow_count = 0;
     cin.clear();
 
-    s = string(readline(PROMPT));
+    string prompt = string(getcwd((char*)NULL, size_t(0))) + string(PROMPT);
+    s = string(readline(prompt.c_str()));
 
     if(scaninterrupt) 
     {
@@ -178,11 +157,14 @@ void run()
         return;
     }
 
-    printf("Line : %s\n", rl_line_buffer);
     add_history((char*)s.c_str());
 
     if(stringEmpty(s)) return;
-    if(s == "exit") exit(0);
+    if (s == "exit") {
+
+        write_history();
+        exit(0);
+    }
     cmds.push_back(s);
     vector<string> v = split(s);
     
