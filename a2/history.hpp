@@ -1,6 +1,6 @@
 #ifndef __HISTORY_H__
 #define __HISTORY_H__
-#include "utility.h"
+#include "utility.hpp"
 #include <deque>
 #include <string>
 #include <readline/readline.h>
@@ -16,12 +16,13 @@ typedef struct _history_state{
     deque<string> history;
 } history_state;
 
+history_state cmd_history;
+
 void read_history();
 void write_history();
 void add_history(char* s);
 int backward_history(int count, int key);
 int forward_history(int count, int key);
 void initialize_readline();
-void run();
 
 #endif

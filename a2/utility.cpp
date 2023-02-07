@@ -17,6 +17,7 @@ vector<string> split(string s1)
     vector<string> v;
     stringstream ss(s);
     string item;
+    
     while(getline(ss, item, ' '))
     {
         v.push_back(item);
