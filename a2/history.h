@@ -16,7 +16,8 @@ typedef struct _history_state{
     deque<string> history;
 } history_state;
 
-int read_history();
+void read_history();
+void write_history();
 void add_history(char* s);
 int backward_history(int count, int key);
 int forward_history(int count, int key);

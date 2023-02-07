@@ -7,35 +7,53 @@ FILE* fphist;
 history_state cmd_history;
 
 // read history from file
-int read_history(){
+void read_history(){
 
     char *line = NULL;
     size_t len = 0;
     ssize_t read;
 
     fphist = fopen(history_file, "r");
-    if (fphist == NULL)
-        return 1;
  
     while ((read = getline(&line, &len, fphist)) != -1) 
         cmd_history.history.push_back(string(line));
 
-    
+    cmd_history.size = cmd_history.history.size();
+    cmd_history.index = cmd_history.size - 1;
+
     fclose(fphist);
     if (line)
         free(line);
-    return 0;
 }
 
+// write deque history to file
+void write_history(){
+
+    fphist = fopen(history_file, "w");
+    for (int i=0; i<cmd_history.size; i++)
+        fputs(cmd_history.history[i].c_str(), fphist);
+    fclose(fphist);
+}
+
+// function to add terminal command to deque and file
 void add_history(char* s)
 {
     cmd_history.history.push_back(string(s));
     cmd_history.size++;
+    cmd_history.index++;
+    fphist = fopen(history_file, "a");
+    fputs(s, fphist);
+    putc('\n', fphist);
+    fclose(fphist);
 
     if (cmd_history.size > SIZE)
     {
         cmd_history.history.pop_front();
         cmd_history.size--;
+        cmd_history.index--;
+
+        // remove first line from history file
+        write_history();
     }
 }
 
@@ -88,7 +106,7 @@ void tail(FILE* in, int n)
 int backward_history(int count, int key)
 {
     printf("up");
-    fseek(fphist, -1, SEEK_END);
+    // fseek(fphist, -1, SEEK_END);
     return 0;
 }
 
@@ -117,7 +135,6 @@ void initialize_readline(){
 
 void run()
 {
-
     childPid = -1;
     char *s, *inputfile, *outputfile;
     
@@ -128,12 +145,6 @@ void run()
     s = readline(PROMPT);
 
     printf("Line : %s\n", rl_line_buffer);
-
-    // add entered commands to history file
-    fphist = fopen(history_file, "a");
-    fputs(s, fphist);
-    putc('\n', fphist);
-    fclose(fphist);
 
     // add entered commands to history deque
     add_history(s);
