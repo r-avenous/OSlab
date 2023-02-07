@@ -1,10 +1,10 @@
-#include "history.h"
+#include "history.hpp"
 
 const char *history_file = ".cmd_history";
 pid_t childPid;
-vectorstring cmds;
+vector<string> cmds;
+int scaninterrupt = 0, background = 0;
 FILE* fphist;
-history_state cmd_history;
 
 // read history from file
 void read_history(){
@@ -15,8 +15,13 @@ void read_history(){
 
     fphist = fopen(history_file, "r");
  
-    while ((read = getline(&line, &len, fphist)) != -1) 
+    while ((read = getline(&line, &len, fphist)) != -1)
+    {
+        // added to remove newline character from getline input
+        if (line[read-1] == '\n')
+            line[read-1] = '\0';
         cmd_history.history.push_back(string(line));
+    }
 
     cmd_history.size = cmd_history.history.size();
     cmd_history.index = cmd_history.size - 1;
@@ -38,11 +43,15 @@ void write_history(){
 // function to add terminal command to deque and file
 void add_history(char* s)
 {
+    cout << "Inside add_history : " << string(s);
     cmd_history.history.push_back(string(s));
     cmd_history.size++;
     cmd_history.index++;
+
     fphist = fopen(history_file, "a");
-    fputs(s, fphist);
+    printf("B : %s\n", s);
+    printf("%d\n", fputs(s, fphist));
+    printf("A : %s\n", s);
     putc('\n', fphist);
     fclose(fphist);
 
@@ -57,45 +66,6 @@ void add_history(char* s)
     }
 }
 
-void tail(FILE* in, int n)
-{
-    int count = 0;
-  
-    unsigned long long pos;
-    char str[SIZE];
-  
-    if (fseek(in, 0, SEEK_END))
-        perror("fseek() failed");
-
-    else
-    {
-        pos = ftell(in);
-  
-        // search for '\n' characters
-        while (pos)
-        {
-            // Move 'pos' away from end of file.
-            if (!fseek(in, --pos, SEEK_SET))
-            {
-                if (fgetc(in) == '\n')
-  
-                    // stop reading when n newlines
-                    // is found
-                    if (count++ == n)
-                        break;
-            }
-            else
-                perror("fseek() failed");
-        }
-
-        // print last n lines
-        printf("Printing last %d lines -\n", n);
-        while (fgets(str, sizeof(str), in))
-            printf("%s", str);
-    }
-    printf("\n\n");
-}
-
 /* 
     Functions :
 
@@ -105,8 +75,9 @@ void tail(FILE* in, int n)
 */
 int backward_history(int count, int key)
 {
-    printf("up");
-    // fseek(fphist, -1, SEEK_END);
+    if (cmd_history.index > 0)
+        cout << '\r' << cmd_history.history[--cmd_history.index];
+
     return 0;
 }
 
@@ -119,7 +90,9 @@ int backward_history(int count, int key)
 */
 int forward_history(int count, int key)
 {
-    printf("down");
+    if (cmd_history.index < cmd_history.size - 1)  
+        cout << '\r' << cmd_history.history[++cmd_history.index];
+
     return 0;
 }
 
@@ -133,74 +106,185 @@ void initialize_readline(){
 
 }
 
+void sigint_handler(int signum)
+{
+    scaninterrupt = 1;
+    cout << endl;
+    if(childPid > 0) 
+    {
+        kill(childPid, SIGKILL);
+        childPid = -1;
+    }
+}
+void sigtstp_handler(int signum)
+{
+    scaninterrupt = 1;
+    cout << endl;
+}
+void sigchld_handler(int signum)
+{
+    if(!background) return;
+    scaninterrupt = 1;
+    cout.flush();
+}
+
 void run()
 {
-    childPid = -1;
-    char *s, *inputfile, *outputfile;
-    
-    s = (char *)malloc(SIZE * sizeof(char));
-    inputfile = (char *)malloc(SIZE * sizeof(char));
-    outputfile = (char *)malloc(SIZE * sizeof(char));
+    string s, inputfile, outputfile;
+    char input[1000];
+    cout.flush();
+    cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
+    cin.clear();
 
-    s = readline(PROMPT);
+    s = string(readline(""));
+
+    if(scaninterrupt) 
+    {
+        scaninterrupt = 0;
+        return;
+    }
 
     printf("Line : %s\n", rl_line_buffer);
+    add_history((char*)s.c_str());
 
-    // add entered commands to history deque
-    add_history(s);
-
-    if(!strcmp(s, "exit")) 
-        exit(0);
-
-    push_back(&cmds, s);
-    vectorstring v = split(s);
+    if(stringEmpty(s)) return;
+    if(s == "exit") exit(0);
+    cmds.push_back(s);
+    vector<string> v = split(s);
     
     FILE* fpin;
-    if (!strcmp(v.data[0], "cd"))
+    if(v[0] == "cd")
     {
-        chdir(v.data[1]);
-        run();
+        chdir(v[1].c_str());
+        return;
     }
-    for (int i=0; i<v.size; i++)
+    for(int i=0; i<v.size(); i++)
     {
-        if(!strcmp(v.data[i],"<"))
+        if(v[i] == "<")
         {
-            strcpy(inputfile, v.data[i+1]);
-            fpin = fopen(inputfile, "r");
+            // strcpy(inputfile, v[i+1]);
+            // fpin = fopen(inputfile, "r");
             i++;
         }
-        else if(!strcmp(v.data[i], ">"))
+        else if(v[i] == ">")
         {
-            strcpy(outputfile, v.data[i+1]);
+            // strcpy(outputfile, v.data[i+1]);
             i++;
+        }
+        else if(v[i] == "&")
+        {
+            background = 1;
         }
     }
     childPid = fork();
     if(childPid == 0)
     {
-        char* args[v.size + 1];
-        for(int i = 0; i < v.size; i++)
+        char* args[v.size() + 1];
+        for(int i = 0; i < v.size(); i++)
         {
-            args[i] = (char*)malloc(1+strlen(v.data[i]));
-            strcpy(args[i], v.data[i]);
+            args[i] = (char*)v[i].c_str();
         }
-        args[v.size] = NULL;
-        execvp(args[0], args);
+        args[v.size()] = NULL;
+        if(execvp(args[0], args) < 0)
+        {
+            cout << "Command not found" << endl;
+            exit(0);
+        }
     }
-    wait(NULL);
+    if(!background) waitpid(childPid, NULL, 0);
+    else waitpid(childPid, NULL, WNOHANG);
 }
 
 int main()
-{ 
+{
     initialize_readline();
     read_history();
-    cmds.capacity = 500;
-    cmds.size = 0;
-    cmds.data = (char**)malloc(sizeof(char*) * 500);
 
-    while (1){
-
+    signal(SIGINT, sigint_handler);
+    signal(SIGTSTP, sigtstp_handler);
+    signal(SIGCHLD, sigchld_handler);
+    siginterrupt(SIGINT, 1);
+    siginterrupt(SIGTSTP, 1);
+    // siginterrupt(SIGCHLD, 1);
+    
+    while(1)
+    {
+        childPid = -1;
+        background = 0;
         run();
     }
     return 0;
 }
+
+// void run()
+// {
+//     childPid = -1;
+//     char *s, *inputfile, *outputfile;
+    
+//     s = (char *)malloc(SIZE * sizeof(char));
+//     inputfile = (char *)malloc(SIZE * sizeof(char));
+//     outputfile = (char *)malloc(SIZE * sizeof(char));
+
+//     s = readline(PROMPT);
+
+//     printf("Line : %s\n", rl_line_buffer);
+
+//     // add entered commands to history deque
+//     add_history(s);
+
+//     if(!strcmp(s, "exit")) 
+//         exit(0);
+
+//     push_back(&cmds, s);
+//     vectorstring v = split(s);
+    
+//     FILE* fpin;
+//     if (!strcmp(v.data[0], "cd"))
+//     {
+//         chdir(v.data[1]);
+//         run();
+//     }
+//     for (int i=0; i<v.size; i++)
+//     {
+//         if(!strcmp(v.data[i],"<"))
+//         {
+//             strcpy(inputfile, v.data[i+1]);
+//             fpin = fopen(inputfile, "r");
+//             i++;
+//         }
+//         else if(!strcmp(v.data[i], ">"))
+//         {
+//             strcpy(outputfile, v.data[i+1]);
+//             i++;
+//         }
+//     }
+//     childPid = fork();
+//     if(childPid == 0)
+//     {
+//         char* args[v.size + 1];
+//         for(int i = 0; i < v.size; i++)
+//         {
+//             args[i] = (char*)malloc(1+strlen(v.data[i]));
+//             strcpy(args[i], v.data[i]);
+//         }
+//         args[v.size] = NULL;
+//         execvp(args[0], args);
+//     }
+//     wait(NULL);
+// }
+
+// int main()
+// { 
+//     initialize_readline();
+//     read_history();
+//     cmds.capacity = 500;
+//     cmds.size = 0;
+//     cmds.data = (char**)malloc(sizeof(char*) * 500);
+
+//     while (1){
+
+//         run();
+//     }
+//     return 0;
+// }
+

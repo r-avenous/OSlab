@@ -9,7 +9,6 @@ void push_back(vectorstring *v, char *s)
     }
     v->data[v->size++] = s;
 }
-
 vectorstring split(char *s1)
 {
     vectorstring v;
