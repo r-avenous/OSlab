@@ -12,7 +12,7 @@ name=${args[3]}
 
 echo "$date,$category,$amount,$name">>main.csv
 
-# tail -n +2 main.csv | sort -n -t ',' -k1.7 -k1.4,1.5 -k1.1,1.2 | sed '1 i\date,category,amount,name' > main.csv
+tail -n +2 main.csv | sort -n -t ',' -k1.7 -k1.4,1.5 -k1.1,1.2 | sed '1 i\date,category,amount,name' | tee main.csv > /dev/null
 
 while getopts "c:n:s:h" opt
 do

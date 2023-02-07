@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Feb  5 01:47:55 2023
+# Make data base, printed on Tue Feb  7 05:36:26 2023
 
 # Variables
 
@@ -45,7 +45,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:48071
+JOURNAL_STREAM = 8:53432
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -59,7 +59,7 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/home/shreyas/.local/share/flatpak/exports/sha
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 4209
+MANAGERPID = 23114
 # environment
 VSCODE_CWD = /home/shreyas
 # environment
@@ -73,7 +73,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/4414,unix/shreyas:/tmp/.ICE-unix/4414
+SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/23321,unix/shreyas:/tmp/.ICE-unix/23321
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -81,7 +81,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 5ea1be3651c34a088179b711d3d0a5c8
+INVOCATION_ID = 876e26a3b2fa43dbb3db3057dad7aed0
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -89,7 +89,7 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 581672
+GIO_LAUNCHED_DESKTOP_FILE_PID = 32216
 # automatic
 %F = $(notdir $%)
 # environment
@@ -99,7 +99,7 @@ PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 4365
+SSH_AGENT_PID = 23272
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -189,7 +189,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 581672
+VSCODE_PID = 32216
 # variable set hash-table stats:
 # Load=89/1024=9%, Rehash=0, Collisions=7/111=6%
 
@@ -199,9 +199,9 @@ VSCODE_PID = 581672
 
 # Directories
 
-# . (device 66311, inode 4612299): 7 files, no impossibilities.
+# . (device 66311, inode 4612299): 8 files, no impossibilities.
 
-# 7 files, no impossibilities in 1 directories.
+# 8 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -251,12 +251,12 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 15 / storage = 120 B / avg = 8 B
-# current buf: size = 8162 B / used = 120 B / count = 15 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 16 / storage = 133 B / avg = 8 B
+# current buf: size = 8162 B / used = 133 B / count = 16 / avg = 8 B
 
-# strcache performance: lookups = 18 / hit rate = 16%
+# strcache performance: lookups = 19 / hit rate = 15%
 # hash-table stats:
-# Load=15/8192=0%, Rehash=0, Collisions=1/18=6%
-# Finished Make data base on Sun Feb  5 01:47:55 2023
+# Load=16/8192=0%, Rehash=0, Collisions=1/19=5%
+# Finished Make data base on Tue Feb  7 05:36:26 2023
 
  
