@@ -35,23 +35,22 @@ void read_history(){
 void write_history(){
 
     fphist = fopen(history_file, "w");
-    for (int i=0; i<cmd_history.size; i++)
+    for (int i=0; i<cmd_history.size; i++){
         fputs(cmd_history.history[i].c_str(), fphist);
+        putc('\n', fphist);
+    }
     fclose(fphist);
 }
 
 // function to add terminal command to deque and file
 void add_history(char* s)
 {
-    // cout << "Inside add_history : " << string(s);
     cmd_history.history.push_back(string(s));
     cmd_history.size++;
     cmd_history.index++;
 
     fphist = fopen(history_file, "a");
-    // printf("B : %s\n", s);
     printf("%d\n", fputs(s, fphist));
-    // printf("A : %s\n", s);
     putc('\n', fphist);
     fclose(fphist);
 
@@ -77,21 +76,14 @@ int backward_history(int count, int key)
 {
     if (cmd_history.index >= 0){
 
-        if (cmd_history.index == cmd_history.size - 1){
-            cout << cmd_history.history[cmd_history.index--];
-        }
+        string s;
+        s = cmd_history.history[cmd_history.index];
+        rl_replace_line(s.c_str(), 0);
+        rl_redisplay();
 
-        else{
-
-            cout << "\33[2K\r";
-            cout.flush();
-            cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
-            cin.clear();
-
-            cout << cmd_history.history[cmd_history.index--];
-        }
+        if (cmd_history.index > 0)
+            cmd_history.index--;
     }
-
     return 0;
 }
 
@@ -104,21 +96,15 @@ int backward_history(int count, int key)
 */
 int forward_history(int count, int key)
 {
-
     if (cmd_history.index <= cmd_history.size - 1) {
 
-        if (cmd_history.index == 0)
-            cout << cmd_history.history[cmd_history.index++];
+        string s;
+        s = cmd_history.history[cmd_history.index];
+        rl_replace_line(s.c_str(), 0);
+        rl_redisplay();
 
-        else{
-
-            cout << "\33[2K\r";
-            cout.flush();
-            cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
-            cin.clear();
-
-            cout << cmd_history.history[cmd_history.index++];
-        }
+        if (cmd_history.index < cmd_history.size - 1)
+            cmd_history.index++;
     }
 
     return 0;
@@ -160,10 +146,10 @@ void run()
     string s, inputfile, outputfile;
     char input[1000];
     cout.flush();
-    cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
     cin.clear();
 
-    s = string(readline(""));
+    string prompt = string(getcwd((char*)NULL, size_t(0))) + string(PROMPT);
+    s = string(readline(prompt.c_str()));
 
     if(scaninterrupt) 
     {
@@ -171,11 +157,14 @@ void run()
         return;
     }
 
-    printf("Line : %s\n", rl_line_buffer);
     add_history((char*)s.c_str());
 
     if(stringEmpty(s)) return;
-    if(s == "exit") exit(0);
+    if (s == "exit") {
+
+        write_history();
+        exit(0);
+    }
     cmds.push_back(s);
     vector<string> v = split(s);
     
