@@ -1,4 +1,5 @@
 #include "utility.hpp"
+#include "signal.hpp"
 
 pid_t childPid;
 vector<string> cmds;
