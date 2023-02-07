@@ -1,11 +1,12 @@
-#ifndef __MAIN_H__
-#define __MAIN_H__
+#ifndef __UTILITY_H__
+#define __UTILITY_H__
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <sstream>
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/wait.h>
-#include <signal.h>
 #include <stdlib.h>
 
 using namespace std;

@@ -1,9 +1,7 @@
 #ifndef __HISTORY_H__
 #define __HISTORY_H__
 #include "utility.hpp"
-#include <iostream>
 #include <deque>
-#include <string>
 #include <readline/readline.h>
 #define SIZE 1000
 
