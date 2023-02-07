@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Feb  7 10:31:22 2023
+# Make data base, printed on Wed Feb  8 02:09:56 2023
 
 # Variables
 
@@ -183,6 +183,7 @@ CHROME_DESKTOP = code-url-handler.desktop
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
+ 
 GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
@@ -199,9 +200,9 @@ VSCODE_PID = 32216
 
 # Directories
 
-# . (device 66311, inode 4612299): 7 files, no impossibilities.
+# . (device 66311, inode 4612299): 8 files, no impossibilities.
 
-# 7 files, no impossibilities in 1 directories.
+# 8 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -251,12 +252,12 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 15 / storage = 120 B / avg = 8 B
-# current buf: size = 8162 B / used = 120 B / count = 15 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 16 / storage = 133 B / avg = 8 B
+# current buf: size = 8162 B / used = 133 B / count = 16 / avg = 8 B
 
-# strcache performance: lookups = 18 / hit rate = 16%
+# strcache performance: lookups = 19 / hit rate = 15%
 # hash-table stats:
-# Load=15/8192=0%, Rehash=0, Collisions=1/18=6%
-# Finished Make data base on Tue Feb  7 10:31:22 2023
+# Load=16/8192=0%, Rehash=0, Collisions=1/19=5%
+# Finished Make data base on Wed Feb  8 02:09:56 2023
 
  

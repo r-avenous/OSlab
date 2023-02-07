@@ -1,9 +1,7 @@
 #include "history.hpp"
 
 const char *history_file = ".cmd_history";
-pid_t childPid;
 vector<string> cmds;
-int scaninterrupt = 0, background = 0;
 FILE* fphist;
 
 // read history from file
@@ -118,27 +116,6 @@ void initialize_readline(){
     // map forward_history function to down arrow key
     rl_bind_keyseq("\e[B", forward_history);
 
-}
-void sigint_handler(int signum)
-{
-    scaninterrupt = 1;
-    cout << endl;
-    if(childPid > 0) 
-    {
-        kill(childPid, SIGKILL);
-        childPid = -1;
-    }
-}
-void sigtstp_handler(int signum)
-{
-    scaninterrupt = 1;
-    cout << endl;
-}
-void sigchld_handler(int signum)
-{
-    if(!background) return;
-    scaninterrupt = 1;
-    cout.flush();
 }
 
 void run()

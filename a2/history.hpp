@@ -1,15 +1,12 @@
 #ifndef __HISTORY_H__
 #define __HISTORY_H__
-#include "utility.hpp"
-#include <iostream>
+
+#include "signal.hpp"
 #include <deque>
-#include <string>
 #include <readline/readline.h>
 #define SIZE 1000
 
 using namespace std;
-
-// const char *history_file;
 
 typedef struct _history_state{
     int index;

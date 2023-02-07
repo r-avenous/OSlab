@@ -1,46 +1,29 @@
-#include "utility.hpp"
+#include "delep.hpp"
 #include "signal.hpp"
 
 pid_t childPid;
 vector<string> cmds;
 int scaninterrupt = 0, background = 0;
+FILE* fphist;
 
-void sigint_handler(int signum)
-{
-    scaninterrupt = 1;
-    cout << endl;
-    if(childPid > 0) 
-    {
-        kill(childPid, SIGKILL);
-        childPid = -1;
-    }
-}
-void sigtstp_handler(int signum)
-{
-    scaninterrupt = 1;
-    cout << endl;
-}
-void sigchld_handler(int signum)
-{
-    if(!background) return;
-    scaninterrupt = 1;
-    cout.flush();
-}
 void run()
 {
     string s, inputfile, outputfile;
     char input[1000];
     cout.flush();
-    cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
     cin.clear();
-    getline(cin, s);
+
     if(scaninterrupt) 
     {
         scaninterrupt = 0;
         return;
     }
+
     if(stringEmpty(s)) return;
-    if(s == "exit") exit(0);
+    if (s == "exit") {
+
+        exit(0);
+    }
     cmds.push_back(s);
     vector<string> v = split(s);
     
@@ -89,6 +72,7 @@ void run()
 
 int main()
 {
+
     signal(SIGINT, sigint_handler);
     signal(SIGTSTP, sigtstp_handler);
     signal(SIGCHLD, sigchld_handler);
@@ -104,3 +88,4 @@ int main()
     }
     return 0;
 }
+
