@@ -77,21 +77,15 @@ int backward_history(int count, int key)
 {
     if (cmd_history.index >= 0){
 
-        if (cmd_history.index == cmd_history.size - 1){
-            cout << cmd_history.history[cmd_history.index--];
-        }
+        cout << "\33[2K\r";
+        cout.flush();
+        cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
+        cin.clear();
+        cout << cmd_history.history[cmd_history.index];
 
-        else{
-
-            cout << "\33[2K\r";
-            cout.flush();
-            cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
-            cin.clear();
-
-            cout << cmd_history.history[cmd_history.index--];
-        }
+        if (cmd_history.index > 0)
+            cmd_history.index--;
     }
-
     return 0;
 }
 
@@ -104,21 +98,16 @@ int backward_history(int count, int key)
 */
 int forward_history(int count, int key)
 {
-
     if (cmd_history.index <= cmd_history.size - 1) {
 
-        if (cmd_history.index == 0)
-            cout << cmd_history.history[cmd_history.index++];
+        cout << "\33[2K\r";
+        cout.flush();
+        cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
+        cin.clear();
+        cout << cmd_history.history[cmd_history.index];
 
-        else{
-
-            cout << "\33[2K\r";
-            cout.flush();
-            cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
-            cin.clear();
-
-            cout << cmd_history.history[cmd_history.index++];
-        }
+        if (cmd_history.index < cmd_history.size - 1)
+            cmd_history.index++;
     }
 
     return 0;
