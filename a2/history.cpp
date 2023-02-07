@@ -43,15 +43,15 @@ void write_history(){
 // function to add terminal command to deque and file
 void add_history(char* s)
 {
-    cout << "Inside add_history : " << string(s);
+    // cout << "Inside add_history : " << string(s);
     cmd_history.history.push_back(string(s));
     cmd_history.size++;
     cmd_history.index++;
 
     fphist = fopen(history_file, "a");
-    printf("B : %s\n", s);
+    // printf("B : %s\n", s);
     printf("%d\n", fputs(s, fphist));
-    printf("A : %s\n", s);
+    // printf("A : %s\n", s);
     putc('\n', fphist);
     fclose(fphist);
 
@@ -75,8 +75,22 @@ void add_history(char* s)
 */
 int backward_history(int count, int key)
 {
-    if (cmd_history.index > 0)
-        cout << '\r' << cmd_history.history[--cmd_history.index];
+    if (cmd_history.index >= 0){
+
+        if (cmd_history.index == cmd_history.size - 1){
+            cout << cmd_history.history[cmd_history.index--];
+        }
+
+        else{
+
+            cout << "\33[2K\r";
+            cout.flush();
+            cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
+            cin.clear();
+
+            cout << cmd_history.history[cmd_history.index--];
+        }
+    }
 
     return 0;
 }
@@ -90,8 +104,22 @@ int backward_history(int count, int key)
 */
 int forward_history(int count, int key)
 {
-    if (cmd_history.index < cmd_history.size - 1)  
-        cout << '\r' << cmd_history.history[++cmd_history.index];
+
+    if (cmd_history.index <= cmd_history.size - 1) {
+
+        if (cmd_history.index == 0)
+            cout << cmd_history.history[cmd_history.index++];
+
+        else{
+
+            cout << "\33[2K\r";
+            cout.flush();
+            cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
+            cin.clear();
+
+            cout << cmd_history.history[cmd_history.index++];
+        }
+    }
 
     return 0;
 }
@@ -105,7 +133,6 @@ void initialize_readline(){
     rl_bind_keyseq("\e[B", forward_history);
 
 }
-
 void sigint_handler(int signum)
 {
     scaninterrupt = 1;
