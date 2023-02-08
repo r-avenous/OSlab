@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Feb  8 02:09:56 2023
+# Make data base, printed on Wed Feb  8 17:33:06 2023
 
 # Variables
 
@@ -45,7 +43,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:53432
+JOURNAL_STREAM = 8:49607
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile
@@ -59,7 +57,7 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/home/shreyas/.local/share/flatpak/exports/sha
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 23114
+MANAGERPID = 3912
 # environment
 VSCODE_CWD = /home/shreyas
 # environment
@@ -73,7 +71,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/23321,unix/shreyas:/tmp/.ICE-unix/23321
+SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/4110,unix/shreyas:/tmp/.ICE-unix/4110
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -81,7 +79,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 876e26a3b2fa43dbb3db3057dad7aed0
+INVOCATION_ID = 2b6d6ec0c87b433fa0b9f70effaa4938
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -89,7 +87,7 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 32216
+GIO_LAUNCHED_DESKTOP_FILE_PID = 10581
 # automatic
 %F = $(notdir $%)
 # environment
@@ -99,7 +97,7 @@ PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 23272
+SSH_AGENT_PID = 4068
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -113,7 +111,7 @@ VSCODE_CODE_CACHE_PATH = /home/shreyas/.config/Code/CachedData/e8a3071ea4344d9d4
 # environment
 LOGNAME = shreyas
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
@@ -183,14 +181,13 @@ CHROME_DESKTOP = code-url-handler.desktop
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
- 
 GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # environment
 LANG = C
 # environment
-VSCODE_PID = 32216
+VSCODE_PID = 10581
 # variable set hash-table stats:
 # Load=89/1024=9%, Rehash=0, Collisions=7/111=6%
 
@@ -258,6 +255,8 @@ GNUmakefile:
 # strcache performance: lookups = 19 / hit rate = 15%
 # hash-table stats:
 # Load=16/8192=0%, Rehash=0, Collisions=1/19=5%
-# Finished Make data base on Wed Feb  8 02:09:56 2023
+# Finished Make data base on Wed Feb  8 17:33:06 2023
 
  
+make: *** No rule to make target 'all'.  Stop.
+
