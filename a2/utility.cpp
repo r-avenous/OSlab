@@ -316,9 +316,11 @@ void initialize_readline(){
 }
 
 // function to count number of children of a process
-int count_children(const pid_t pid) {
+int count_children(const pid_t pid) 
+{
   DIR* proc_dir;
   int num_children = 0;
+
   if ((proc_dir = opendir("/proc"))) 
   {
     for (struct dirent* proc_id; (proc_id = readdir(proc_dir))!=NULL;) {
@@ -342,7 +344,7 @@ int count_children(const pid_t pid) {
   return -1;
 }
 
-// function to get the time taken by a process
+// function to find time taken by a process
 float time_taken(const pid_t pid)
 {
   ifstream ifs(string("/proc/" + to_string(pid) + "/stat").c_str());
@@ -350,6 +352,7 @@ float time_taken(const pid_t pid)
   for(int i=0; i<22; i++){
     ifs >> process_start;
   }
+
   ifs.close();
   ifs.open(string("/proc/uptime").c_str());
   ifs >> up_time;
@@ -358,7 +361,7 @@ float time_taken(const pid_t pid)
   return time_taken;
 }
 
-// function to get the cpu usage of a process
+// function to find cpu usage of a process
 float cpu_usage(const pid_t pid)
 {
   ifstream ifs(string("/proc/" + to_string(pid) + "/stat").c_str());
@@ -375,59 +378,143 @@ float cpu_usage(const pid_t pid)
       ifs >> temp;
     }
   }
+  
   float process_usage = stof(u_time)/HZ + stof(s_time)/HZ;
   return ((process_usage * 100)/ process_elapsed);
 }
 
-// function to get the average cpu usage of a process and its children
-int find_avg_cpu_of_child(const pid_t pid, int depth){
-  
+// function to find average cpu usage of children
+int find_avg_cpu_of_child(const pid_t pid, int depth)
+{
   if(depth == MAX_DEPTH){
     return 0;
   }
-  
+
   float first_gen = 0, num_children = 0;
   DIR* proc_dir;
   map<int,int> child_count;
 
-  if ((proc_dir = opendir("/proc")))
+  if((proc_dir = opendir("/proc")))
   {
     struct dirent* proc_id;
      for (proc_id; (proc_id = readdir(proc_dir));)
      {
-      if(is_number(proc_id->d_name))
+      if (is_number(proc_id->d_name))
       {
         ifstream ifs(string("/proc/" + string(proc_id->d_name) + "/stat").c_str());
         string parent, status;
-        for(int i=0; i<4; i++)
-        {
+        for(int i=0; i<4; i++){
           if(i==2){
             ifs >> status;
           }
           ifs >> parent;
         }
-        if(parent == to_string(pid)){
-          
-          first_gen = cpu_usage(stoi(proc_id->d_name)) + find_avg_cpu_of_child(stoi(proc_id->d_name), depth+1)/(count_children(stoi(proc_id->d_name))+1);
+        if(parent == to_string(pid))
+        {
+          first_gen = cpu_usage(stoi(proc_id->d_name));
+          float avg = find_avg_cpu_of_child(stoi(proc_id->d_name), depth+1);
+          if(avg != 0){
+            first_gen += avg/ count_children(stoi(proc_id->d_name));
+          }
           num_children++;
         }
       }
     }
   }
-  
   closedir(proc_dir);
   return first_gen;
 }
 
-// function to calculate heuristic value for guessing if a process is malware
-float heuristic(const pid_t pid)
-{
+// function to find heuristic value of a process
+float heuristic(const pid_t pid){
   float heuristic = 0;
-
-  heuristic = count_children(pid);
-  heuristic += cpu_usage(pid);
-  heuristic += find_avg_cpu_of_child(pid,0);
+  heuristic = count_children(pid) + cpu_usage(pid) + find_avg_cpu_of_child(pid,0);
   return heuristic;
+}
+
+// function to find parent of a process
+pid_t get_parent(const pid_t pid)
+{
+  ifstream ifs(string("/proc/" + to_string(pid) + "/stat").c_str());
+  string parent;
+  for(int i=0; i < 4; i++)
+  {
+    ifs >> parent;
+  }
+  ifs.close();
+  return stoi(parent);
+}
+
+// Function to suggest the malware process
+pid_t suggestMalware(pid_t pid) {
+
+  // Check the time spent and number of children of each process
+  if (get_parent(pid) == 1){
+    return pid;
+  }
+
+  pid_t parent_pid = get_parent(pid);
+  float par_h = heuristic(parent_pid), h = heuristic(pid);
+  cout << "PARENT: "<< parent_pid << " Heuristic: " << par_h << "\n" << "CHILD: " << pid << " Heuristic: " << h <<"\n\n";
+  if(par_h > h){
+    suggestMalware(parent_pid);
+  }
+  else{
+    return pid;
+  }
+}
+
+// Function to traverse the process tree
+void traverse(pid_t pid, int gen){
+  if(pid == 1){
+    cout << "No more parent process last process printed was init process\n";
+    return;
+  }
+  pid_t parent_pid = get_parent(pid);
+  cout << "Process ID: " << parent_pid << " Parent Generation " << gen <<"\n";
+  traverse(parent_pid, gen+1);
+}
+
+// function to squash bug
+void sb(int argc, char *argv[]) {
+  
+  if(fork() == 0)
+  {
+    pid_t pid;
+
+    // Check if user provided a process ID
+    if (argc < 2) {
+      cout << "Please provide a process ID." << endl;
+    }
+
+    // Check if user used the "-suggest" flag
+    if (argc == 3 && string(argv[2]) == "-suggest") 
+    {
+      // Get the process ID from the user
+      pid = atoi(argv[1]);
+      cout <<"Children: "  << count_children(pid) << "\n";
+      cout << "cpu_usage: " << cpu_usage(pid) <<"\n";
+
+      // Use the suggestMalware function to suggest the malware process
+      cout << "Current Process ID: " << pid << "\n";
+      traverse(pid, 1);
+      pid_t malware = suggestMalware(pid);
+      cout << "The expected malware Process ID is: " << malware << "\n";
+      exit(0);
+    } 
+    else {
+      // Get the process ID from the user
+      pid = atoi(argv[1]);
+      cout << "Children: " << count_children(pid) << "\n";
+
+      // Use the traverse function to display the parent, grandparent, and so on of the given process
+      cout << "Current Process ID: " << pid << "\n";
+      traverse(pid,1);
+      exit(0);
+    }
+    exit(0);
+  }
+  wait(NULL);
 }
 
 // function to get pid of the process that has the lock file open
@@ -514,95 +601,6 @@ void kill_processes(vector<int> pids){
         kill(pids[i], SIGKILL);
         cout << "Killed process " << pids[i] << endl;
     }
-}
-
-// function to get the parent of a process
-pid_t get_parent(const pid_t pid)
-{
-  ifstream ifs(string("/proc/" + to_string(pid) + "/stat").c_str());
-  string parent;
-  for(int i=0; i<4; i++)
-  {
-    ifs >> parent;
-  }
-  
-  ifs.close();
-  return stoi(parent);
-}
-
-// Function to suggest the malware process
-pid_t suggestMalware(pid_t pid) {
-
-  // Check the time spent and number of children of each process
-  if (get_parent(pid) == 1)
-    return pid;
-  
-  pid_t parent_pid = get_parent(pid);
-  float par_h = heuristic(parent_pid), h = heuristic(pid);
-  cout << "PARENT: "<< parent_pid << " Heuristic: " << par_h << "\n" << "CHILD: " << pid << " Heuristic: " << h <<"\n\n";
-
-  int flag = 0;
-  if(par_h > h)
-    suggestMalware(parent_pid);
-  
-  else
-  {
-    cout << "Parent: " << parent_pid <<"\n";
-    flag = 1;
-  }
-
-  if (flag == 1)
-    return pid;
-}
-
-// Function to traverse the process tree
-void traverse(pid_t pid, int gen)
-{
-  if(pid == 1){
-    cout << "No more parent process last process printed was init process\n";
-    return;
-  }
-  pid_t parent_pid = get_parent(pid);
-  cout << "Process ID: " << parent_pid << " Parent Generation " << gen <<"\n";
-  traverse(parent_pid, gen+1);
-}
-
-// function to squash bug
-void sb(int argc, char *argv[]) 
-{
-  pid_t pid;
-
-  // Check if user provided a process ID
-  if (argc < 2) 
-  {
-    cout << "Please provide a process ID." << endl;
-  }
-
-  // Check if user used the "-suggest" flag
-  if (argc == 3 && string(argv[2]) == "-suggest") 
-  {
-    // Get the process ID from the user
-    pid = atoi(argv[1]);
-    cout <<"Children: "  << count_children(pid) << "\n";
-    cout << "cpu_usage: " << cpu_usage(pid) <<"\n";
-
-    // Use the suggestMalware function to suggest the malware process
-    cout << "Current Process ID: " << pid << "\n";
-    traverse(pid, 1);
-    pid_t malware = suggestMalware(pid);
-    cout << "The expected malware Process ID is: " << malware << "\n";
-  } 
-
-  else {
-
-    // Get the process ID from the user
-    pid = atoi(argv[1]);
-    cout << "Children: " << count_children(pid) << "\n";
-
-    // Use the traverse function to display the parent, grandparent, and so on of the given process
-    cout << "Current Process ID: " << pid << "\n";
-    traverse(pid,1);
-  }
 }
 
 // function to delete without prejudice
