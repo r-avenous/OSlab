@@ -110,7 +110,11 @@ int find_avg_cpu_of_child(const pid_t pid, int depth){
         }
         if(parent == to_string(pid)){
           //cout << "END\n";
-          first_gen = cpu_usage(stoi(proc_id->d_name)) + find_avg_cpu_of_child(stoi(proc_id->d_name), depth+1)/(count_children(stoi(proc_id->d_name))+1);
+          first_gen = cpu_usage(stoi(proc_id->d_name));
+          float avg = find_avg_cpu_of_child(stoi(proc_id->d_name), depth+1);
+          if(avg != 0){
+            first_gen += avg/ count_children(stoi(proc_id->d_name));
+          }
           num_children++;
         }
       }
