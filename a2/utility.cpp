@@ -108,14 +108,6 @@ vector<pair<string,int>> split(string s1, int* background)
         wildcard = 0;
     }
 
-    // stringstream ss(s);
-    // string item;
-    // while(getline(ss, item, ' '))
-    // {
-    //     if(item[0]!=' '){
-    //         v.push_back(item);
-    //     }
-    // }
     return v;
 }
 
@@ -136,11 +128,7 @@ vector<pair<string,int>> wildcard_split(string s)
     string str="";
     int wildcard = 0;
     p = make_pair(str,wildcard);
-    // v.push_back(p);
-    // int i=0;
-    // if(s[0]=='/'){
-    //     i++;
-    // }
+
     for(int i=0; i<s.size(); i++){
         if(s[i]=='/'){
             count--;
@@ -159,12 +147,6 @@ vector<pair<string,int>> wildcard_split(string s)
                 // str+=".";
                 wildcard = 1;
             }
-            // else if((s[i] == '.') && (count == 0)){
-            //     str+="[\\.]";
-            // }
-            // else{
-            //     str+=s[i];
-            // }
             str+=s[i];
         }
     }
