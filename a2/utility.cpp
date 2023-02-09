@@ -478,43 +478,37 @@ void traverse(pid_t pid, int gen){
 // function to squash bug
 void sb(int argc, char *argv[]) {
   
-  if(fork() == 0)
+  pid_t pid;
+
+  // Check if user provided a process ID
+  if (argc < 2) 
   {
-    pid_t pid;
-
-    // Check if user provided a process ID
-    if (argc < 2) {
-      cout << "Please provide a process ID." << endl;
-    }
-
-    // Check if user used the "-suggest" flag
-    if (argc == 3 && string(argv[2]) == "-suggest") 
-    {
-      // Get the process ID from the user
-      pid = atoi(argv[1]);
-      cout <<"Children: "  << count_children(pid) << "\n";
-      cout << "cpu_usage: " << cpu_usage(pid) <<"\n";
-
-      // Use the suggestMalware function to suggest the malware process
-      cout << "Current Process ID: " << pid << "\n";
-      traverse(pid, 1);
-      pid_t malware = suggestMalware(pid);
-      cout << "The expected malware Process ID is: " << malware << "\n";
-      exit(0);
-    } 
-    else {
-      // Get the process ID from the user
-      pid = atoi(argv[1]);
-      cout << "Children: " << count_children(pid) << "\n";
-
-      // Use the traverse function to display the parent, grandparent, and so on of the given process
-      cout << "Current Process ID: " << pid << "\n";
-      traverse(pid,1);
-      exit(0);
-    }
-    exit(0);
+    cout << "Please provide a process ID." << endl;
   }
-  wait(NULL);
+
+  // Check if user used the "-suggest" flag
+  if (argc == 3 && string(argv[2]) == "-suggest") 
+  {
+    // Get the process ID from the user
+    pid = atoi(argv[1]);
+    cout <<"Children: "  << count_children(pid) << "\n";
+    cout << "cpu_usage: " << cpu_usage(pid) <<"\n";
+
+    // Use the suggestMalware function to suggest the malware process
+    cout << "Current Process ID: " << pid << "\n";
+    traverse(pid, 1);
+    pid_t malware = suggestMalware(pid);
+    cout << "The expected malware Process ID is: " << malware << "\n";
+  } 
+  else 
+  {
+    // Get the process ID from the user
+    pid = atoi(argv[1]);
+    cout << "Children: " << count_children(pid) << "\n";
+    // Use the traverse function to display the parent, grandparent, and so on of the given process
+    cout << "Current Process ID: " << pid << "\n";
+    traverse(pid,1);
+  }
 }
 
 // function to get pid of the process that has the lock file open
