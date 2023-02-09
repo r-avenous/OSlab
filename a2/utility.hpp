@@ -30,11 +30,6 @@ typedef struct _history_state{
 bool stringEmpty(string s);
 vector<pair<string,int>> split(string s, int *background);
 
-// // functions for signal handling
-// void sigint_handler(int signum);
-// void sigtstp_handler(int signum);
-// void sigchld_handler(int signum);
-
 // functions for wildcard manipulations
 vector<pair<string,int>> wildcard_split(string s);
 vector<string> wildcard_handler(string s);

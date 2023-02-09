@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
     // Open the file in read/write mode
     fd = open(file_to_lock, O_RDWR);
-    cout << "Pid : " << fd << endl;
+    // cout << "Pid : " << fd << endl;
     if (fd < 0) {
         perror("Error opening file");
         return 1;
@@ -37,6 +37,7 @@ int main(int argc, char *argv[]) {
         const char *buf = "Hello World!\n"; 
         while (1){
 
+            // cout << "Hello World!" << endl;
             write(fd, buf, strlen(buf));
             sleep(1);
         }

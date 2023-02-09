@@ -1,9 +1,5 @@
 #include "utility.hpp"
 
-// variables for signal handling
-// pid_t childPid;
-// int scaninterrupt = 0, background = 0;
-
 // variables for history
 FILE* fphist;
 string last_cmd;
@@ -111,8 +107,6 @@ vector<pair<string,int>> split(string s1, int* background)
     return v;
 }
 
-
-
 // function to split the wildcard command into tokens
 vector<pair<string,int>> wildcard_split(string s)
 {
@@ -150,12 +144,13 @@ vector<pair<string,int>> wildcard_split(string s)
             str+=s[i];
         }
     }
+
     p.first = str;
     p.second = wildcard;
     v.push_back(p);
-    for(int i=0; i<v.size(); i++){
-        cout << v[i].first << " " << v[i].second << endl;
-    }
+    // for(int i=0; i<v.size(); i++){
+    //     cout << v[i].first << " " << v[i].second << endl;
+    // }
     return v;
 }
 
