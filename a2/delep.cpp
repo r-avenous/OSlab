@@ -18,8 +18,7 @@ void get_process_open_lock_file(char* filename, vector<int>* open_pids){
         return;
     }
 
-    // print all pids which have opened the file
-    cout << "PIDs which have opened the file:" << endl << endl;
+    // find all pids which have opened the file
     while ((entry = readdir(dp))){
 
         if ((pid = atoi(entry->d_name)) == 0) 
@@ -35,13 +34,11 @@ void get_process_open_lock_file(char* filename, vector<int>* open_pids){
         
         char buf[1024];
         short found = 0;
-        // struct stat *stat_buf = new struct stat;
 
         while ((fd_entry = readdir(fd_dp))){
 
             memset(buf, '\0', 1024);
             int fd = atoi(fd_entry->d_name);
-            // fstat(fd, stat_buf);
 
             readlink((string(fd_path) + string(fd_entry->d_name)).c_str(), buf, 1024);
             if (strstr(buf, filename) != NULL){
@@ -58,8 +55,7 @@ void get_process_open_lock_file(char* filename, vector<int>* open_pids){
     }
     closedir(dp);
 
-    // print all pids which have locked the file
-    cout << endl << "PIDs which have locked the file:" << endl << endl;
+    // find all pids which have locked the file
     FILE *fp = fopen(lock_file, "r");
     if (fp == NULL){
         perror("fopen: Path does not exist or could not be read.");
@@ -80,15 +76,15 @@ void get_process_open_lock_file(char* filename, vector<int>* open_pids){
             i++;
         }
 
-        if (find(open_pids->begin(), open_pids->end(), pid) != open_pids->end()){
-            cout << pid << endl;
-        }
+        // find all pids which have locked file, replace them with -pid (post-processing done later)
+        if (find(open_pids->begin(), open_pids->end(), pid) != open_pids->end())
+            replace(open_pids->begin(), open_pids->end(), pid, -pid);
     }
 }
 
 void kill_processes(vector<int> pids){
 
-    cout << "Inside kill_processes" << endl;
+    // cout << "Inside kill_processes" << endl;
     for (int i = 0; i < pids.size(); i++){
         kill(pids[i], SIGTERM);
         cout << "Killed process " << pids[i] << endl;
@@ -140,6 +136,7 @@ int main(int args, char* argv[])
     size_t open_len;
     int p_;
     vector<int> open_pids;
+    vector<int> locked_pids;
 
     // read list of pids from child process
     read(pfd[0], &open_len, sizeof(open_len));
@@ -148,8 +145,22 @@ int main(int args, char* argv[])
     for (int i = 0; i < open_len; i++){
 
         read(pfd[0], &p_, sizeof(pid_t));
-        open_pids.push_back(p_);
+        if (p_ < 0)
+        {
+            open_pids.push_back(-p_);
+            locked_pids.push_back(-p_);
+        }
+        else
+            open_pids.push_back(p_);
     }
+
+    cout << "PIDs which have opened the file:" << endl << endl;
+    for (int i = 0; i < open_pids.size(); i++)
+        cout << open_pids[i] << endl;
+
+    cout << "PIDs which have locked the file:" << endl << endl;
+    for (int i = 0; i < locked_pids.size(); i++)
+        cout << locked_pids[i] << endl;
 
     cout << "Do you want to kill these processes? (y/n): ";
     char c;
