@@ -9,7 +9,7 @@ void sigint_handler(int signum)
 {
     scaninterrupt = 1;
     cout << endl;
-    
+
     if(childPid > 0) 
     {
         kill(childPid, SIGKILL);
@@ -113,7 +113,7 @@ void run()
                 inputfile = v[i+1];
 
                 if((fd = open((char*)inputfile.c_str(),  O_RDONLY)) < 0){
-                    perror("cant open file");
+                    perror("Can't open file");
                     exit(0);                    
                 }
 
