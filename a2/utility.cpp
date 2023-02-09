@@ -428,7 +428,7 @@ int find_avg_cpu_of_child(const pid_t pid, int depth)
 // function to find heuristic value of a process
 float heuristic(const pid_t pid){
   float heuristic = 0;
-  heuristic = count_children(pid) + cpu_usage(pid) + find_avg_cpu_of_child(pid,0);
+  heuristic = count_children(pid)*60/time_taken(pid) + cpu_usage(pid) + find_avg_cpu_of_child(pid,0);
   return heuristic;
 }
 
