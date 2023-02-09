@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
         while (1){
 
             write(fd, buf, strlen(buf));
-            sleep(10);
+            sleep(1);
         }
         exit(0);
     }
