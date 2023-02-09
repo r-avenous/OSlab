@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <sys/types.h>
+#include<sys/wait.h>
 #include <map>
 #define MAX_DEPTH 5
 #include <dirent.h>
@@ -110,7 +111,11 @@ int find_avg_cpu_of_child(const pid_t pid, int depth){
         }
         if(parent == to_string(pid)){
           //cout << "END\n";
-          first_gen = cpu_usage(stoi(proc_id->d_name)) + find_avg_cpu_of_child(stoi(proc_id->d_name), depth+1)/(count_children(stoi(proc_id->d_name))+1);
+          first_gen = cpu_usage(stoi(proc_id->d_name));
+          float avg = find_avg_cpu_of_child(stoi(proc_id->d_name), depth+1);
+          if(avg != 0){
+            first_gen += avg/ count_children(stoi(proc_id->d_name));
+          }
           num_children++;
         }
       }
@@ -123,11 +128,7 @@ int find_avg_cpu_of_child(const pid_t pid, int depth){
 
 float heuristic(const pid_t pid){
   float heuristic = 0;
-  heuristic = count_children(pid);
-  //cout << "HEU 1: " << heuristic <<"\n";
-  heuristic += cpu_usage(pid);
-  //cout <<"HEU 2: " << heuristic <<"\n";
-  heuristic += find_avg_cpu_of_child(pid,0);
+  heuristic = count_children(pid) + cpu_usage(pid) + find_avg_cpu_of_child(pid,0);
   return heuristic;
 }
 
@@ -158,7 +159,6 @@ pid_t suggestMalware(pid_t pid) {
     suggestMalware(parent_pid);
   }
   else{
-    cout << "Parent: " << parent_pid <<"\n";
     return pid;
   }
 }
@@ -172,33 +172,40 @@ void traverse(pid_t pid, int gen){
   cout << "Process ID: " << parent_pid << " Parent Generation " << gen <<"\n";
   traverse(parent_pid, gen+1);
 }
+
 int main(int argc, char *argv[]) {
   //cout << count_children(atoi(argv[1]));
-  pid_t pid;
-  // Check if user provided a process ID
-  if (argc < 2) {
-    cout << "Please provide a process ID." << endl;
-    return 1;
+  if(fork() == 0){
+    pid_t pid;
+    // Check if user provided a process ID
+    if (argc < 2) {
+      cout << "Please provide a process ID." << endl;
+      return 1;
+    }
+    // Check if user used the "-suggest" flag
+    if (argc == 3 && string(argv[2]) == "-suggest") {
+      // Get the process ID from the user
+      pid = atoi(argv[1]);
+      cout <<"Children: "  << count_children(pid) << "\n";
+      cout << "cpu_usage: " << cpu_usage(pid) <<"\n";
+      // Use the suggestMalware function to suggest the malware process
+      cout << "Current Process ID: " << pid << "\n";
+      traverse(pid, 1);
+      pid_t malware = suggestMalware(pid);
+      cout << "The expected malware Process ID is: " << malware << "\n";
+      exit(0);
+    } 
+    else {
+      // Get the process ID from the user
+      pid = atoi(argv[1]);
+      cout << "Children: " << count_children(pid) << "\n";
+      // Use the traverse function to display the parent, grandparent, and so on of the given process
+      cout << "Current Process ID: " << pid << "\n";
+      traverse(pid,1);
+      exit(0);
+    }
+    exit(0);
   }
-  // Check if user used the "-suggest" flag
-  if (argc == 3 && string(argv[2]) == "-suggest") {
-    // Get the process ID from the user
-    pid = atoi(argv[1]);
-    cout <<"Children: "  << count_children(pid) << "\n";
-    cout << "cpu_usage: " << cpu_usage(pid) <<"\n";
-    // Use the suggestMalware function to suggest the malware process
-    cout << "Current Process ID: " << pid << "\n";
-    traverse(pid, 1);
-    pid_t malware = suggestMalware(pid);
-    cout << "The expected malware Process ID is: " << malware << "\n";
-  } 
-  else {
-    // Get the process ID from the user
-    pid = atoi(argv[1]);
-    cout << "Children: " << count_children(pid) << "\n";
-    // Use the traverse function to display the parent, grandparent, and so on of the given process
-    cout << "Current Process ID: " << pid << "\n";
-    traverse(pid,1);
-  }
+  wait(NULL);
   return 0;
 }
