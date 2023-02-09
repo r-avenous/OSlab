@@ -1,18 +1,38 @@
 #include "utility.hpp"
 
-const char *history_file = ".cmd_history";
+// variables for signal handling
+// pid_t childPid;
+// int scaninterrupt = 0, background = 0;
+
+// variables for history
 FILE* fphist;
 string last_cmd;
 int counter = 0;
 history_state cmd_history;
+const char *history_file = ".cmd_history";
 
+// variables for delep
+const char *proc_path = "/proc/";
+const char *lock_file = "/proc/locks";
+
+// function to check if string is empty
+bool stringEmpty(string s)
+{
+    for(char c: s)
+    {
+        if(c != ' ' && c != '\t' && c != '\n') return false;
+    }
+    return true;
+}
+
+// function to split the command into tokens
 vector<pair<string,int>> split(string s1, int* background)
 {
     vector<pair<string,int>> v;
     string s = "";
     int wildcard = 0;
     pair<string,int> p;
-    // cout << s1;
+
     for(int i = 0; i < s1.size(); i++)
     {
         if(s1[i]==' ') continue;
@@ -100,6 +120,8 @@ vector<pair<string,int>> split(string s1, int* background)
 }
 
 
+
+// function to split the wildcard command into tokens
 vector<pair<string,int>> wildcard_split(string s)
 {
     int count = 0;
@@ -108,6 +130,7 @@ vector<pair<string,int>> wildcard_split(string s)
             count++;
         }
     }
+
     vector<pair<string,int>> v;
     pair<string,int> p;
     string str="";
@@ -154,6 +177,7 @@ vector<pair<string,int>> wildcard_split(string s)
     return v;
 }
 
+// function to handle wildcard commands
 vector<string> wildcard_handler(string s)
 {
     vector<pair<string,int>> v = wildcard_split(s);
@@ -211,15 +235,6 @@ vector<string> wildcard_handler(string s)
     return result;
 }
 
-bool stringEmpty(string s)
-{
-    for(char c: s)
-    {
-        if(c != ' ' && c != '\t' && c != '\n') return false;
-    }
-    return true;
-}
-
 // read history from file
 void read_history() {
 
@@ -273,7 +288,6 @@ void add_history(char* s)
         cmd_history.history.pop_front();
         cmd_history.size--;
         cmd_history.index--;
-        // remove first line from history file
     }
 }
 
@@ -286,9 +300,7 @@ void add_history(char* s)
 */
 int backward_history(int count, int key)
 {
-    // cmd_history.history[cmd_history.index] = string(rl_line_buffer);
     counter--;
-    // cout << counter << endl;
     if(counter==-1){
         last_cmd = string(rl_line_buffer);
     }
@@ -315,12 +327,9 @@ int backward_history(int count, int key)
 */
 int forward_history(int count, int key)
 {
-    // cmd_history.history[cmd_history.index] = string(rl_line_buffer);
-
     if(counter<0){
         counter++;
     }
-    // cout << counter << endl;
     if (cmd_history.index < (cmd_history.size - 1)){
         cmd_history.index++;
         string s;
@@ -340,6 +349,7 @@ int forward_history(int count, int key)
     return 0;
 }
 
+// initialize readline settings by mapping functions to keys
 void initialize_readline(){
 
     // map backward_history function to up arrow key
@@ -348,4 +358,165 @@ void initialize_readline(){
     // map forward_history function to down arrow key
     rl_bind_keyseq("\e[B", forward_history);
 
+}
+
+// function to get pid of the process that has the lock file open
+void get_process_open_lock_file(char* filename, vector<int>* open_pids){
+
+    struct dirent *entry;
+    DIR *dp;
+    int pid;
+
+    dp = opendir(proc_path);
+    if (dp == NULL) {
+        perror("opendir: Path does not exist or could not be read.");
+        return;
+    }
+
+    // find all pids which have opened the file
+    while ((entry = readdir(dp))){
+
+        if ((pid = atoi(entry->d_name)) == 0) 
+            continue;
+
+        string fd_path = string(proc_path) + string(entry->d_name) + string("/fd/");
+        struct dirent *fd_entry;
+        DIR *fd_dp;
+
+        fd_dp = opendir(fd_path.c_str());
+        if (fd_dp == NULL)
+            continue;
+        
+        char buf[1024];
+        short found = 0;
+
+        while ((fd_entry = readdir(fd_dp))){
+
+            memset(buf, '\0', 1024);
+            int fd = atoi(fd_entry->d_name);
+
+            readlink((string(fd_path) + string(fd_entry->d_name)).c_str(), buf, 1024);
+            if (strstr(buf, filename) != NULL){
+
+                found = 1;
+                break;
+            }
+        }
+        if (found){
+            open_pids->push_back(pid);
+            // cout << pid << endl;
+        }
+        closedir(fd_dp);
+    }
+    closedir(dp);
+
+    // find all pids which have locked the file
+    FILE *fp = fopen(lock_file, "r");
+    if (fp == NULL){
+        perror("fopen: Path does not exist or could not be read.");
+        return;
+    }
+
+    char line[1024];
+    while (fgets(line, 1024, fp) != NULL){
+
+        char *token = strtok(line, " ");
+        int i = 0;
+        while (token != NULL){
+            if (i == 4){
+                pid = atoi(token);
+                break;
+            }
+            token = strtok(NULL, " ");
+            i++;
+        }
+
+        // find all pids which have locked file, replace them with -pid (post-processing done later)
+        if (find(open_pids->begin(), open_pids->end(), pid) != open_pids->end())
+            replace(open_pids->begin(), open_pids->end(), pid, -pid);
+    }
+}
+
+// function to kill all processes that have the lock file open
+void kill_processes(vector<int> pids){
+
+    for (int i = 0; i < pids.size(); i++){
+        kill(pids[i], SIGKILL);
+        cout << "Killed process " << pids[i] << endl;
+    }
+}
+
+// function to delete without prejudice
+void delep(char* file)
+{
+    char* filename = file;
+    pid_t pfd[2];
+
+    // pipe the pfd array
+    pipe(pfd);
+    pid_t pid = fork();
+
+    if (pid == 0){
+
+        vector<int> pids;
+        get_process_open_lock_file(filename, &pids);
+
+        size_t len;
+        len = pids.size();
+
+        // write pid vector to parent process using pipe
+        write(pfd[1], &len, sizeof(len));
+
+        int p;
+        for (int i = 0; i < len; i++)
+        {
+            p = pids[i];
+            write(pfd[1], &p, sizeof(pid_t));
+        }
+
+        exit(0);
+    }
+    wait(NULL);
+
+    size_t open_len;
+    int p_;
+    vector<int> open_pids;
+    vector<int> locked_pids;
+
+    // read list of pids from child process
+    read(pfd[0], &open_len, sizeof(open_len));
+
+    for (int i = 0; i < open_len; i++){
+
+        read(pfd[0], &p_, sizeof(pid_t));
+        if (p_ < 0)
+        {
+            open_pids.push_back(-p_);
+            locked_pids.push_back(-p_);
+        }
+        else
+            open_pids.push_back(p_);
+    }
+
+    cout << "PIDs which have opened the file:" << endl << endl;
+    for (int i = 0; i < open_pids.size(); i++)
+        cout << open_pids[i] << endl;
+
+    cout << "PIDs which have locked the file:" << endl << endl;
+    for (int i = 0; i < locked_pids.size(); i++)
+        cout << locked_pids[i] << endl;
+
+    cout << "Do you want to kill these processes? (y/n): ";
+    char c;
+    cin >> c;
+
+    if (c == 'y'){
+
+        cout << "Killing processes..."<< endl;
+        kill_processes(open_pids);
+        if (remove(filename) == 0)
+            cout << "File deleted successfully" << endl;
+        else
+            cout << "Error: unable to delete the file" << endl;
+    }
 }
