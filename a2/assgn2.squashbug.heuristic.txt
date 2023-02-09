@@ -1,0 +1,24 @@
+Group 29 Assignment 2 Squash Bug Report
+
+HEURISTIC USED: count_of_children/time_taken_by_process + cpu_usage_of_original_process + avg_cpu_usage_of_child_process
+
+Explanation of each term used in the heuristic formula
+
+1) count_of_children ---  The number of children process spawned from given process id
+2) time_taken_by_process --- The amount of time taken by process (in minutes)
+3) cpu_usage_of_original_process --- Amount of cpu usage of the given process id
+4) avg_cpu_usage_of_child_process --- This is the sum of average of cpu usage of all possible childs of given process id. This contains recursive terms too. For example a process P spawns 5 processes P1, P2, P3, P4, P5 and each of these processes spawn 10 children each. Now avg_cpu_usage_of_child_process on pid of P will be sum of cpu usage of process P1, P2, P3, P4, P5 and also sum of average of cpu usage of the children of P1, P2, P3, P4, P5 respectively.
+
+JUSTIFICATION: 
+
+Our heuristic takes into account following major things:
+
+1) In general higher the count of children being generated in less amount of time relates to higher chance of being a malware. Hence the first term count of children/ time taken.
+2) There is a good chance that a malware process will use higher cpu utilization hence we add the the term cpu_usage_of_original_process.
+3) Also we add the term avg_cpu_usage_of_child_process. This is because it may happen that the malware might spawn a child process which uses a lot of cpu but the malware process itself sleeps after spawning such process. To counter this case we have added this term.
+
+Other remarks:
+
+1) Dividing the count of children by time taken helps normalize it a bit. If not processes such as google chrome which spawn a lot of child process might also be detected as malware. But now as we divide it by time taken we decrease the ill effect of just using count of children.
+2) If you notice the avg_cpu_usage_of_child_process gives output a running sum of average of cpu usage of all children grand children and so on.... But we need to stop at some point hence in code a max depth of 5 has been set.
+3) The time taken has been used in minutes and not seconds, this was purely based on observations that using it in seconds causes the denominator of the first term to become too large and renders it useless.

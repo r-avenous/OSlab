@@ -7,21 +7,32 @@ int scaninterrupt = 0, background = 0;
 // function to handle SIGINT
 void sigint_handler(int signum)
 {
+    if((!background) && (childPid >= 0)){
+        killpg(getpgid(childPid), SIGINT);
+        cout << endl;
+        return;
+    }
+
     scaninterrupt = 1;
     cout << endl;
+    rl_forced_update_display();
 
-    if(childPid > 0) 
-    {
-        kill(childPid, SIGKILL);
-        childPid = -1;
-    }
 }
 
 // function to handle SIGTSTP
 void sigtstp_handler(int signum)
 {
-    scaninterrupt = 1;
-    cout << endl;
+    if(childPid == -1){
+
+        cout << endl;
+        cout << "No process to send in background" ;
+        cout << endl;
+        cout << getcwd((char*)NULL, size_t(0)) << PROMPT;
+        return;
+    }
+    else
+        kill(getpid(), SIGCHLD);
+    
 }
 
 // function to handle SIGCHLD
@@ -41,12 +52,6 @@ void run()
     prompt += PROMPT;
     cin.clear();
     s = readline(prompt.c_str());
-
-    if(scaninterrupt) 
-    {
-        scaninterrupt = 0;
-        return;
-    }
 
     if(stringEmpty(s)) 
         return;
