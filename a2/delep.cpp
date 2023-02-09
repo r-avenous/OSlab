@@ -1,5 +1,4 @@
 #include "utility.hpp"
-#include <sys/stat.h>
 
 pid_t childPid;
 vector<string> cmds;
@@ -7,11 +6,11 @@ int scaninterrupt = 0, background = 0;
 const char *proc_path = "/proc/";
 const char *lock_file = "/proc/locks";
 
-void get_process_open_lock_file(char* filename, vector<pid_t>* open_pids){
+void get_process_open_lock_file(char* filename, vector<int>* open_pids){
 
     struct dirent *entry;
     DIR *dp;
-    pid_t pid;
+    int pid;
 
     dp = opendir(proc_path);
     if (dp == NULL) {
@@ -36,13 +35,13 @@ void get_process_open_lock_file(char* filename, vector<pid_t>* open_pids){
         
         char buf[1024];
         short found = 0;
-        struct stat *stat_buf = new struct stat;
+        // struct stat *stat_buf = new struct stat;
 
         while ((fd_entry = readdir(fd_dp))){
 
             memset(buf, '\0', 1024);
             int fd = atoi(fd_entry->d_name);
-            fstat(fd, stat_buf);
+            // fstat(fd, stat_buf);
 
             readlink((string(fd_path) + string(fd_entry->d_name)).c_str(), buf, 1024);
             if (strstr(buf, filename) != NULL){
@@ -58,7 +57,6 @@ void get_process_open_lock_file(char* filename, vector<pid_t>* open_pids){
         closedir(fd_dp);
     }
     closedir(dp);
-
 
     // print all pids which have locked the file
     cout << endl << "PIDs which have locked the file:" << endl << endl;
@@ -88,8 +86,9 @@ void get_process_open_lock_file(char* filename, vector<pid_t>* open_pids){
     }
 }
 
-void kill_processes(vector<pid_t> pids){
+void kill_processes(vector<int> pids){
 
+    cout << "Inside kill_processes" << endl;
     for (int i = 0; i < pids.size(); i++){
         kill(pids[i], SIGTERM);
         cout << "Killed process " << pids[i] << endl;
@@ -99,27 +98,72 @@ void kill_processes(vector<pid_t> pids){
 int main(int args, char* argv[])
 {
     char* filename = argv[1];
-    vector<pid_t> pids;
+    pid_t pfd[2];
 
+    // pipe the pfd array
+    pipe(pfd);
     pid_t pid = fork();
+
     if (pid == 0){
 
+        vector<int> pids;
         get_process_open_lock_file(filename, &pids);
-        cout << "Do you want to kill these processes? (y/n): ";
-        char c;
-        cin >> c;
 
-        if (c == 'y'){
+        // cout << "#####################" << endl;
+        size_t len;
+        // cout << "!!###################" << endl;
+        // cout << &pids << endl;
+        len = pids.size();
+        // cout << "Len child : " << len << endl;
 
-            kill_processes(pids);
-            if (remove(filename) == 0)
-                cout << "File deleted successfully" << endl;
-            else
-                cout << "Error: unable to delete the file" << endl;
+        // write pid vector to parent process using pipe
+        write(pfd[1], &len, sizeof(len));
+        // cout << "!!###################" << endl;
+        int p;
+
+        for (int i = 0; i < len; i++)
+        {
+            // cout << "!####################" << endl;
+            p = pids[i];
+            // cout << p << endl;
+            // cout << "#####################" << endl;
+            write(pfd[1], &p, sizeof(pid_t));
         }
+        // write(pfd[1], &pids[0], pids.size() * sizeof(pid_t));
+        // cout << "!!!!################" << endl;
 
         exit(0);
     }
     wait(NULL);
+    // cout << "!!!!##############!" << endl;
+
+    size_t open_len;
+    int p_;
+    vector<int> open_pids;
+
+    // read list of pids from child process
+    read(pfd[0], &open_len, sizeof(open_len));
+    // cout << "!!!!##############!!" << endl;
+
+    for (int i = 0; i < open_len; i++){
+
+        read(pfd[0], &p_, sizeof(pid_t));
+        open_pids.push_back(p_);
+    }
+
+    cout << "Do you want to kill these processes? (y/n): ";
+    char c;
+    cin >> c;
+
+    if (c == 'y'){
+
+        cout << "Killing processes..."<< endl;
+        kill_processes(open_pids);
+        if (remove(filename) == 0)
+            cout << "File deleted successfully" << endl;
+        else
+            cout << "Error: unable to delete the file" << endl;
+    }
+
     return 0;
 }
