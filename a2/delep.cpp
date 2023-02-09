@@ -84,7 +84,6 @@ void get_process_open_lock_file(char* filename, vector<int>* open_pids){
 
 void kill_processes(vector<int> pids){
 
-    // cout << "Inside kill_processes" << endl;
     for (int i = 0; i < pids.size(); i++){
         kill(pids[i], SIGTERM);
         cout << "Killed process " << pids[i] << endl;
@@ -105,33 +104,22 @@ int main(int args, char* argv[])
         vector<int> pids;
         get_process_open_lock_file(filename, &pids);
 
-        // cout << "#####################" << endl;
         size_t len;
-        // cout << "!!###################" << endl;
-        // cout << &pids << endl;
         len = pids.size();
-        // cout << "Len child : " << len << endl;
 
         // write pid vector to parent process using pipe
         write(pfd[1], &len, sizeof(len));
-        // cout << "!!###################" << endl;
-        int p;
 
+        int p;
         for (int i = 0; i < len; i++)
         {
-            // cout << "!####################" << endl;
             p = pids[i];
-            // cout << p << endl;
-            // cout << "#####################" << endl;
             write(pfd[1], &p, sizeof(pid_t));
         }
-        // write(pfd[1], &pids[0], pids.size() * sizeof(pid_t));
-        // cout << "!!!!################" << endl;
 
         exit(0);
     }
     wait(NULL);
-    // cout << "!!!!##############!" << endl;
 
     size_t open_len;
     int p_;
@@ -140,7 +128,6 @@ int main(int args, char* argv[])
 
     // read list of pids from child process
     read(pfd[0], &open_len, sizeof(open_len));
-    // cout << "!!!!##############!!" << endl;
 
     for (int i = 0; i < open_len; i++){
 
