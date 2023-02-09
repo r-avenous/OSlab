@@ -21,6 +21,16 @@ bool stringEmpty(string s)
     return true;
 }
 
+// function to check if string is a number
+bool is_number(string s)
+{
+    auto it = s.begin();
+    for(;(it!=s.end()) && (isdigit(*it)); it++){
+
+    }
+    return !s.empty() && it == s.end();
+}
+
 // function to split the command into tokens
 vector<pair<string,int>> split(string s1, int* background)
 {
@@ -37,9 +47,6 @@ vector<pair<string,int>> split(string s1, int* background)
             if(s1[i] == '\"'){
                 i++;
                 while(s1[i] != '\"' && (i<s1.size())){
-                    // if(((s1[i] == '*') || (s1[i] == '?')) && (s1[i-1] != '\\')){
-                    //     wildcard = 1;
-                    // }
                     s += s1[i];
                     i++;
                 }
@@ -47,23 +54,14 @@ vector<pair<string,int>> split(string s1, int* background)
                 if(s1[i] == ' ' || s1[i] == '|' || s1[i] == '<' || s1[i] == '>' || s1[i] == '&'){
                     p = make_pair(s,wildcard);
                     v.push_back(p);
-                    // wildcard = 0;
                     s="";
                     i--;
                     break;
                 }
-                // else{
-                //     s += s1[i];
-                //     i++;
-                //     continue;
-                // }
             }
             if(s1[i] == '\''){
                 i++;
                 while(s1[i] != '\'' && (i<s1.size())){
-                    // if(((s1[i] == '*') || (s1[i] == '?')) && (s1[i-1] != '\\')){
-                    //     wildcard = 1;
-                    // }
                     s += s1[i];
                     i++;
                 }
@@ -71,14 +69,10 @@ vector<pair<string,int>> split(string s1, int* background)
                 if(s1[i] == ' ' || s1[i] == '|' || s1[i] == '<' || s1[i] == '>' || s1[i] == '&'){
                     p = make_pair(s,wildcard);
                     v.push_back(p);
-                    // wildcard = 0;
                     s="";
                     i--;
                     break;
                 }
-                // v.push_back(s);
-                // s="";
-                // continue;
             }
             if(((s1[i] == '*') || (s1[i] == '?')) && (s1[i-1] != '\\')){
                 wildcard = 1;
@@ -134,11 +128,9 @@ vector<pair<string,int>> wildcard_split(string s)
         }
         else{
             if(s[i] == '*'){
-                // str+=".*";
                 wildcard = 1;
             }
             else if(s[i] == '?'){
-                // str+=".";
                 wildcard = 1;
             }
             str+=s[i];
@@ -148,9 +140,6 @@ vector<pair<string,int>> wildcard_split(string s)
     p.first = str;
     p.second = wildcard;
     v.push_back(p);
-    // for(int i=0; i<v.size(); i++){
-    //     cout << v[i].first << " " << v[i].second << endl;
-    // }
     return v;
 }
 
@@ -165,9 +154,10 @@ vector<string> wildcard_handler(string s)
     DIR *dir;
     for(int i=0; i<v.size(); i++){
         int size = result.size();
-        for(int j=0; j<size; j++){
-            if(v[i].second == 1){
-                // chdir(result[j].c_str());
+        for(int j=0; j<size; j++)
+        {
+            if(v[i].second == 1)
+            {
                 if(result[0]==""){
                     dir = opendir (".");
                 }
@@ -197,18 +187,6 @@ vector<string> wildcard_handler(string s)
     for(int i=0; i<result.size(); i++){
         result[i] = result[i].substr(0,result[i].size()-1);
     }
-    // struct dirent *ent;
-    // if ((dir = opendir (".")) != NULL) {
-    //     while ((ent = readdir (dir)) != NULL) {
-    //         if(fnmatch(s.c_str(), ent->d_name, FNM_CASEFOLD) == 0){
-    //             p = ent->d_name;
-    //             v.push_back(p);
-    //         }
-    //     }
-    //     closedir (dir);
-    // } else {
-    //     perror ("");
-    // }
     return result;
 }
 
@@ -337,6 +315,121 @@ void initialize_readline(){
 
 }
 
+// function to count number of children of a process
+int count_children(const pid_t pid) {
+  DIR* proc_dir;
+  int num_children = 0;
+  if ((proc_dir = opendir("/proc"))) 
+  {
+    for (struct dirent* proc_id; (proc_id = readdir(proc_dir))!=NULL;) {
+      if (is_number(proc_id->d_name)) 
+      {
+        ifstream ifs(string("/proc/" + string(proc_id->d_name) + "/stat").c_str());
+        string parent;
+        for (int i = 0; i < 4; ++i) {
+          ifs >> parent;
+        }
+
+        if (parent == to_string(pid)) {
+          ++num_children;
+        }
+      }
+    }
+    closedir(proc_dir);
+    return num_children;
+  }
+  perror("could not open directory");
+  return -1;
+}
+
+// function to get the time taken by a process
+float time_taken(const pid_t pid)
+{
+  ifstream ifs(string("/proc/" + to_string(pid) + "/stat").c_str());
+  string process_start, up_time;
+  for(int i=0; i<22; i++){
+    ifs >> process_start;
+  }
+  ifs.close();
+  ifs.open(string("/proc/uptime").c_str());
+  ifs >> up_time;
+
+  float time_taken = stof(up_time) - (stof(process_start))/HZ;
+  return time_taken;
+}
+
+// function to get the cpu usage of a process
+float cpu_usage(const pid_t pid)
+{
+  ifstream ifs(string("/proc/" + to_string(pid) + "/stat").c_str());
+  string u_time, s_time, temp;
+  float process_elapsed = time_taken(pid);
+  for(int i=0; i<22; i++){
+    if(i==13){
+      ifs >> u_time;
+    }
+    else if(i == 14){
+      ifs >> s_time;
+    }
+    else{
+      ifs >> temp;
+    }
+  }
+  float process_usage = stof(u_time)/HZ + stof(s_time)/HZ;
+  return ((process_usage * 100)/ process_elapsed);
+}
+
+// function to get the average cpu usage of a process and its children
+int find_avg_cpu_of_child(const pid_t pid, int depth){
+  
+  if(depth == MAX_DEPTH){
+    return 0;
+  }
+  
+  float first_gen = 0, num_children = 0;
+  DIR* proc_dir;
+  map<int,int> child_count;
+
+  if ((proc_dir = opendir("/proc")))
+  {
+    struct dirent* proc_id;
+     for (proc_id; (proc_id = readdir(proc_dir));)
+     {
+      if(is_number(proc_id->d_name))
+      {
+        ifstream ifs(string("/proc/" + string(proc_id->d_name) + "/stat").c_str());
+        string parent, status;
+        for(int i=0; i<4; i++)
+        {
+          if(i==2){
+            ifs >> status;
+          }
+          ifs >> parent;
+        }
+        if(parent == to_string(pid)){
+          
+          first_gen = cpu_usage(stoi(proc_id->d_name)) + find_avg_cpu_of_child(stoi(proc_id->d_name), depth+1)/(count_children(stoi(proc_id->d_name))+1);
+          num_children++;
+        }
+      }
+    }
+  }
+  
+  closedir(proc_dir);
+  return first_gen;
+}
+
+// function to calculate heuristic value for guessing if a process is malware
+float heuristic(const pid_t pid)
+{
+  float heuristic = 0;
+
+  heuristic = count_children(pid);
+  heuristic += cpu_usage(pid);
+  heuristic += find_avg_cpu_of_child(pid,0);
+  return heuristic;
+}
+
 // function to get pid of the process that has the lock file open
 void get_process_open_lock_file(char* filename, vector<int>* open_pids){
 
@@ -421,6 +514,95 @@ void kill_processes(vector<int> pids){
         kill(pids[i], SIGKILL);
         cout << "Killed process " << pids[i] << endl;
     }
+}
+
+// function to get the parent of a process
+pid_t get_parent(const pid_t pid)
+{
+  ifstream ifs(string("/proc/" + to_string(pid) + "/stat").c_str());
+  string parent;
+  for(int i=0; i<4; i++)
+  {
+    ifs >> parent;
+  }
+  
+  ifs.close();
+  return stoi(parent);
+}
+
+// Function to suggest the malware process
+pid_t suggestMalware(pid_t pid) {
+
+  // Check the time spent and number of children of each process
+  if (get_parent(pid) == 1)
+    return pid;
+  
+  pid_t parent_pid = get_parent(pid);
+  float par_h = heuristic(parent_pid), h = heuristic(pid);
+  cout << "PARENT: "<< parent_pid << " Heuristic: " << par_h << "\n" << "CHILD: " << pid << " Heuristic: " << h <<"\n\n";
+
+  int flag = 0;
+  if(par_h > h)
+    suggestMalware(parent_pid);
+  
+  else
+  {
+    cout << "Parent: " << parent_pid <<"\n";
+    flag = 1;
+  }
+
+  if (flag == 1)
+    return pid;
+}
+
+// Function to traverse the process tree
+void traverse(pid_t pid, int gen)
+{
+  if(pid == 1){
+    cout << "No more parent process last process printed was init process\n";
+    return;
+  }
+  pid_t parent_pid = get_parent(pid);
+  cout << "Process ID: " << parent_pid << " Parent Generation " << gen <<"\n";
+  traverse(parent_pid, gen+1);
+}
+
+// function to squash bug
+void sb(int argc, char *argv[]) 
+{
+  pid_t pid;
+
+  // Check if user provided a process ID
+  if (argc < 2) 
+  {
+    cout << "Please provide a process ID." << endl;
+  }
+
+  // Check if user used the "-suggest" flag
+  if (argc == 3 && string(argv[2]) == "-suggest") 
+  {
+    // Get the process ID from the user
+    pid = atoi(argv[1]);
+    cout <<"Children: "  << count_children(pid) << "\n";
+    cout << "cpu_usage: " << cpu_usage(pid) <<"\n";
+
+    // Use the suggestMalware function to suggest the malware process
+    cout << "Current Process ID: " << pid << "\n";
+    traverse(pid, 1);
+    pid_t malware = suggestMalware(pid);
+    cout << "The expected malware Process ID is: " << malware << "\n";
+  } 
+
+  else {
+
+    // Get the process ID from the user
+    pid = atoi(argv[1]);
+    cout << "Children: " << count_children(pid) << "\n";
+
+    // Use the traverse function to display the parent, grandparent, and so on of the given process
+    cout << "Current Process ID: " << pid << "\n";
+    traverse(pid,1);
+  }
 }
 
 // function to delete without prejudice

@@ -172,6 +172,7 @@ void traverse(pid_t pid, int gen){
   cout << "Process ID: " << parent_pid << " Parent Generation " << gen <<"\n";
   traverse(parent_pid, gen+1);
 }
+
 int main(int argc, char *argv[]) {
   //cout << count_children(atoi(argv[1]));
   pid_t pid;

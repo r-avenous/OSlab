@@ -63,7 +63,8 @@ void run()
     vector<string> v;
     vector<pair<string,int>> pair_vec = split(s, &background);
 
-    for (int i = 0; i < pair_vec.size(); i++){
+    for (int i = 0; i < pair_vec.size(); i++)
+    {
 
         if(pair_vec[i].second == 1){
 
@@ -96,6 +97,19 @@ void run()
 
         char* filename = (char*)v[1].c_str();
         delep(filename);
+        return;
+    }
+
+    if (v[0] == "sb"){
+
+        int argc = v.size();
+        char* argv[argc];
+
+        for(int i = 0; i < argc; i++){
+            argv[i] = (char*)v[i].c_str();
+        }
+
+        sb(argc, argv);
         return;
     }
 
