@@ -46,6 +46,8 @@ void add_history(char* s);
 int backward_history(int count, int key);
 int forward_history(int count, int key);
 void initialize_readline();
+int rl_beg_of_line(int count, int key);
+int rl_end_of_line(int count, int key);
 
 // functions for malware detection
 int count_children(const pid_t pid);
