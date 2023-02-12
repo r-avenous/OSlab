@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
     // Open the file in read/write mode
     fd = open(file_to_lock, O_RDWR);
-    // cout << "Pid : " << fd << endl;
+
     if (fd < 0) {
         perror("Error opening file");
         return 1;

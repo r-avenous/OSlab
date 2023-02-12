@@ -232,6 +232,7 @@ void add_history(char* s)
     cmd_history.history.push_back(string(s));
     cmd_history.size++;
     cmd_history.index = cmd_history.size;
+    last_cmd = "";
 
     fphist = fopen(history_file, "a");
     printf("%d\n", fputs(s, fphist));
@@ -255,6 +256,10 @@ void add_history(char* s)
 */
 int backward_history(int count, int key)
 {
+    if(cmd_history.index<cmd_history.size){
+        cmd_history.history[cmd_history.index] = string(rl_line_buffer);
+    }
+
     counter--;
     if(counter==-1){
         last_cmd = string(rl_line_buffer);
@@ -282,6 +287,10 @@ int backward_history(int count, int key)
 */
 int forward_history(int count, int key)
 {
+    if(cmd_history.index<cmd_history.size){
+        cmd_history.history[cmd_history.index] = string(rl_line_buffer);
+    }
+
     if(counter<0){
         counter++;
     }
@@ -304,6 +313,20 @@ int forward_history(int count, int key)
     return 0;
 }
 
+int rl_beg_of_line(int count, int key)
+{
+    // cout << "hello" << endl;
+    rl_point = 0;
+    return 0;
+}
+
+int rl_end_of_line(int count, int key)
+{
+    // cout << "hello" << endl;
+    rl_point = rl_end;
+    return 0;
+}
+
 // initialize readline settings by mapping functions to keys
 void initialize_readline(){
 
@@ -312,6 +335,10 @@ void initialize_readline(){
 
     // map forward_history function to down arrow key
     rl_bind_keyseq("\e[B", forward_history);
+
+    rl_bind_key('\x01', rl_beg_of_line);
+
+    rl_bind_key('\x05', rl_end_of_line);
 
 }
 
@@ -459,9 +486,7 @@ pid_t suggestMalware(pid_t pid) {
   if(par_h > h){
     suggestMalware(parent_pid);
   }
-  else{
-    return pid;
-  }
+  return pid;
 }
 
 // Function to traverse the process tree
