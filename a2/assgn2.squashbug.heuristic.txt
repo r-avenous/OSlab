@@ -1,4 +1,4 @@
-Group 29 Assignment 2 Squash Bug Report
+Group 25 Assignment 2 Squash Bug Report
 
 HEURISTIC USED: count_of_children/time_taken_by_process + cpu_usage_of_original_process + avg_cpu_usage_of_child_process
 

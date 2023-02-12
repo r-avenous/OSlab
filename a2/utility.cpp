@@ -486,9 +486,7 @@ pid_t suggestMalware(pid_t pid) {
   if(par_h > h){
     suggestMalware(parent_pid);
   }
-  else{
-    return pid;
-  }
+  return pid;
 }
 
 // Function to traverse the process tree
