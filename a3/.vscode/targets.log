@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Feb 14 12:28:38 2023
+# Make data base, printed on Tue Feb 14 19:35:12 2023
 
 # Variables
 
@@ -203,9 +203,9 @@ VSCODE_PID = 20669
 
 # Directories
 
-# . (device 66311, inode 4768724): 12 files, no impossibilities.
+# . (device 66311, inode 4768724): 14 files, no impossibilities.
 
-# 12 files, no impossibilities in 1 directories.
+# 14 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -223,7 +223,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2023-02-14 12:27:58.622433863
+#  Last modified 2023-02-14 19:35:07.467824903
 #  File has been updated.
 #  Successfully updated.
 
@@ -234,32 +234,46 @@ main.cpp:
 #  File has not been updated.
 
 # Not a target:
+reader.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
-graph: main.cpp
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 9):
+	rm main reader
+
+graph: main.cpp reader.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 5):
 	$(CC) $(flags) main.cpp -o main
+	$(CC) $(flags) reader.cpp -o reader
 
 # files hash-table stats:
-# Load=6/1024=1%, Rehash=0, Collisions=0/17=0%
+# Load=8/1024=1%, Rehash=0, Collisions=0/20=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 18 / storage = 220 B / avg = 12 B
-# current buf: size = 8162 B / used = 220 B / count = 18 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 21 / storage = 244 B / avg = 11 B
+# current buf: size = 8162 B / used = 244 B / count = 21 / avg = 11 B
 
-# strcache performance: lookups = 24 / hit rate = 25%
+# strcache performance: lookups = 29 / hit rate = 27%
 # hash-table stats:
-# Load=18/8192=0%, Rehash=0, Collisions=1/24=4%
-# Finished Make data base on Tue Feb 14 12:28:38 2023
+# Load=21/8192=0%, Rehash=0, Collisions=1/29=3%
+# Finished Make data base on Tue Feb 14 19:35:12 2023
 
  
