@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Feb 14 11:13:28 2023
+# Make data base, printed on Tue Feb 14 12:28:38 2023
 
 # Variables
 
@@ -35,7 +37,7 @@ XAUTHORITY = /home/shreyas/.Xauthority
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments
+CURDIR := /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3
 # makefile
 SHELL = /bin/sh
 # environment
@@ -46,8 +48,8 @@ _ = /usr/share/code/code
 JOURNAL_STREAM = 8:50864
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
-# makefile
-MAKEFILE_LIST := 
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
 # environment
 GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # 'override' directive
@@ -68,6 +70,8 @@ XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
 PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/shreyas:/home/shreyas
+# makefile (from 'Makefile', line 2)
+flags = -Wall -std=c++11
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
@@ -87,13 +91,13 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 18942
+GIO_LAUNCHED_DESKTOP_FILE_PID = 20669
 # automatic
 %F = $(notdir $%)
 # environment
 DISPLAY = :0
 # environment
-PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments
+PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3
 # default
 .LOADED := 
 # environment
@@ -111,7 +115,7 @@ VSCODE_CODE_CACHE_PATH = /home/shreyas/.config/Code/CachedData/e8a3071ea4344d9d4
 # environment
 LOGNAME = shreyas
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
@@ -128,6 +132,8 @@ MAKECMDGOALS := all
 QT_IM_MODULE = ibus
 # environment
 SHLVL = 0
+# makefile (from 'Makefile', line 1)
+CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # default
@@ -135,7 +141,7 @@ MAKE_VERSION := 4.2.1
 # environment
 USER = shreyas
 # makefile
-.DEFAULT_GOAL := 
+.DEFAULT_GOAL := graph
 # environment
 XDG_CURRENT_DESKTOP = Unity
 # automatic
@@ -187,9 +193,9 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 18942
+VSCODE_PID = 20669
 # variable set hash-table stats:
-# Load=89/1024=9%, Rehash=0, Collisions=7/111=6%
+# Load=91/1024=9%, Rehash=0, Collisions=7/116=6%
 
 # Pattern-specific Variable Values
 
@@ -197,9 +203,9 @@ VSCODE_PID = 18942
 
 # Directories
 
-# . (device 66311, inode 4612299): 9 files, no impossibilities.
+# . (device 66311, inode 4768724): 12 files, no impossibilities.
 
-# 9 files, no impossibilities in 1 directories.
+# 12 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -217,16 +223,15 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  File does not exist.
+#  Last modified 2023-02-14 12:27:58.622433863
 #  File has been updated.
-#  Failed to be updated.
+#  Successfully updated.
 
 # Not a target:
-makefile:
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
+main.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 .DEFAULT:
@@ -234,29 +239,27 @@ makefile:
 #  Modification time never checked.
 #  File has not been updated.
 
-# Not a target:
-GNUmakefile:
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
+graph: main.cpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 5):
+	$(CC) $(flags) main.cpp -o main
 
 # files hash-table stats:
-# Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
+# Load=6/1024=1%, Rehash=0, Collisions=0/17=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 17 / storage = 136 B / avg = 8 B
-# current buf: size = 8162 B / used = 136 B / count = 17 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 18 / storage = 220 B / avg = 12 B
+# current buf: size = 8162 B / used = 220 B / count = 18 / avg = 12 B
 
-# strcache performance: lookups = 20 / hit rate = 15%
+# strcache performance: lookups = 24 / hit rate = 25%
 # hash-table stats:
-# Load=17/8192=0%, Rehash=0, Collisions=1/20=5%
-# Finished Make data base on Tue Feb 14 11:13:28 2023
+# Load=18/8192=0%, Rehash=0, Collisions=1/24=4%
+# Finished Make data base on Tue Feb 14 12:28:38 2023
 
  
-make: *** No rule to make target 'all'.  Stop.
-
