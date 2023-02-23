@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3'
+g++ -Wall -std=c++11 main.cpp -o main
+g++ -Wall -std=c++11 reader.cpp -o reader
+make: Leaving directory '/home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3'
+ 

@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Feb 14 11:13:28 2023
+# Make data base, printed on Thu Feb 23 13:40:54 2023
 
 # Variables
 
@@ -35,7 +37,7 @@ XAUTHORITY = /home/shreyas/.Xauthority
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments
+CURDIR := /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3
 # makefile
 SHELL = /bin/sh
 # environment
@@ -43,11 +45,11 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:50864
+JOURNAL_STREAM = 8:48737
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
-# makefile
-MAKEFILE_LIST := 
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
 # environment
 GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # 'override' directive
@@ -57,7 +59,7 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/home/shreyas/.local/share/flatpak/exports/sha
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 4344
+MANAGERPID = 21001
 # environment
 VSCODE_CWD = /home/shreyas
 # environment
@@ -68,10 +70,12 @@ XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
 PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/shreyas:/home/shreyas
+# makefile (from 'Makefile', line 2)
+flags = -Wall -std=c++11
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/4549,unix/shreyas:/tmp/.ICE-unix/4549
+SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/21207,unix/shreyas:/tmp/.ICE-unix/21207
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -79,7 +83,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 08edb83fdd4c47d19b4164384b52b45d
+INVOCATION_ID = 227f6c9f915d44e6a83f7fba40fefb2e
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -87,17 +91,17 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 18942
+GIO_LAUNCHED_DESKTOP_FILE_PID = 28732
 # automatic
 %F = $(notdir $%)
 # environment
 DISPLAY = :0
 # environment
-PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments
+PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 4507
+SSH_AGENT_PID = 21158
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -128,6 +132,8 @@ MAKECMDGOALS := all
 QT_IM_MODULE = ibus
 # environment
 SHLVL = 0
+# makefile (from 'Makefile', line 1)
+CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # default
@@ -135,7 +141,7 @@ MAKE_VERSION := 4.2.1
 # environment
 USER = shreyas
 # makefile
-.DEFAULT_GOAL := 
+.DEFAULT_GOAL := graph
 # environment
 XDG_CURRENT_DESKTOP = Unity
 # automatic
@@ -187,9 +193,9 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 18942
+VSCODE_PID = 28732
 # variable set hash-table stats:
-# Load=89/1024=9%, Rehash=0, Collisions=7/111=6%
+# Load=91/1024=9%, Rehash=0, Collisions=7/116=6%
 
 # Pattern-specific Variable Values
 
@@ -197,9 +203,9 @@ VSCODE_PID = 18942
 
 # Directories
 
-# . (device 66311, inode 4612299): 9 files, no impossibilities.
+# . (device 66311, inode 4768724): 13 files, no impossibilities.
 
-# 9 files, no impossibilities in 1 directories.
+# 13 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -217,16 +223,21 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  File does not exist.
+#  Last modified 2023-02-14 19:35:07.467824903
 #  File has been updated.
-#  Failed to be updated.
+#  Successfully updated.
 
 # Not a target:
-makefile:
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
+main.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+reader.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 .DEFAULT:
@@ -234,29 +245,35 @@ makefile:
 #  Modification time never checked.
 #  File has not been updated.
 
-# Not a target:
-GNUmakefile:
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 9):
+	rm main reader
+
+graph: main.cpp reader.cpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 5):
+	$(CC) $(flags) main.cpp -o main
+	$(CC) $(flags) reader.cpp -o reader
 
 # files hash-table stats:
-# Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
+# Load=8/1024=1%, Rehash=0, Collisions=0/20=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 17 / storage = 136 B / avg = 8 B
-# current buf: size = 8162 B / used = 136 B / count = 17 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 20 / storage = 298 B / avg = 14 B
+# current buf: size = 8162 B / used = 298 B / count = 20 / avg = 14 B
 
-# strcache performance: lookups = 20 / hit rate = 15%
+# strcache performance: lookups = 28 / hit rate = 28%
 # hash-table stats:
-# Load=17/8192=0%, Rehash=0, Collisions=1/20=5%
-# Finished Make data base on Tue Feb 14 11:13:28 2023
+# Load=20/8192=0%, Rehash=0, Collisions=1/28=4%
+# Finished Make data base on Thu Feb 23 13:40:54 2023
 
  
-make: *** No rule to make target 'all'.  Stop.
-
