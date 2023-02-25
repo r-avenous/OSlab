@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Feb 23 21:27:15 2023
+# Make data base, printed on Sat Feb 25 15:52:53 2023
 
 # Variables
 
@@ -43,7 +45,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:48960
+JOURNAL_STREAM = 8:47884
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -57,7 +59,7 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/home/shreyas/.local/share/flatpak/exports/sha
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 6001
+MANAGERPID = 6004
 # environment
 VSCODE_CWD = /home/shreyas
 # environment
@@ -73,7 +75,7 @@ flags = -Wall -std=c++11
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/6206,unix/shreyas:/tmp/.ICE-unix/6206
+SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/6209,unix/shreyas:/tmp/.ICE-unix/6209
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -81,7 +83,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 427870119ff84529bc24784f08c7816c
+INVOCATION_ID = 16940314f33940a29ab6209116b7fff9
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -89,7 +91,7 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 280379
+GIO_LAUNCHED_DESKTOP_FILE_PID = 179989
 # automatic
 %F = $(notdir $%)
 # environment
@@ -99,7 +101,7 @@ PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 6164
+SSH_AGENT_PID = 6160
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -191,7 +193,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 280379
+VSCODE_PID = 179989
 # variable set hash-table stats:
 # Load=91/1024=9%, Rehash=0, Collisions=7/116=6%
 
@@ -201,9 +203,9 @@ VSCODE_PID = 280379
 
 # Directories
 
-# . (device 66311, inode 4768724): 13 files, no impossibilities.
+# . (device 66311, inode 4768724): 17 files, no impossibilities.
 
-# 13 files, no impossibilities in 1 directories.
+# 17 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -221,7 +223,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2023-02-14 19:35:07.467824903
+#  Last modified 2023-02-25 15:52:51.016773393
 #  File has been updated.
 #  Successfully updated.
 
@@ -232,7 +234,7 @@ main.cpp:
 #  File has not been updated.
 
 # Not a target:
-reader.cpp:
+pro:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -247,16 +249,15 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 9):
+#  recipe to execute (from 'Makefile', line 8):
 	rm main reader
 
-graph: main.cpp reader.cpp
+graph: main.cpp pro
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 5):
 	$(CC) $(flags) main.cpp -o main
-	$(CC) $(flags) reader.cpp -o reader
 
 # files hash-table stats:
 # Load=8/1024=1%, Rehash=0, Collisions=0/20=0%
@@ -266,14 +267,12 @@ graph: main.cpp reader.cpp
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 20 / storage = 298 B / avg = 14 B
-# current buf: size = 8162 B / used = 298 B / count = 20 / avg = 14 B
+# strcache buffers: 1 (0) / strings = 25 / storage = 340 B / avg = 13 B
+# current buf: size = 8162 B / used = 340 B / count = 25 / avg = 13 B
 
-# strcache performance: lookups = 28 / hit rate = 28%
+# strcache performance: lookups = 32 / hit rate = 21%
 # hash-table stats:
-# Load=20/8192=0%, Rehash=0, Collisions=1/28=4%
-# Finished Make data base on Thu Feb 23 21:27:15 2023
+# Load=25/8192=0%, Rehash=0, Collisions=1/32=3%
+# Finished Make data base on Sat Feb 25 15:52:53 2023
 
  
-make: *** No rule to make target 'all'.  Stop.
-
