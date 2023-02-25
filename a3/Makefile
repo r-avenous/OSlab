@@ -1,9 +1,10 @@
 CC=g++
 flags=-Wall -std=c++11
 
-graph:	main.cpp reader.cpp
+graph:	main.cpp producer.cpp consumer.cpp
 	$(CC) $(flags) main.cpp -o main
-	$(CC) $(flags) reader.cpp -o reader
+	$(CC) $(flags) producer.cpp -o producer
+	$(CC) $(flags) consumer.cpp -o consumer
 
 clean:
-	rm main reader
+	rm main producer consumer
