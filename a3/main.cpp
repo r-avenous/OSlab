@@ -16,24 +16,35 @@
 #define PRODUCTIONSLEEP 50
 #define CONSUMPTIONSLEEP 30
 
+int shmid_setofnodes, shmid_adjlist, *setofnodes_segment, *adjlist_segment;
 inline int get_address_offset_setOfNodesSegment(int node)
 {
     return node * (1+MAXNODES/10);
 }
-
 inline int get_address_offset_adjacencyListSegment(int node)
 {
     return 1 + node * (1+MAXDEGREE);
+}
+void signal_handler(int signum)
+{
+    shmdt(setofnodes_segment);
+    shmdt(adjlist_segment);
+    shmctl(shmid_setofnodes, IPC_RMID,NULL);
+    shmctl(shmid_adjlist, IPC_RMID,NULL);
+    exit(0);
 }
 
 using namespace std;
 
 void producer()
 {
-    // execvp("./producer", NULL);
+    char *args[2];
+    args[0] = (char*)malloc(11);
+    sprintf(args[0], "./producer");
+    args[1] = NULL;
+    // execvp("./producer", args);
     exit(0);
 }
-
 void consumer(int i)
 {
     char *args[3];

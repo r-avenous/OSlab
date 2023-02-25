@@ -7,4 +7,5 @@ graph:	main.cpp producer.cpp consumer.cpp
 	$(CC) $(flags) consumer.cpp -o consumer
 
 clean:
-	rm -f main producer consumer
+	ls | grep -P "^[0-9]\.txt$" | xargs -d"\n" rm -f
+	rm -f main producer consumer 
