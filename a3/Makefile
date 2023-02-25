@@ -7,4 +7,4 @@ graph:	main.cpp producer.cpp consumer.cpp
 	$(CC) $(flags) consumer.cpp -o consumer
 
 clean:
-	rm main producer consumer
+	rm -f main producer consumer

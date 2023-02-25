@@ -11,8 +11,8 @@
 
 #define MAXNODES 5000
 #define MAXDEGREE 2000
-#define SETOFNODESSEGMENT 1
-#define ADJACENCYLISTSEGMENT 2
+#define SETOFNODESSEGMENT 100
+#define ADJACENCYLISTSEGMENT 200
 #define PRODUCTIONSLEEP 50
 #define CONSUMPTIONSLEEP 30
 
@@ -23,29 +23,26 @@ inline int get_address_offset_setOfNodesSegment(int node)
 
 inline int get_address_offset_adjacencyListSegment(int node)
 {
-    return node * (1+MAXDEGREE);
+    return 1 + node * (1+MAXDEGREE);
 }
 
 using namespace std;
 
 void producer()
 {
-    while(1)
-    {
-        sleep(50);
-        cout << "Producer is producing" << endl;
-    }
+    // execvp("./producer", NULL);
     exit(0);
 }
 
-void consumer()
+void consumer(int i)
 {
-    while(1)
-    {
-        sleep(30);
-        cout << "Consumer is consuming" << endl;
-    }
-    exit(0);
+    char *args[3];
+    args[0] = (char*)malloc(11);
+    sprintf(args[0], "./consumer");
+    args[1] = (char*)malloc(2);
+    sprintf(args[1], "%d", i);
+    args[2] = NULL;
+    execvp("./consumer", args);
 }
 
 int main()
@@ -67,13 +64,14 @@ int main()
 
     int shmid_setofnodes, shmid_adjlist, *setofnodes_segment, *adjlist_segment;
     shmid_setofnodes = shmget(SETOFNODESSEGMENT, 10 * (1 + MAXNODES/10) * sizeof(int), IPC_CREAT | 0666);          // create shared memory segment
-    shmid_adjlist = shmget(ADJACENCYLISTSEGMENT, MAXNODES * (1 + MAXDEGREE) * sizeof(int), IPC_CREAT | 0666);          // create shared memory segment
+    shmid_adjlist = shmget(ADJACENCYLISTSEGMENT, (1 + MAXNODES * (1 + MAXDEGREE) )* sizeof(int), IPC_CREAT | 0666);          // create shared memory segment
 
     setofnodes_segment = (int*)shmat(shmid_setofnodes, NULL, 0);                  // attach shared memory segment to process
     adjlist_segment = (int*)shmat(shmid_adjlist, NULL, 0);                  // attach shared memory segment to process
 
     cout << "Number of nodes: " << adjList.size() << endl;
-
+    *adjlist_segment = adjList.size();
+    
     // load graph into shared memory 
     for(auto list: adjList)
     {
@@ -91,11 +89,11 @@ int main()
     int num_nodes = adjList.size();
     int nodes_per_process = num_nodes / 10;
     int nodes_left = num_nodes % 10;
-    int* setofnodes_ptr = setofnodes_segment;
     int counter = 0;
     for(int i = 0; i < 10; i++)
     {
         int num_nodes_in_process = nodes_per_process;
+        int* setofnodes_ptr = setofnodes_segment + get_address_offset_setOfNodesSegment(i);
         if(nodes_left > 0)
         {
             num_nodes_in_process++;
@@ -108,41 +106,42 @@ int main()
             *setofnodes_ptr = counter++;
             setofnodes_ptr++;
         }
+        cout << "Process " << i << " has " << num_nodes_in_process << " nodes" << endl;
     }
 
-    // verify the adjlist stored in shared memory
-    cout << "Adjacency list in the graph: " << endl;
-    for(int i=0; i<(int)adjList.size(); i++)
-    {
-        int* adjlist_ptr = adjlist_segment + get_address_offset_adjacencyListSegment(i);
-        int num_nbrs = *adjlist_ptr;
-        if(num_nbrs == (int)adjList[i].size()) cout << i << " (" << num_nbrs << ") :";
-        else cout << "Incorrect number of neighbors for node " << i << endl;
-        auto it = adjList[i].begin();
-        for(int j=0; j<num_nbrs; j++ , it++)
-        {
-            adjlist_ptr++;
-            if(*adjlist_ptr == *it) cout << *adjlist_ptr << " ";
-            else cout << "Incorrect neighbor for node " << i << endl;
-        }
-        cout << '\n';
-    }
+    // // verify the adjlist stored in shared memory
+    // cout << "Adjacency list in the graph: " << endl;
+    // for(int i=0; i<(int)adjList.size(); i++)
+    // {
+    //     int* adjlist_ptr = adjlist_segment + get_address_offset_adjacencyListSegment(i);
+    //     int num_nbrs = *adjlist_ptr;
+    //     if(num_nbrs == (int)adjList[i].size()) cout << i << " (" << num_nbrs << ") :";
+    //     else cout << "Incorrect number of neighbors for node " << i << endl;
+    //     auto it = adjList[i].begin();
+    //     for(int j=0; j<num_nbrs; j++ , it++)
+    //     {
+    //         adjlist_ptr++;
+    //         if(*adjlist_ptr == *it) cout << *adjlist_ptr << " ";
+    //         else cout << "Incorrect neighbor for node " << i << endl;
+    //     }
+    //     cout << '\n';
+    // }
 
-    // verify the set of nodes stored in shared memory
-    cout << "Set of nodes in the graph: " << endl;
-    counter = 0;
-    setofnodes_ptr = setofnodes_segment;
-    for(int i=0; i<10; i++)
-    {
-        int num_nodes_in_process = *setofnodes_ptr;
-        setofnodes_ptr++;
-        for(int j=0; j<num_nodes_in_process; j++)
-        {
-            if(counter++ != *setofnodes_ptr) cout << "Incorrect node in set of nodes" << endl;
-            setofnodes_ptr++;
-        }
-        cout << '\n';
-    }
+    // // verify the set of nodes stored in shared memory
+    // cout << "Set of nodes in the graph: " << endl;
+    // counter = 0;
+    // setofnodes_ptr = setofnodes_segment;
+    // for(int i=0; i<10; i++)
+    // {
+    //     int num_nodes_in_process = *setofnodes_ptr;
+    //     setofnodes_ptr++;
+    //     for(int j=0; j<num_nodes_in_process; j++)
+    //     {
+    //         if(counter++ != *setofnodes_ptr) cout << "Incorrect node in set of nodes" << endl;
+    //         setofnodes_ptr++;
+    //     }
+    //     cout << '\n';
+    // }
 
     // make producer
     pid_t pid_producer = fork(), pid_consumer[10];
@@ -157,8 +156,9 @@ int main()
             pid_consumer[i] = fork();
             if(pid_consumer[i] == 0)
             {
-                consumer();
+                consumer(i);
             }
+            sleep(2);
         }
     }
     for(int i=0; i<10; i++)
