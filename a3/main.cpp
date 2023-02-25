@@ -34,11 +34,12 @@ void producer()
     {
         sleep(50);
         cout << "Producer is producing" << endl;
+        execvp("producer", NULL);
     }
     exit(0);
 }
 
-void consumer()
+void consumer(int consumer_id)
 {
     while(1)
     {
@@ -157,7 +158,7 @@ int main()
             pid_consumer[i] = fork();
             if(pid_consumer[i] == 0)
             {
-                consumer();
+                consumer(i);
             }
         }
     }
