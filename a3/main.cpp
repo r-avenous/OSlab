@@ -5,11 +5,14 @@
 #include <set>
 #include <fstream>
 #include <sys/shm.h>
+#include <unistd.h>
 
 #define MAXNODES 5000
 #define MAXDEGREE 2000
 #define SETOFNODESSEGMENT 1
 #define ADJACENCYLISTSEGMENT 2
+#define PRODUCTIONSLEEP 50
+#define CONSUMPTIONSLEEP 30
 
 inline int get_address_offset_setOfNodesSegment(int node)
 {
@@ -22,6 +25,26 @@ inline int get_address_offset_adjacencyListSegment(int node)
 }
 
 using namespace std;
+
+void producer()
+{
+    while(1)
+    {
+        sleep(50);
+        cout << "Producer is producing" << endl;
+    }
+    exit(0);
+}
+
+void consumer()
+{
+    while(1)
+    {
+        sleep(30);
+        cout << "Consumer is consuming" << endl;
+    }
+    exit(0);
+}
 
 int main()
 {
@@ -117,6 +140,24 @@ int main()
             setofnodes_ptr++;
         }
         cout << '\n';
+    }
+
+    // make producer
+    pid_t pid_producer = fork(), pid_consumer[10];
+    if(pid_producer == 0)
+    {
+        producer();
+    }
+    else
+    {
+        for(int i=0; i<10; i++)
+        {
+            pid_consumer[i] = fork();
+            if(pid_consumer[i] == 0)
+            {
+                consumer();
+            }
+        }
     }
 
     shmdt(adjlist_segment);      // deallocate shared memory segment; don't delete it yet!
