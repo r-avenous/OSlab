@@ -6,6 +6,8 @@
 #include <sys/shm.h>
 #define NUM_NODES 4039
 #define NUM_EDGES 88234
+#define MAX_NODES 1e4
+#define MAX_EDGES 1e6
 
 using namespace std;
 
@@ -29,7 +31,7 @@ int main(){
     char *shared_seg;
     key_t key;
     int shmid;
-    int memory_size = (1 + NUM_NODES + 2 * NUM_EDGES) * sizeof(int); // allocate memory for graph edges, as well as number of edges
+    int memory_size = (1 + MAX_NODES + 2 * MAX_EDGES) * sizeof(int); // allocate memory for graph edges, as well as number of edges
 
     key = ftok("/tmp", 'a');                                     // generate unique key for shmget()
     shmid = shmget(key, memory_size, IPC_CREAT | 0666);          // create shared memory segment
