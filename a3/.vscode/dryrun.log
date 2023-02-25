@@ -1,6 +1,7 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory '/home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3'
+g++ -Wall -std=c++11 main.cpp -o main
+g++ -Wall -std=c++11 producer.cpp -o producer
+g++ -Wall -std=c++11 consumer.cpp -o consumer
 make: Leaving directory '/home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3'
  
-make: *** No rule to make target 'pro', needed by 'graph'.
-

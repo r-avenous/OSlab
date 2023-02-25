@@ -8,167 +8,95 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-
-#define MAXNODES 5000
-#define MAXDEGREE 2000
-#define SETOFNODESSEGMENT 1
-#define ADJACENCYLISTSEGMENT 2
-#define PRODUCTIONSLEEP 50
-#define CONSUMPTIONSLEEP 30
-
-inline int get_address_offset_setOfNodesSegment(int node)
-{
-    return node * (1+MAXNODES/10);
-}
-
-inline int get_address_offset_adjacencyListSegment(int node)
-{
-    return node * (1+MAXDEGREE);
-}
+#include <bits/stdc++.h>
 
 using namespace std;
 
-void producer()
-{
-    while(1)
-    {
-        sleep(50);
-        cout << "Producer is producing" << endl;
-    }
+#define MAXNODES 5000
+#define MAXDEGREE 2000
+#define PRODUCTIONSLEEP 50
+#define CONSUMPTIONSLEEP 30
+#define SETOFNODESSEGMENT 1
+#define ADJACENCYLISTSEGMENT 2
+
+int *adj_list, *mapping;
+
+void sig_handler(int sig_no){ // if SIGINT is detected, first detach the shared memeory segment and then exit
+    shmdt(adj_list);
+    shmdt(mapping);
     exit(0);
 }
 
-void consumer()
-{
-    while(1)
-    {
-        sleep(30);
-        cout << "Consumer is consuming" << endl;
-    }
-    exit(0);
-}
+int main(){
+    signal(SIGINT, sig_handler); // handler for SIGINT signal
+    int shmid_adj_list, shmid_mapping;
+    int i=0, j=0;
+    shmid_adj_list = shmget(ADJACENCYLISTSEGMENT, (MAXNODES * (1 + MAXDEGREE) + 1) * sizeof(int), IPC_CREAT | 0666); // gets the memory segment with provided key (for adj_list)
+    shmid_mapping = shmget(SETOFNODESSEGMENT, (10 * (1 + MAXNODES/10) + 1) * sizeof(int) , IPC_CREAT | 0666); // gets the memory segment with provided key (for mapping)
+    adj_list = (int *)shmat(shmid_adj_list, NULL, 0); //attach adj_list
+    mapping = (int *)shmat(shmid_mapping, NULL, 0); // attach_mapping
+    srand(time(0));
+    while(1){
+        int m, k ,ubm = 30, lbm = 10, ubk = 20, lbk = 1;
+        unsigned long int sum_deg = 0;
+        // srand(time(0));
+        m = (rand() % (ubm - lbm + 1)) + lbm; // generate value of m
 
-int main()
-{
-    const char *filename = "facebook_combined.txt";
-    map<int, set<int>> adjList;
-    int node1, node2;
-
-    // read graph edges from file
-    ifstream file(filename);
-    string line;
-    
-    while (getline(file, line))
-    {
-        sscanf(line.c_str(), "%d %d", &node1, &node2);
-        adjList[node1].insert(node2);
-        adjList[node2].insert(node1);
-    }
-
-    int shmid_setofnodes, shmid_adjlist, *setofnodes_segment, *adjlist_segment;
-    shmid_setofnodes = shmget(SETOFNODESSEGMENT, 10 * (1 + MAXNODES/10) * sizeof(int), IPC_CREAT | 0666);          // create shared memory segment
-    shmid_adjlist = shmget(ADJACENCYLISTSEGMENT, MAXNODES * (1 + MAXDEGREE) * sizeof(int), IPC_CREAT | 0666);          // create shared memory segment
-
-    setofnodes_segment = (int*)shmat(shmid_setofnodes, NULL, 0);                  // attach shared memory segment to process
-    adjlist_segment = (int*)shmat(shmid_adjlist, NULL, 0);                  // attach shared memory segment to process
-
-    cout << "Number of nodes: " << adjList.size() << endl;
-
-    // load graph into shared memory 
-    for(auto list: adjList)
-    {
-        int node = list.first;
-        int* adjlist_ptr = adjlist_segment + get_address_offset_adjacencyListSegment(node);
-        *adjlist_ptr = list.second.size();
-        for(auto nbr: list.second)
-        {
-            adjlist_ptr++;
-            *adjlist_ptr = nbr;
-        }
-    }
-
-    // distribute nodes to 10 processes
-    int num_nodes = adjList.size();
-    int nodes_per_process = num_nodes / 10;
-    int nodes_left = num_nodes % 10;
-    int* setofnodes_ptr = setofnodes_segment;
-    int counter = 0;
-    for(int i = 0; i < 10; i++)
-    {
-        int num_nodes_in_process = nodes_per_process;
-        if(nodes_left > 0)
-        {
-            num_nodes_in_process++;
-            nodes_left--;
-        }
-        *setofnodes_ptr = num_nodes_in_process;
-        setofnodes_ptr++;
-        for(int j = 0; j < num_nodes_in_process; j++)
-        {
-            *setofnodes_ptr = counter++;
-            setofnodes_ptr++;
-        }
-    }
-
-    // verify the adjlist stored in shared memory
-    cout << "Adjacency list in the graph: " << endl;
-    for(int i=0; i<(int)adjList.size(); i++)
-    {
-        int* adjlist_ptr = adjlist_segment + get_address_offset_adjacencyListSegment(i);
-        int num_nbrs = *adjlist_ptr;
-        if(num_nbrs == (int)adjList[i].size()) cout << i << " (" << num_nbrs << ") :";
-        else cout << "Incorrect number of neighbors for node " << i << endl;
-        auto it = adjList[i].begin();
-        for(int j=0; j<num_nbrs; j++ , it++)
-        {
-            adjlist_ptr++;
-            if(*adjlist_ptr == *it) cout << *adjlist_ptr << " ";
-            else cout << "Incorrect neighbor for node " << i << endl;
-        }
-        cout << '\n';
-    }
-
-    // verify the set of nodes stored in shared memory
-    cout << "Set of nodes in the graph: " << endl;
-    counter = 0;
-    setofnodes_ptr = setofnodes_segment;
-    for(int i=0; i<10; i++)
-    {
-        int num_nodes_in_process = *setofnodes_ptr;
-        setofnodes_ptr++;
-        for(int j=0; j<num_nodes_in_process; j++)
-        {
-            if(counter++ != *setofnodes_ptr) cout << "Incorrect node in set of nodes" << endl;
-            setofnodes_ptr++;
-        }
-        cout << '\n';
-    }
-
-    // make producer
-    pid_t pid_producer = fork(), pid_consumer[10];
-    if(pid_producer == 0)
-    {
-        producer();
-    }
-    else
-    {
-        for(int i=0; i<10; i++)
-        {
-            pid_consumer[i] = fork();
-            if(pid_consumer[i] == 0)
-            {
-                consumer();
+        int num_nodes = adj_list[0]; // num_nodes = total_number of nodes
+        vector<int> degree;          // vector to store degree of all nodes in a prefix sum fashion
+        int temp;
+        unsigned long long sum;      // summ will store the sum of all degrees
+        for(i=0; i<num_nodes; i++){
+            temp = adj_list[1+i*500];
+            sum += temp;
+            temp += *(degree.end()-1);
+            if(i!= 0){
+                degree.push_back(temp);
             }
         }
-    }
-    for(int i=0; i<10; i++)
-    {
-        waitpid(pid_consumer[i], NULL, 0);
-    }
 
-    shmdt(adjlist_segment);      // deallocate shared memory segment; don't delete it yet!
-    shmdt(setofnodes_segment);      // deallocate shared memory segment; don't delete it yet!
-    shmctl(shmid_setofnodes, IPC_RMID,NULL);
-    shmctl(shmid_adjlist, IPC_RMID,NULL);
-    return 0;
+        // the method being used for finding the new k nodes:
+        /*
+            We first sum of all degrees and pick a random number from (0, sum of all degrees - 1).
+            After this we find in which interval does it lie. For example:
+            if degrees of node are d1, d2, d3.....
+            and if the value lies between d1, d1+d2 then we add the edge between new node and the second node.
+        */
+        
+        for(i=0;i<m;i++){
+            k = (rand() % (ubk - lbk + 1)) + lbk;
+            unordered_map<int, int> ignore;          // ignore will consist keys of those nodes which are already added as an edge
+            for(j=0; j<k; j++){
+                int random = (int)((double)rand() / ((double)RAND_MAX + 1) * sum); // generate random value
+                auto upper = upper_bound(degree.begin(), degree.end(), random); // use binary search to find its interval and get the corresponding node
+                int new_node = upper - degree.begin(); // new_node  is the node which is to get added as an edge
+                if(ignore.find(new_node) == ignore.end()){ // we check if it has already been selected
+                    ignore.insert({new_node,1});
+                }
+                else{
+                    j--;
+                }
+            }
+            int ptr = 1 + (MAXDEGREE+1)*(num_nodes+i);  // for the newly added node first we add the degree in the adj_list
+            adj_list[ptr] = ignore.size();
+            int l=1;
+            for(auto it = ignore.begin(); it != ignore.end(); it++){ // now we iterate over all the vertices who got added as a new edge to update their adj_list
+                adj_list[ptr + l] = it->first;
+                l++;
+                int temp_ptr = 1 + (it->first)*(MAXDEGREE+1);
+                adj_list[temp_ptr] += 1; // first we increase the degree by 1
+                int temp_node = adj_list[temp_ptr];
+                adj_list[temp_ptr + temp_node] = num_nodes + i; // then we add the new node's node number
+            }
+            int rand_consumer;
+            rand_consumer = rand()%10; // randomly selecting a consumer out of the 10 partitions
+            mapping[0] += 1; // increasing the number of nodes
+            int temp_ptr = 1 + rand_consumer*(1 + MAXNODES/10); 
+            mapping[temp_ptr] += 1; // increasing the number of nodes in the partition of randomly selected consumer
+            mapping[temp_ptr + mapping[temp_ptr]] = num_nodes + i; // adding the new node into the partition
+        }
+        adj_list[0] += m; // increase the total number count
+        sleep(50); // producer sleeps for 50s after each iteration
+    }
+    
 }

@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Feb 25 15:52:53 2023
+# Make data base, printed on Sat Feb 25 15:56:09 2023
 
 # Variables
 
@@ -223,18 +221,18 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2023-02-25 15:52:51.016773393
+#  Last modified 2023-02-25 15:54:05.334882113
 #  File has been updated.
 #  Successfully updated.
 
 # Not a target:
-main.cpp:
+producer.cpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
 # Not a target:
-pro:
+main.cpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -249,30 +247,40 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 8):
-	rm main reader
+#  recipe to execute (from 'Makefile', line 10):
+	rm main producer consumer
 
-graph: main.cpp pro
+graph: main.cpp producer.cpp consumer.cpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 5):
 	$(CC) $(flags) main.cpp -o main
+	$(CC) $(flags) producer.cpp -o producer
+	$(CC) $(flags) consumer.cpp -o consumer
+
+# Not a target:
+consumer.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # files hash-table stats:
-# Load=8/1024=1%, Rehash=0, Collisions=0/20=0%
+# Load=9/1024=1%, Rehash=0, Collisions=0/22=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 25 / storage = 340 B / avg = 13 B
-# current buf: size = 8162 B / used = 340 B / count = 25 / avg = 13 B
+# strcache buffers: 1 (0) / strings = 24 / storage = 336 B / avg = 14 B
+# current buf: size = 8162 B / used = 336 B / count = 24 / avg = 14 B
 
-# strcache performance: lookups = 32 / hit rate = 21%
+# strcache performance: lookups = 33 / hit rate = 27%
 # hash-table stats:
-# Load=25/8192=0%, Rehash=0, Collisions=1/32=3%
-# Finished Make data base on Sat Feb 25 15:52:53 2023
+# Load=24/8192=0%, Rehash=0, Collisions=1/33=3%
+# Finished Make data base on Sat Feb 25 15:56:09 2023
 
  
+make: *** No rule to make target 'all'.  Stop.
+
