@@ -6,6 +6,8 @@
 #include <fstream>
 #include <sys/shm.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <sys/wait.h>
 
 #define MAXNODES 5000
 #define MAXDEGREE 2000
@@ -158,6 +160,10 @@ int main()
                 consumer();
             }
         }
+    }
+    for(int i=0; i<10; i++)
+    {
+        waitpid(pid_consumer[i], NULL, 0);
     }
 
     shmdt(adjlist_segment);      // deallocate shared memory segment; don't delete it yet!
