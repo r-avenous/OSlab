@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <queue>
 
 #define MAXNODES 5000
 #define MAXDEGREE 2000
@@ -20,6 +21,7 @@ using namespace std;
 
 int consumerID, totalNumNodes, shmid_setofnodes, shmid_adjlist, *setofnodes_segment, *adjlist_segment;
 char fileName[7];
+vector<set<int>> adjList(MAXNODES);
 
 inline int get_address_offset_setOfNodesSegment()
 {
@@ -36,62 +38,86 @@ void signal_handler(int signum)
     exit(0);
 }
 
-void printPath(int currentVertex, vector<int> parents, ofstream &file)
+void printDestinationPaths(const vector<int>& sources, vector<int>& dests, vector<vector<int>>& dist, ofstream &fout) 
 {
-    if (currentVertex == -1) 
+    set<int> sourcesSet(sources.begin(), sources.end());
+    for (int i = 0; i < (int)dests.size(); i++) 
     {
-        return;
-    }
-    printPath(parents[currentVertex], parents, file);
-    file << currentVertex << " ";
-}
-
-void printSolution(int startVertex, vector<int> distances, vector<int> parents, ofstream &file)
-{
-    int totalNumNodes = distances.size();
-    for (int vertexIndex = 0; vertexIndex < totalNumNodes; vertexIndex++) 
-    {
-        if (vertexIndex != startVertex) 
+        vector<int> path;
+        int closestSrc = -1;
+        int minDist = 1e9;
+        for (int j = 0; j < (int)sources.size(); j++) 
         {
-            file << "\n" << startVertex << " -> ";
-            file << vertexIndex << " = ";
-            file << distances[vertexIndex] << " : ";
-            printPath(vertexIndex, parents, file);
-        }
-    }
-}
-
-void dijkstra(vector<set<int>> adjLis, int startVertex, ofstream &file)
-{
-    vector<int> shortestDistances(totalNumNodes, 1e9), parents(totalNumNodes);
-    vector<bool> added(totalNumNodes, false);
-    shortestDistances[startVertex] = 0;
-    parents[startVertex] = -1;
-    
-    for (int i = 1; i < totalNumNodes; i++) 
-    {
-        int nearestVertex = -1;
-        int shortestDistance = 1e9;
-        for (int vertexIndex = 0; vertexIndex < totalNumNodes; vertexIndex++) 
-        {
-            if (!added[vertexIndex] && shortestDistances[vertexIndex] < shortestDistance) 
+            if (dist[j][dests[i]] < minDist) 
             {
-                nearestVertex = vertexIndex;
-                shortestDistance = shortestDistances[vertexIndex];
+                closestSrc = sources[j];
+                minDist = dist[j][dests[i]];
             }
         }
-        added[nearestVertex] = true;
- 
-        for (int vertexIndex = 0; vertexIndex < totalNumNodes; vertexIndex++) 
+        fout << dests[i] << " <- ";
+        if (minDist == 1e9) 
         {
-            if (adjLis[nearestVertex].find(vertexIndex) != adjLis[nearestVertex].end() && ((shortestDistance + 1) < shortestDistances[vertexIndex])) 
+            fout << "X : No path.\n";
+            continue;
+        }
+        int u = dests[i];
+        path.push_back(u);
+        while (sourcesSet.find(u) == sourcesSet.end())
+        {
+            for (int v : adjList[u]) 
             {
-                parents[vertexIndex] = nearestVertex;
-                shortestDistances[vertexIndex] = shortestDistance + 1;
+                if (dist[sources.size() - 1][v] == dist[sources.size() - 1][u] - 1) 
+                {
+                    u = v;
+                    break;
+                }
+            }
+            path.push_back(u);
+        }
+        fout << path[path.size() - 1] << " : " << minDist << " | ";
+        for (int j = (int)path.size() - 1; j >= 0; j--) 
+        {
+            fout << path[j] << " ";
+        }
+        fout << endl;        
+    }
+}
+
+void multiSourceDijkstra(const vector<int>& sources, ofstream &fout) 
+{
+    queue<int> q;
+    vector<bool> visited(totalNumNodes, false);
+    vector<vector<int>> dist(sources.size(), vector<int>(totalNumNodes, 1e9));
+    for (int i = 0; i < (int)sources.size(); i++) 
+    {
+        dist[i][sources[i]] = 0;
+        visited[sources[i]] = true;
+        q.push(sources[i]);
+    }
+    while (!q.empty()) 
+    {
+        int u = q.front();
+        q.pop();
+        for (int v : adjList[u]) 
+        {
+            if (!visited[v]) {
+                visited[v] = true;
+                for (int i = 0; i < (int)sources.size(); i++) {
+                    dist[i][v] = dist[i][u] + 1;
+                }
+                q.push(v);
             }
         }
     }
-    printSolution(startVertex, shortestDistances, parents, file);
+    vector<int> dests;
+    for (int i = 0; i < totalNumNodes; i++) 
+    {
+        if (i < sources[0] || i > sources[sources.size() - 1])
+        {
+            dests.push_back(i);
+        }
+    }
+    printDestinationPaths(sources, dests, dist, fout);
 }
 
 int main(int argc, char *argv[])
@@ -122,27 +148,23 @@ int main(int argc, char *argv[])
             setOfNodes.insert(*(thisProcessSetOfNodes_segment + i));
         }
         totalNumNodes = *adjlist_segment;
-        vector<set<int>> adjList(totalNumNodes);
         // get adjacency list
         for(int i=0; i<totalNumNodes; i++)
         {
             int* curAdjacencyList_segment = adjlist_segment + get_address_offset_adjacencyListSegment(i);
-            int curNumNeighbors = *curAdjacencyList_segment;
+            int curNumNeighbors = *curAdjacencyList_segment, oldlistsize = adjList[i].size();
             // cout << "The number of neighbors of node " << i << " is " << *curAdjacencyList_segment << endl;
-            for(int j=1; j<=curNumNeighbors; j++)
+            for(int j=1+oldlistsize; j<=curNumNeighbors; j++)
             {
                 // cout << *(curAdjacencyList_segment + j) << " ";
                 adjList[i].insert(*(curAdjacencyList_segment + j));
             }
             // cout << endl;
         }
-        for(int node: setOfNodes)
-        {
-            // cout << "Consumer " << consumerID << " is consuming node " << node << endl;
-            dijkstra(adjList, node, file);
-        }
+        multiSourceDijkstra(vector<int> (setOfNodes.begin(), setOfNodes.end()), file);
         // cout << endl;
         file.close();
+        cout << "Consumer " << consumerID << " is done consuming" << endl;
     }
     shmdt(adjlist_segment);      // deallocate shared memory segment; don't delete it yet!
     shmdt(setofnodes_segment);      // deallocate shared memory segment; don't delete it yet!
