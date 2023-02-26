@@ -85,6 +85,7 @@ void printDestinationPaths(const vector<int>& sources, vector<int>& dests, vecto
 
 void multiSourceDijkstra(const vector<int>& sources, ofstream &fout) 
 {
+    set<int> sourcesSet(sources.begin(), sources.end());
     queue<int> q;
     vector<bool> visited(totalNumNodes, false);
     vector<vector<int>> dist(sources.size(), vector<int>(totalNumNodes, 1e9));
@@ -112,10 +113,8 @@ void multiSourceDijkstra(const vector<int>& sources, ofstream &fout)
     vector<int> dests;
     for (int i = 0; i < totalNumNodes; i++) 
     {
-        if (i < sources[0] || i > sources[sources.size() - 1])
-        {
+        if(sourcesSet.find(i) == sourcesSet.end())
             dests.push_back(i);
-        }
     }
     printDestinationPaths(sources, dests, dist, fout);
 }
