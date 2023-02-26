@@ -17,6 +17,7 @@
 #define CONSUMPTIONSLEEP 30
 
 int shmid_setofnodes, shmid_adjlist, *setofnodes_segment, *adjlist_segment;
+bool optimisation;
 inline int get_address_offset_setOfNodesSegment(int node)
 {
     return node * (1+MAXNODES/10);
@@ -47,6 +48,19 @@ void producer()
 }
 void consumer(int i)
 {
+    if(optimisation)
+    {
+        char *args[3];
+        args[0] = (char*)malloc(11);
+        sprintf(args[0], "./consumer");
+        args[1] = (char*)malloc(2);
+        sprintf(args[1], "%d", i);
+        args[2] = (char*)malloc(10);
+        sprintf(args[2], "-optimize");
+        args[3] = NULL;
+        execvp("./consumer", args);
+        // exit(0);
+    }
     char *args[3];
     args[0] = (char*)malloc(11);
     sprintf(args[0], "./consumer");
@@ -54,14 +68,23 @@ void consumer(int i)
     sprintf(args[1], "%d", i);
     args[2] = NULL;
     execvp("./consumer", args);
-    exit(0);
+    // exit(0);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     const char *filename = "facebook_combined.txt";
     map<int, set<int>> adjList;
     int node1, node2;
+    optimisation = false;
+    if(argc > 1) 
+    {
+        if(!strcmp(argv[1], "-optimize"))
+        {
+            optimisation = true;
+            cout << "Optimisation enabled" << endl;
+        }
+    }
 
     // read graph edges from file
     ifstream file(filename);

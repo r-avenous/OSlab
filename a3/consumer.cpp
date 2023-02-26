@@ -20,6 +20,7 @@
 using namespace std;
 
 int consumerID, totalNumNodes, shmid_setofnodes, shmid_adjlist, *setofnodes_segment, *adjlist_segment;
+bool optimisation;
 char fileName[7];
 vector<set<int>> adjList(MAXNODES);
 
@@ -123,7 +124,18 @@ int main(int argc, char *argv[])
 {
     consumerID = atoi(argv[1]);
     sprintf(fileName, "%d.txt", consumerID);
-    cout << "Consumer " << consumerID << " is running" << endl;
+    cout << "Consumer " << consumerID << " is running";
+    signal(SIGINT, signal_handler);
+    optimisation = false;
+    if(argc > 2)
+    {
+        if(strcmp(argv[2], "-optimize") == 0)
+        {
+            optimisation = true;
+            cout << " optimised";
+        }
+    }
+    cout << endl;
     
     shmid_setofnodes = shmget(SETOFNODESSEGMENT, 10 * (1 + MAXNODES/10) * sizeof(int), IPC_CREAT | 0666);          // create shared memory segment
     shmid_adjlist = shmget(ADJACENCYLISTSEGMENT, (1 + MAXNODES * (1 + MAXDEGREE)) * sizeof(int), IPC_CREAT | 0666);          // create shared memory segment
