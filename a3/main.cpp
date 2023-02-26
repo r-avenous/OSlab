@@ -42,7 +42,7 @@ void producer()
     args[0] = (char*)malloc(11);
     sprintf(args[0], "./producer");
     args[1] = NULL;
-    // execvp("./producer", args);
+    execvp("./producer", args);
     exit(0);
 }
 void consumer(int i)
@@ -54,6 +54,7 @@ void consumer(int i)
     sprintf(args[1], "%d", i);
     args[2] = NULL;
     execvp("./consumer", args);
+    exit(0);
 }
 
 int main()
@@ -169,13 +170,14 @@ int main()
             {
                 consumer(i);
             }
-            sleep(2);
+            // sleep(2);
         }
     }
     for(int i=0; i<10; i++)
     {
         waitpid(pid_consumer[i], NULL, 0);
     }
+    waitpid(pid_producer, NULL, 0);
 
     shmdt(adjlist_segment);      // deallocate shared memory segment; don't delete it yet!
     shmdt(setofnodes_segment);      // deallocate shared memory segment; don't delete it yet!

@@ -36,16 +36,15 @@ int main(){
     shmid_mapping = shmget(SETOFNODESSEGMENT, (10 * (1 + MAXNODES/10) ) * sizeof(int) , IPC_CREAT | 0666); // gets the memory segment with provided key (for mapping)
     adj_list = (int *)shmat(shmid_adj_list, NULL, 0); //attach adj_list
     mapping = (int *)shmat(shmid_mapping, NULL, 0); // attach_mapping
-    // int countr = 1;
+    // int countr = 2;
     srand(time(0));
-    while(1)
-    {
-        int m, k ,ubm = 5, lbm = 1, ubk = 3, lbk = 1;
+    while(1){
+        int m, k ,ubm = 30, lbm = 10, ubk = 20, lbk = 1;
         // unsigned long int sum_deg = 0;
         // srand(time(0));
-        // m = (rand() % (ubm - lbm + 1)) + lbm; // generate value of m
-        m=1;
-        // cout << "m: " << m << endl;
+        m = (rand() % (ubm - lbm + 1)) + lbm; // generate value of m
+        // m=1;
+        cout << "m: " << m << endl;
         int num_nodes = adj_list[0]; // num_nodes = total_number of nodes
             cout << "num_nodes: " << num_nodes << endl;
         vector<int> degree;          // vector to store degree of all nodes in a prefix sum fashion
@@ -74,12 +73,13 @@ int main(){
         */
         
         for(i=0;i<m;i++){
+            srand(time(0)+i);
             k = (rand() % (ubk - lbk + 1)) + lbk;
-            // cout << "k: " << k << endl;
+            cout << "k: " << k << endl;
             unordered_map<int, int> ignore;          // ignore will consist keys of those nodes which are already added as an edge
             for(j=0; j<k; j++){
                 int random = (int)((double)rand() / ((double)RAND_MAX + 1) * sum); // generate random value
-                sleep(1);
+                // sleep(1);
                 auto upper = upper_bound(degree.begin(), degree.end(), random); // use binary search to find its interval and get the corresponding node
                 int new_node = upper - degree.begin(); // new_node  is the node which is to get added as an edge
                 if(ignore.find(new_node) == ignore.end()){ // we check if it has already been selected
@@ -114,7 +114,7 @@ int main(){
             mapping[temp_ptr + mapping[temp_ptr]] = num_nodes + i; // adding the new node into the partition
         }
         adj_list[0] += m; // increase the total number count
-        // sleep(50); // producer sleeps for 50s after each iteration
+        sleep(50); // producer sleeps for 50s after each iteration
     }
     
 }
