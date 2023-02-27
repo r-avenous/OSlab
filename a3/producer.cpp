@@ -39,7 +39,7 @@ int main()
     mapping = (int *)shmat(shmid_mapping, NULL, 0); // attach_mapping
     int countr = 2;
     srand(time(0));
-    while(countr--)
+    while(1)
     {
         int m, k ,ubm = 30, lbm = 10, ubk = 20, lbk = 1;
         // unsigned long int sum_deg = 0;

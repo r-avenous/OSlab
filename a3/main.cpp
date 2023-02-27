@@ -18,15 +18,15 @@
 
 int shmid_setofnodes, shmid_adjlist, *setofnodes_segment, *adjlist_segment;
 bool optimisation;
-inline int get_address_offset_setOfNodesSegment(int node)
+inline int get_address_offset_setOfNodesSegment(int node)   // inline function to find the offset of the current consumer
 {
     return node * (1+MAXNODES/10);
 }
-inline int get_address_offset_adjacencyListSegment(int node)
+inline int get_address_offset_adjacencyListSegment(int node)    // inline function to find offset of adjacency list of node 'node'
 {
     return 1 + node * (1+MAXDEGREE);
 }
-void signal_handler(int signum)
+void signal_handler(int signum) // signal handler for SIGINT (detaches the memory segments and marks it for deletion before exiting)
 {
     shmdt(setofnodes_segment);
     shmdt(adjlist_segment);
@@ -37,7 +37,7 @@ void signal_handler(int signum)
 
 using namespace std;
 
-void producer()
+void producer() // calls producer
 {
     char *args[2];
     args[0] = (char*)malloc(11);
@@ -46,9 +46,9 @@ void producer()
     execvp("./producer", args);
     exit(0);
 }
-void consumer(int i)
+void consumer(int i)    // calls 10 consumers
 {
-    if(optimisation)
+    if(optimisation) // if optimization enabled, calls optimized consumers
     {
         char *args[3];
         args[0] = (char*)malloc(11);
@@ -61,7 +61,7 @@ void consumer(int i)
         execvp("./consumer", args);
         // exit(0);
     }
-    char *args[3];
+    char *args[3];  // calls non optimized consumers
     args[0] = (char*)malloc(11);
     sprintf(args[0], "./consumer");
     args[1] = (char*)malloc(2);
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     optimisation = false;
     if(argc > 1) 
     {
-        if(!strcmp(argv[1], "-optimize"))
+        if(!strcmp(argv[1], "-optimize"))   // if optimization flag is enabled
         {
             optimisation = true;
             cout << "Optimisation enabled" << endl;
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     ifstream file(filename);
     string line;
     
-    while (getline(file, line))
+    while (getline(file, line)) // builds adjacency list from the file
     {
         sscanf(line.c_str(), "%d %d", &node1, &node2);
         adjList[node1].insert(node2);
@@ -144,39 +144,6 @@ int main(int argc, char *argv[])
         cout << "Process " << i << " has " << num_nodes_in_process << " nodes" << endl;
     }
 
-    // // verify the adjlist stored in shared memory
-    // cout << "Adjacency list in the graph: " << endl;
-    // for(int i=0; i<(int)adjList.size(); i++)
-    // {
-    //     int* adjlist_ptr = adjlist_segment + get_address_offset_adjacencyListSegment(i);
-    //     int num_nbrs = *adjlist_ptr;
-    //     if(num_nbrs == (int)adjList[i].size()) cout << i << " (" << num_nbrs << ") :";
-    //     else cout << "Incorrect number of neighbors for node " << i << endl;
-    //     auto it = adjList[i].begin();
-    //     for(int j=0; j<num_nbrs; j++ , it++)
-    //     {
-    //         adjlist_ptr++;
-    //         if(*adjlist_ptr == *it) cout << *adjlist_ptr << " ";
-    //         else cout << "Incorrect neighbor for node " << i << endl;
-    //     }
-    //     cout << '\n';
-    // }
-
-    // // verify the set of nodes stored in shared memory
-    // cout << "Set of nodes in the graph: " << endl;
-    // counter = 0;
-    // setofnodes_ptr = setofnodes_segment;
-    // for(int i=0; i<10; i++)
-    // {
-    //     int num_nodes_in_process = *setofnodes_ptr;
-    //     setofnodes_ptr++;
-    //     for(int j=0; j<num_nodes_in_process; j++)
-    //     {
-    //         if(counter++ != *setofnodes_ptr) cout << "Incorrect node in set of nodes" << endl;
-    //         setofnodes_ptr++;
-    //     }
-    //     cout << '\n';
-    // }
 
     // make producer
     pid_t pid_producer = fork(), pid_consumer[10];
@@ -193,18 +160,17 @@ int main(int argc, char *argv[])
             {
                 consumer(i);
             }
-            // sleep(2);
         }
     }
     for(int i=0; i<10; i++)
     {
-        waitpid(pid_consumer[i], NULL, 0);
+        waitpid(pid_consumer[i], NULL, 0);  // wait for each consumer
     }
-    waitpid(pid_producer, NULL, 0);
+    waitpid(pid_producer, NULL, 0); // wait for producer
 
-    shmdt(adjlist_segment);      // deallocate shared memory segment; don't delete it yet!
-    shmdt(setofnodes_segment);      // deallocate shared memory segment; don't delete it yet!
-    shmctl(shmid_setofnodes, IPC_RMID,NULL);
-    shmctl(shmid_adjlist, IPC_RMID,NULL);
+    shmdt(adjlist_segment);      // detaches shared memory segment;
+    shmdt(setofnodes_segment);      // detaches shared memory segment;
+    shmctl(shmid_setofnodes, IPC_RMID,NULL);    //marks the shared memeory segment for deletion
+    shmctl(shmid_adjlist, IPC_RMID,NULL);   //marks the shared memeory segment for deletion
     return 0;
 }
