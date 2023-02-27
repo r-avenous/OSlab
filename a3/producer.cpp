@@ -44,7 +44,7 @@ int main()
         m = (rand() % (ubm - lbm + 1)) + lbm; // generate value of m
         cout << "m: " << m << endl;
         int num_nodes = adj_list[0]; // num_nodes = total_number of nodes
-            cout << "num_nodes: " << num_nodes << endl;
+        cout << "num_nodes: " << num_nodes << endl;
         vector<int> degree;          // vector to store degree of all nodes in a prefix sum fashion
         unsigned long long sum=0;      // summ will store the sum of all degrees
         for(i=0; i<num_nodes; i++){
