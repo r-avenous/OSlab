@@ -1,10 +1,11 @@
 CC=g++
 flags=-Wall -std=c++11
 
-graph:	main.cpp producer.cpp consumer.cpp
+run:	main.cpp producer.cpp consumer.cpp
 	$(CC) $(flags) main.cpp -o main
 	$(CC) $(flags) producer.cpp -o producer
-	$(CC) $(flags) consumer.cpp -o consumer
+	$(CC) $(flags) consumerOP.cpp -o consumer
+	./main
 
 runop:  main.cpp producer.cpp consumer.cpp
 	$(CC) $(flags) main.cpp -o main

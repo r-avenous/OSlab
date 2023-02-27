@@ -28,7 +28,8 @@ void sig_handler(int sig_no){ // if SIGINT is detected, first detach the shared 
     exit(0);
 }
 
-int main(){
+int main()
+{
     signal(SIGINT, sig_handler); // handler for SIGINT signal
     int shmid_adj_list, shmid_mapping;
     int i=0, j=0;
@@ -36,9 +37,10 @@ int main(){
     shmid_mapping = shmget(SETOFNODESSEGMENT, (10 * (1 + MAXNODES/10) ) * sizeof(int) , IPC_CREAT | 0666); // gets the memory segment with provided key (for mapping)
     adj_list = (int *)shmat(shmid_adj_list, NULL, 0); //attach adj_list
     mapping = (int *)shmat(shmid_mapping, NULL, 0); // attach_mapping
-    // int countr = 2;
+    int countr = 2;
     srand(time(0));
-    while(1){
+    while(countr--)
+    {
         int m, k ,ubm = 30, lbm = 10, ubk = 20, lbk = 1;
         // unsigned long int sum_deg = 0;
         // srand(time(0));
@@ -72,7 +74,8 @@ int main(){
             and if the value lies between d1, d1+d2 then we add the edge between new node and the second node.
         */
         
-        for(i=0;i<m;i++){
+        for(i=0;i<m;i++)
+        {
             srand(time(0)+i);
             k = (rand() % (ubk - lbk + 1)) + lbk;
             cout << "k: " << k << endl;
@@ -114,7 +117,7 @@ int main(){
             mapping[temp_ptr + mapping[temp_ptr]] = num_nodes + i; // adding the new node into the partition
         }
         adj_list[0] += m; // increase the total number count
-        sleep(50); // producer sleeps for 50s after each iteration
+        sleep(PRODUCTIONSLEEP); // producer sleeps for 50s after each iteration
     }
     
 }
