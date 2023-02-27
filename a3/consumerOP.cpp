@@ -18,7 +18,7 @@
 #define SETOFNODESSEGMENT 100
 #define ADJACENCYLISTSEGMENT 200
 #define PRODUCTIONSLEEP 50
-#define CONSUMPTIONSLEEP 10
+#define CONSUMPTIONSLEEP 30
 
 using namespace std;
 
@@ -56,10 +56,12 @@ vector<int> printPathFromSourceToDest(int source, int dest, ofstream &fout, bool
         return {};
     }
     // if path needs to be printed in reverse
-    if(reversed)
+    if(reversed){
         if(print) fout << dest << " -> " << source << " : " << shortestPathDistances[source][dest] << " | ";
-    else
+    }
+    else{
         if(print) fout << source << " -> " << dest << " : " << shortestPathDistances[source][dest] << " | ";
+    }
     int u = dest;
     vector<int> path;
     // store the path in vector named path (it stores in reverse order)
@@ -73,7 +75,7 @@ vector<int> printPathFromSourceToDest(int source, int dest, ofstream &fout, bool
     if(!reversed)
         reverse(path.begin(), path.end());
     // printing the path
-    for (int i = 0; i < path.size(); i++) 
+    for (int i = 0; i < (int)path.size(); i++) 
     {
         if(print) fout << path[i] << " ";
     }
@@ -263,8 +265,8 @@ int main(int argc, char *argv[])
                         vector<int> p2 = printPathFromSourceToDest(closestNewSource, oldall, fout, false, false); // p2 holds the path from new node to oldall
                         fout << oldsrc << " -> " << oldall << " : " << minDist << " | ";
                         // print the paths
-                        for(int i=0; i<p1.size(); i++) fout << p1[i] << " ";
-                        for(int i=1; i<p2.size(); i++) fout << p2[i] << " ";
+                        for(int i=0; i<(int)p1.size(); i++) fout << p1[i] << " ";
+                        for(int i=1; i<(int)p2.size(); i++) fout << p2[i] << " ";
                         fout << endl;
                     }
                 }
