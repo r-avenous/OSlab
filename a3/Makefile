@@ -1,7 +1,7 @@
 CC=g++
 flags=-Wall -std=c++11
 
-output:	main.cpp producer.cpp consumer.cpp
+output:	main.cpp producer.cpp consumerOP.cpp
 	$(CC) $(flags) main.cpp -o main
 	$(CC) $(flags) producer.cpp -o producer
 	$(CC) $(flags) consumerOP.cpp -o consumer
