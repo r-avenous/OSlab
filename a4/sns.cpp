@@ -1,23 +1,25 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <unordered_map>
-#include <set>
+#include "helper.hpp"
+#include "userSimulator.hpp"
 
-#define PRIORITY 0
-#define CHRONOLOGICAL 1
-
-using namespace std;
-
-char filename[] = "musae_git_edges.csv";
 int n;
 unordered_map<int, vector<int>> graph;
 vector<int> type;
+Out out;
+
+void sig_handler(int signo)
+{
+    if (signo == SIGINT)
+    {
+        cout << "SIGINT received\n";
+        exit(0);
+    }
+}
 
 int main()
 {
+    signal(SIGINT, sig_handler);
     // read csv file and store in array
-    ifstream file(filename);
+    ifstream file(GRAPHFILE);
     string value;
     getline(file, value); // skip first line (header)
     set<int> nodes;
@@ -41,5 +43,8 @@ int main()
         // assign random type 0 or 1
         type[i] = rand() % 2;
     }
+    pthread_t userSimulatorThread, readPost[10], pushUpdate[25];
+    pthread_create(&userSimulatorThread, NULL, userSimulator, NULL);
+    pthread_join(userSimulatorThread, NULL);
     return 0;
 }
