@@ -18,10 +18,22 @@
 
 using namespace std;
 
+enum actionType
+{
+    POST, COMMENT, LIKE
+};
+
 typedef struct _action
 {
     int userID, actionID, actionType;
     time_t timeStamp;
+    _action(int userID, int actionID, int actionType)
+    {
+        this->userID = userID;
+        this->actionID = actionID;
+        this->actionType = actionType;
+        this->timeStamp = time(NULL);
+    }
 }action;
 
 class Out
@@ -45,5 +57,8 @@ class Out
             log.close();
         }
 };
+
+void printTime(time_t, ostream&);
+ostream& operator<<(ostream&, action);
 
 #endif

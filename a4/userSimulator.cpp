@@ -5,6 +5,7 @@ extern int n;
 extern unordered_map<int, vector<int>> graph;
 extern vector<int> type;
 extern Out out;
+extern unordered_map<int, int> counter;
 
 #define TIMEOUT 12
 
@@ -20,6 +21,12 @@ void *userSimulator(void *arg)
         out << "Selected Nodes: ";
         for(int i: selectNodes) out << i << ' ';
         out << '\n';
+
+        for(int node: selectNodes)
+        {
+            action a(node, ++counter[node], rand()%3);
+            out << a;
+        }
 
         out << "User Simulator Sleeping.\n";
         sleep(TIMEOUT);

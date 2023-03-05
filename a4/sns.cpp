@@ -5,6 +5,7 @@ int n;
 unordered_map<int, vector<int>> graph;
 vector<int> type;
 Out out;
+unordered_map<int, int> counter;
 
 void sig_handler(int signo)
 {
