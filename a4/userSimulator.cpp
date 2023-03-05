@@ -1,5 +1,6 @@
 #include "userSimulator.hpp"
 #include "helper.hpp"
+#include <math.h>
 
 extern int n;
 extern unordered_map<int, vector<int>> graph;
@@ -24,8 +25,13 @@ void *userSimulator(void *arg)
 
         for(int node: selectNodes)
         {
-            action a(node, ++counter[node], rand()%3);
-            out << a;
+            int numActions = log2(graph[node].size() + 1);
+            out << "User " << node << " will perform " << numActions << " actions." << " | Degree: " << graph[node].size() << '\n';
+            while(numActions--)
+            {
+                action a(node, ++counter[node], rand()%3);
+                out << a;
+            }
         }
 
         out << "User Simulator Sleeping.\n";
