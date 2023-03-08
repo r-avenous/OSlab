@@ -19,12 +19,14 @@ void* pushUpdate(void* arg)
         {
             action a = pushUpdateQueue.back();
             pushUpdateQueue.pop_back();
-            out << "Push Update received at " << index << " : " << a;
+            out << "PU Thread " << index << " | ";
+            out << "Push Update received" << " : " << a;
             pthread_mutex_unlock(&pushUpdateQueueLock);
             for(int neighbor: graph[a.userID])
             {
                 pthread_mutex_lock(&feedQueues[neighbor].lock);
                 feedQueues[neighbor].push(a);
+                out << "PU Thread " << index << " | ";
                 out << "Push Update sent to " << neighbor << " : " << a;
                 pthread_mutex_unlock(&feedQueues[neighbor].lock);
             }
