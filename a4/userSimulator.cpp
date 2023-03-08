@@ -7,8 +7,14 @@ extern unordered_map<int, vector<int>> graph;
 extern vector<int> type;
 extern Out out;
 extern unordered_map<int, int> counter;
+extern unordered_map<int, vector<action>> wallQueue;
+
+vector<action> pushUpdateQueue;
+pthread_mutex_t pushUpdateQueueLock = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t pushUpdateQueueCond = PTHREAD_COND_INITIALIZER;
 
 #define TIMEOUT 12
+#define PROPORTIONALITY 10
 
 void *userSimulator(void *arg)
 {
@@ -23,14 +29,29 @@ void *userSimulator(void *arg)
         for(int i: selectNodes) out << i << ' ';
         out << '\n';
 
+        unordered_map<int, vector<action>> xp;
+
         for(int node: selectNodes)
         {
-            int numActions = log2(graph[node].size() + 1);
+            int numActions = PROPORTIONALITY * log2(graph[node].size()) + PROPORTIONALITY;
             out << "User " << node << " will perform " << numActions << " actions." << " | Degree: " << graph[node].size() << '\n';
-            while(numActions--)
+            for(int j=0; j<numActions; j++)
             {
                 action a(node, ++counter[node], rand()%3);
+                // out << a;
+                xp[j].push_back(a);
+                wallQueue[node].push_back(a);
+            }
+        }
+        for(auto p: xp)
+        {
+            for(action a: p.second)
+            {
+                pthread_mutex_lock(&pushUpdateQueueLock);
+                pushUpdateQueue.push_back(a);
                 out << a;
+                pthread_cond_broadcast(&pushUpdateQueueCond);
+                pthread_mutex_unlock(&pushUpdateQueueLock);
             }
         }
 

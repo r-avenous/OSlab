@@ -1,8 +1,8 @@
 CC=g++
 flags=-Wall -std=c++11
 
-sns:	sns.cpp musae_git_edges.csv
-	$(CC) $(flags) sns.cpp helper.cpp userSimulator.cpp -o sns -lm
+sns:	sns.cpp musae_git_edges.csv userSimulator.cpp helper.cpp pushUpdate.cpp readPost.cpp
+	$(CC) $(flags) sns.cpp helper.cpp userSimulator.cpp pushUpdate.cpp -o sns -lm -lpthread
 
 run:	sns
 	./sns

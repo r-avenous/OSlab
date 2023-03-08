@@ -1,11 +1,14 @@
 #include "helper.hpp"
 #include "userSimulator.hpp"
+// #include "readPost.hpp"
+#include "pushUpdate.hpp"
 
 int n;
 unordered_map<int, vector<int>> graph;
 vector<int> type;
 Out out;
 unordered_map<int, int> counter;
+unordered_map<int, vector<action>> wallQueue, feedQueue;
 
 void sig_handler(int signo)
 {
@@ -44,8 +47,24 @@ int main()
         // assign random type 0 or 1
         type[i] = rand() % 2;
     }
-    pthread_t userSimulatorThread, readPost[10], pushUpdate[25];
+    pthread_t userSimulatorThread, readPostThread[10], pushUpdateThread[25];
     pthread_create(&userSimulatorThread, NULL, userSimulator, NULL);
+    for(int i=0; i<25; i++)
+    {
+        pthread_create(&pushUpdateThread[i], NULL, pushUpdate, (void*)&i);
+    }
+    // for(int i=0; i<10; i++)
+    // {
+    //     pthread_create(&readPostThread[i], NULL, readPost, (void*)&i);
+    // }
+    // for(int i=0; i<10; i++)
+    // {
+    //     pthread_join(readPostThread[i], NULL);
+    // }
+    for(int i=0; i<25; i++)
+    {
+        pthread_join(pushUpdateThread[i], NULL);
+    }
     pthread_join(userSimulatorThread, NULL);
     return 0;
 }
