@@ -8,7 +8,7 @@ unordered_map<int, vector<int>> graph;
 vector<int> type;
 Out out;
 unordered_map<int, int> counter;
-unordered_map<int, vector<action>> wallQueue, feedQueue;
+unordered_map<int, vector<action>> wallQueue;
 
 void sig_handler(int signo)
 {

@@ -4,7 +4,6 @@
 
 extern int n;
 extern unordered_map<int, vector<int>> graph;
-extern vector<int> type;
 extern Out out;
 extern unordered_map<int, int> counter;
 extern unordered_map<int, vector<action>> wallQueue;
