@@ -8,7 +8,7 @@ unordered_map<int, vector<int>> graph;
 Out out;
 unordered_map<int, int> counter;
 unordered_map<int, vector<action>> wallQueue;
-
+unordered_map<int, feedQueue> feedQueues;
 void sig_handler(int signo)
 {
     if (signo == SIGINT)
@@ -43,6 +43,8 @@ int main()
     for(int i=0; i<n; i++)
     {
         // assign random type 0 or 1
+        int type = rand() % 2;
+        feedQueues[i] = feedQueue(type, i);
     }
     pthread_t userSimulatorThread, readPostThread[10], pushUpdateThread[25];
     pthread_create(&userSimulatorThread, NULL, userSimulator, NULL);

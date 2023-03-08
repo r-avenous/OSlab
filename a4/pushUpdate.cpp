@@ -5,6 +5,7 @@ extern vector<action> pushUpdateQueue;
 extern pthread_mutex_t pushUpdateQueueLock;
 extern pthread_cond_t pushUpdateQueueCond;
 extern unordered_map<int, vector<int>> graph;
+extern unordered_map<int, feedQueue> feedQueues;
 extern Out out;
 
 void* pushUpdate(void* arg)
@@ -22,6 +23,10 @@ void* pushUpdate(void* arg)
             pthread_mutex_unlock(&pushUpdateQueueLock);
             for(int neighbor: graph[a.userID])
             {
+                pthread_mutex_lock(&feedQueues[neighbor].lock);
+                feedQueues[neighbor].push(a);
+                out << "Push Update sent to " << neighbor << " : " << a;
+                pthread_mutex_unlock(&feedQueues[neighbor].lock);
             }
         }
         else pthread_mutex_unlock(&pushUpdateQueueLock);
