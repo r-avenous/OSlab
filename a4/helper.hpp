@@ -58,28 +58,41 @@ class Out
             log.close();
         }
 };
-struct actionCompare
-{
-    bool operator()(const action& a, const action& b);
-};
 class feedQueue
 {
     public:
     int type, userID;
     pthread_mutex_t lock;
     vector<action> feed;
+    struct actionCompare
+    {
+        feedQueue* fq;
+        actionCompare()
+        {
+            fq = nullptr;
+        }
+        actionCompare(feedQueue* fq)
+        {
+            this->fq = fq;
+        }
+        bool operator()(const action& a, const action& b);
+    };
     priority_queue<action, vector<action>, actionCompare> pq;
+    actionCompare comp;
     feedQueue()
     {
         type = -1;
         userID = -1;
         pthread_mutex_init(&lock, NULL);
+        pq = priority_queue<action, vector<action>, actionCompare>(comp);
     }
     feedQueue(int type, int userID)
     {
         this->type = type;
         this->userID = userID;
         pthread_mutex_init(&lock, NULL);
+        if(type == PRIORITY) comp = actionCompare(this);
+        pq = priority_queue<action, vector<action>, actionCompare>(comp);
     }
     void push(action a)
     {

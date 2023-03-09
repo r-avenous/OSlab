@@ -13,7 +13,7 @@ pthread_mutex_t pushUpdateQueueLock = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t pushUpdateQueueCond = PTHREAD_COND_INITIALIZER;
 
 #define TIMEOUT 12
-#define PROPORTIONALITY 10
+#define PROPORTIONALITY 1
 
 void *userSimulator(void *arg)
 {

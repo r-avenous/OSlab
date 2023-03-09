@@ -14,9 +14,9 @@ ostream& operator<<(ostream& outf, action a)
     return outf;
 }
 
-bool actionCompare::operator()(const action& a, const action& b)
+bool feedQueue::actionCompare::operator()(const action& a, const action& b)
 {
-    set<int> neighbours(graph[a.userID].begin(), graph[a.userID].end());
+    set<int> neighbours(graph[fq->userID].begin(), graph[fq->userID].end());
     int aScore = 0, bScore = 0;
     for(int aNeighbours: graph[a.userID])
     {
