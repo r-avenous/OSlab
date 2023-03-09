@@ -20,11 +20,11 @@ void* pushUpdate(void* arg)
     while(1)
     {
         pthread_mutex_lock(&pushUpdateQueueLock);
+        Out out("PU Thread " + to_string(index) + ".txt");
         
         while(pushUpdateQueue.empty())
             pthread_cond_wait(&pushUpdateQueueCond, &pushUpdateQueueLock);
 
-        Out out("PU Thread " + to_string(index) + ".txt");
         if(pushUpdateQueue.size() > 0)
         {
             action a = pushUpdateQueue.back();

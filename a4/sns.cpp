@@ -44,7 +44,7 @@ int main()
     {
         // assign random type 0 or 1
         int type = rand() % 2;
-        feedQueues[i] = feedQueue(type, i);
+        feedQueues[i] = feedQueue(type, CHRONOLOGICAL);
     }
     pthread_t userSimulatorThread, readPostThread[10], pushUpdateThread[25];
     pthread_create(&userSimulatorThread, NULL, userSimulator, NULL);
