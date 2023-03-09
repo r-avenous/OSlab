@@ -15,7 +15,7 @@ void *readPost(void *arg)
     while(1)
     {
         pthread_mutex_lock(&visLock);
-        Out out("RP Thread " + to_string(index) + ".txt");
+        Out out("RP Thread " + to_string(index) + ".log");
         
         while(visited.size() == 0)
             pthread_cond_wait(&visCond, &visLock);

@@ -20,7 +20,7 @@ void* pushUpdate(void* arg)
     while(1)
     {
         pthread_mutex_lock(&pushUpdateQueueLock);
-        Out out("PU Thread " + to_string(index) + ".txt");
+        Out out("PU Thread " + to_string(index) + ".log");
         
         while(pushUpdateQueue.empty())
             pthread_cond_wait(&pushUpdateQueueCond, &pushUpdateQueueLock);
