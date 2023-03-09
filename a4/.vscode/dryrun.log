@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a4'
+g++ -Wall -std=c++11 sns.cpp helper.cpp userSimulator.cpp pushUpdate.cpp -o sns -lm -lpthread
+make: Leaving directory '/home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a4'
+ 
