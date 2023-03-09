@@ -1,6 +1,7 @@
 #include "userSimulator.hpp"
 #include "helper.hpp"
 #include <math.h>
+#include <unistd.h>
 
 extern int n;
 extern unordered_map<int, vector<int>> graph;
@@ -12,14 +13,14 @@ vector<action> pushUpdateQueue;
 pthread_mutex_t pushUpdateQueueLock = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t pushUpdateQueueCond = PTHREAD_COND_INITIALIZER;
 
-#define TIMEOUT 120
+#define TIMEOUT 20
 #define PROPORTIONALITY 1
 
 void *userSimulator(void *arg)
 {
     while(true)
     {
-        out << "User simulator awake\n";
+        out << "\n\n\nUser simulator awake\n";
         // select 100 random nodes
         set<int> selectNodes;
         while((int)selectNodes.size() < 1) selectNodes.insert(rand() % n);

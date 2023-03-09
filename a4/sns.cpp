@@ -48,18 +48,22 @@ int main()
     }
     pthread_t userSimulatorThread, readPostThread[10], pushUpdateThread[25];
     pthread_create(&userSimulatorThread, NULL, userSimulator, NULL);
+    cout << "Creating pushUpdate" << endl;
     for(int i=0; i<25; i++)
     {
         pthread_create(&pushUpdateThread[i], NULL, pushUpdate, (void*)&i);
     }
+    cout << "Creating readPost" << endl;
     for(int i=0; i<10; i++)
     {
         pthread_create(&readPostThread[i], NULL, readPost, (void*)&i);
     }
+    cout << "Executing readPost" << endl;
     for(int i=0; i<10; i++)
     {
         pthread_join(readPostThread[i], NULL);
     }
+    cout << "Executing pushUpdate" << endl;
     for(int i=0; i<25; i++)
     {
         pthread_join(pushUpdateThread[i], NULL);
