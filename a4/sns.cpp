@@ -1,6 +1,6 @@
 #include "helper.hpp"
 #include "userSimulator.hpp"
-// #include "readPost.hpp"
+#include "readPost.hpp"
 #include "pushUpdate.hpp"
 
 int n;
@@ -52,14 +52,14 @@ int main()
     {
         pthread_create(&pushUpdateThread[i], NULL, pushUpdate, (void*)&i);
     }
-    // for(int i=0; i<10; i++)
-    // {
-    //     pthread_create(&readPostThread[i], NULL, readPost, (void*)&i);
-    // }
-    // for(int i=0; i<10; i++)
-    // {
-    //     pthread_join(readPostThread[i], NULL);
-    // }
+    for(int i=0; i<10; i++)
+    {
+        pthread_create(&readPostThread[i], NULL, readPost, (void*)&i);
+    }
+    for(int i=0; i<10; i++)
+    {
+        pthread_join(readPostThread[i], NULL);
+    }
     for(int i=0; i<25; i++)
     {
         pthread_join(pushUpdateThread[i], NULL);

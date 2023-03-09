@@ -10,6 +10,8 @@ extern unordered_map<int, feedQueue> feedQueues;
 extern Out out;
 
 unordered_set<int> visited;
+pthread_mutex_t visLock = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t visCond = PTHREAD_COND_INITIALIZER;
 
 void* pushUpdate(void* arg)
 {
@@ -33,7 +35,11 @@ void* pushUpdate(void* arg)
                 out << "PU Thread " << index << " | ";
                 out << "Push Update sent to " << neighbor << " : " << feedQueues[neighbor].top();
                 pthread_mutex_unlock(&feedQueues[neighbor].lock);
+                
+                pthread_mutex_lock(&visLock);
                 visited.insert(neighbor);
+                pthread_cond_broadcast(&visCond);
+                pthread_mutex_unlock(&visLock);
             }
         }
         else pthread_mutex_unlock(&pushUpdateQueueLock);
