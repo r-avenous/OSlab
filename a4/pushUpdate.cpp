@@ -14,6 +14,7 @@ unordered_set<int> visited;
 void* pushUpdate(void* arg)
 {
     int index = *(int*)arg;
+    Out out("PU Thread " + to_string(index) + ".txt");
     while(1)
     {
         pthread_mutex_lock(&pushUpdateQueueLock);
