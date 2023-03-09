@@ -22,13 +22,13 @@ void *userSimulator(void *arg)
         out << "User simulator awake\n";
         // select 100 random nodes
         set<int> selectNodes;
-        while((int)selectNodes.size() < 100) selectNodes.insert(rand() % n + 1);
+        while((int)selectNodes.size() < 1) selectNodes.insert(rand() % n);
 
         out << "Selected Nodes: ";
         for(int i: selectNodes) out << i << ' ';
         out << '\n';
 
-        unordered_map<int, vector<action>> xp;
+        // unordered_map<int, vector<action>> xp;
 
         for(int node: selectNodes)
         {
@@ -38,21 +38,22 @@ void *userSimulator(void *arg)
             {
                 action a(node, ++counter[node], rand()%3);
                 // out << a;
-                xp[j].push_back(a);
-                wallQueue[node].push_back(a);
-            }
-        }
-        for(auto p: xp)
-        {
-            for(action a: p.second)
-            {
                 pthread_mutex_lock(&pushUpdateQueueLock);
                 pushUpdateQueue.push_back(a);
                 out << a;
                 pthread_cond_broadcast(&pushUpdateQueueCond);
                 pthread_mutex_unlock(&pushUpdateQueueLock);
+                // xp[j].push_back(a);
+                wallQueue[node].push_back(a);
             }
         }
+        // for(auto p: xp)
+        // {
+        //     for(action a: p.second)
+        //     {
+                
+        //     }
+        // }
 
         out << "User Simulator Sleeping.\n";
         sleep(TIMEOUT);
