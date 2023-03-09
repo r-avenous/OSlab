@@ -16,11 +16,15 @@ pthread_cond_t visCond = PTHREAD_COND_INITIALIZER;
 void* pushUpdate(void* arg)
 {
     int index = *(int*)arg;
-    Out out("PU Thread " + to_string(index) + ".txt");
+    
     while(1)
     {
         pthread_mutex_lock(&pushUpdateQueueLock);
-        pthread_cond_wait(&pushUpdateQueueCond, &pushUpdateQueueLock);
+        
+        while(pushUpdateQueue.empty())
+            pthread_cond_wait(&pushUpdateQueueCond, &pushUpdateQueueLock);
+
+        Out out("PU Thread " + to_string(index) + ".txt");
         if(pushUpdateQueue.size() > 0)
         {
             action a = pushUpdateQueue.back();
