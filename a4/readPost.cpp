@@ -15,7 +15,7 @@ void *readPost(void *arg)
     while(1)
     {
         pthread_mutex_lock(&visLock);           // lock the visited set
-        Out out("RP Thread " + to_string(index) + ".log");
+        // Out out("RP Thread " + to_string(index) + ".log");
         
         while(visited.size() == 0)          // wait for visited to be non-empty
             pthread_cond_wait(&visCond, &visLock);

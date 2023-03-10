@@ -94,6 +94,10 @@ class feedQueue
         if(type == PRIORITY) comp = actionCompare(this);        //custom comparator for priority queue if type is PRIORITY 
         pq = priority_queue<action, vector<action>, actionCompare>(comp);       //parameterized constructor
     }
+    ~feedQueue()
+    {
+        pthread_mutex_destroy(&lock);       //mutex destruction
+    }
     void push(action a)     //push action to queue  depending on type
     {
         if(type == PRIORITY) pq.push(a);

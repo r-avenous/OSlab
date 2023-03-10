@@ -20,7 +20,7 @@ void* pushUpdate(void* arg)
     while(1)
     {
         pthread_mutex_lock(&pushUpdateQueueLock);           // lock the pushUpdateQueue
-        Out out("PU Thread " + to_string(index) + ".log");      
+        // Out out("PU Thread " + to_string(index) + ".log");      
         
         while(pushUpdateQueue.empty())              // wait for pushUpdateQueue to be non-empty
             pthread_cond_wait(&pushUpdateQueueCond, &pushUpdateQueueLock);      
@@ -48,5 +48,7 @@ void* pushUpdate(void* arg)
         }
         else pthread_mutex_unlock(&pushUpdateQueueLock);
     }
+    pthread_mutex_destroy(&visLock);
+    pthread_cond_destroy(&visCond);
     return nullptr;
 }
