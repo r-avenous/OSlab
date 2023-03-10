@@ -30,7 +30,7 @@ void* pushUpdate(void* arg)
             action a = pushUpdateQueue.back();
             pushUpdateQueue.pop_back();
             out << "PU Thread " << index << " | ";
-            out << "Push Update received" << " : " << a;
+            out << "Push Update received" << " : " << a << "\n";
             pthread_mutex_unlock(&pushUpdateQueueLock);
             for(int neighbor: graph[a.userID])
             {

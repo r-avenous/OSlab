@@ -1,5 +1,8 @@
 {
     "makefile.extensionOutputFolder": "./.vscode",
     "ros.distro": "noetic",
-    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
+    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+    "files.associations": {
+        "unordered_map": "cpp"
+    }
 }
