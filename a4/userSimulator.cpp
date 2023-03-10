@@ -6,7 +6,7 @@
 extern int n;
 extern unordered_map<int, vector<int>> graph;
 extern Out out;
-extern unordered_map<int, int> counter;
+extern unordered_map<int, int> counter[3];
 extern unordered_map<int, vector<action>> wallQueue;
 
 vector<action> pushUpdateQueue;
@@ -37,7 +37,8 @@ void *userSimulator(void *arg)
             out << "User " << node << " will perform " << numActions << " actions." << " | Degree: " << graph[node].size() << '\n';
             for(int j=0; j<numActions; j++)
             {
-                action a(node, ++counter[node], rand()%3);
+                int type = rand() % 3;
+                action a(node, ++counter[type][node], type);
                 // out << a;
                 pthread_mutex_lock(&pushUpdateQueueLock);
                 pushUpdateQueue.push_back(a);
