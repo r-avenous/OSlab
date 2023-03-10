@@ -8,7 +8,7 @@ Implemented as an unordered map of nodes (known by their userIDs) with their nei
 
 2) COUNTER (counter) :
 
-- Implemented as an unordered map of userIDs with their total no. of actions performed.
+- Implemented as an array of unordered map (of size 3 for each action type) of userIDs with their total no. of actions performed.
 - Used to set actionID value for a user's new action.
 
 3) ACTION (action, struct) :
@@ -59,6 +59,7 @@ Vector used because of the need to store actions in chronological order.
 
 Priority queue of actions (stores neighbors' updates only if type = "PRIORITY")
 Priority between two actions is decided by the no. of common neighbors between given user and the user performing the action
+Cache is used to store previously calculated number of common neighbours
 Not used if type = "CHRONOLOGICAL"
 Dynamic sized priority queue of actions (hence, no need to specify max size)
 New updates are pushed to priority queue and highest priority updates are removed from it
@@ -77,7 +78,7 @@ Stores updates for all users in a single queue.
 Vector used because of the need to store actions in chronological order.
 Accessed by multiple pushUpdate threads to push updates to feed queues of relevant users.
 
-Max_Size_bound : sum of actions possible for top 100 highest possible degree nodes (upper bound on size of push update queue) is around 10,000
+Max_Size_bound :  around 10,000, sum of actions possible for top 100 highest possible degree nodes (upper bound on size of push update queue) 
 ( This is calculated by assuming that no pushupdate thread is scheduled before the usersimulation thread completes one iteration)
 
 Avg_size_bound : is around 8300 (calculated by taking average action of a node and multiplying it by 100)
@@ -99,11 +100,11 @@ No. of locks = 1 (for push update queues) + 1 (for common queue between pushupda
 
 Race condition: Lock for push update queue:
 -> avoids race condition as at a time it allows access to only one thread ( out of 1 Usersimulator thread and 25 push update threads) accesses the common queue
--> Concurrency: It allows concurrency between the push update threads as whenever the usersimulator thread pushes an action in the queue, the broadcast message is given to all free push update threads and one out of them dequeues the queue (and processes the action) (if any free push update thread available)
+-> Concurrency: It allows concurrency between the push update threads as whenever the usersimulator thread pushes an action in the queue, the broadcast message is given to all free push update threads and one out of them dequeues the queue (and processes the action) (if any free push update thread available). Push update  thread continues after popping one action and subsequently pushing this action to all feed queues of neighbours which has nothing to do with the user simulator thread.
 
 Lock between push update and read post threads:
--> Race condition: avoids race conditio as at a time only one thread ( out of 10 Read post threads and 25 push update threads) accesses the common queue
--> Concurrency: It allows concurrency between the Read post and Push update threads as whenever the Push update thread enters the node whose feed queue it updates, the broadcast message is given to all free Read post threads and one out of them takes the ID of one element of the set (and processes its feed queue) (if any free Read post thread is available)
+-> Race condition: avoids race condition as at a time only one thread ( out of 10 Read post threads and 25 push update threads) accesses the common queue
+-> Concurrency: It allows concurrency between the Read post and Push update threads as whenever the Push update thread enters the node whose feed queue it updates, the broadcast message is given to all free Read post threads and one out of them takes the ID of one element of the set (and processes its feed queue) (if any free Read post thread is available). Read post threads continue printing the new actions in respective feed queues without any intervention from user simulator but has some intervention from the push update because every feed queue has its lock.
 
 /*
 NOTE: Here we used set for storing ID of the nodes whose feed queue are updated by the Push update threads because feed queue of the same node may be updated by multiple threads, but by maintaining a set only one occurrence of the node is stored which increases the efficiency by reducing the number of Read post threads required.
