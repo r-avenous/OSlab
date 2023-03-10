@@ -13,8 +13,8 @@ vector<action> pushUpdateQueue;         // pushUpdateQueue
 pthread_mutex_t pushUpdateQueueLock = PTHREAD_MUTEX_INITIALIZER;        // lock for pushUpdateQueue
 pthread_cond_t pushUpdateQueueCond = PTHREAD_COND_INITIALIZER;          // condition variable for pushUpdateQueue
 
-#define TIMEOUT 20
-#define PROPORTIONALITY 1
+#define TIMEOUT 120
+#define PROPORTIONALITY 10
 
 void *userSimulator(void *arg)
 {
@@ -24,7 +24,7 @@ void *userSimulator(void *arg)
         out << "\n\n\nUser simulator awake\n";
         // select 100 random nodes
         set<int> selectNodes;
-        while((int)selectNodes.size() < 1) selectNodes.insert((int)(((double)rand()/((double)RAND_MAX +1)) * n));
+        while((int)selectNodes.size() < 100) selectNodes.insert((int)(((double)rand()/((double)RAND_MAX +1)) * n));
 
         out << "Selected Nodes: ";
         for(int i: selectNodes) out << i << ' ';
@@ -62,5 +62,7 @@ void *userSimulator(void *arg)
         out << "User Simulator Sleeping.\n";
         sleep(TIMEOUT);
     }
+    pthread_mutex_destroy(&pushUpdateQueueLock);
+    pthread_cond_destroy(&pushUpdateQueueCond);
     return nullptr;
 }
