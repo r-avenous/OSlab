@@ -18,7 +18,7 @@ pthread_cond_t pushUpdateQueueCond = PTHREAD_COND_INITIALIZER;          // condi
 
 void *userSimulator(void *arg)
 {
-    srand(time(NULL) + *(int*)arg);
+    srand(time(NULL));
     while(true)
     {
         out << "\n\n\nUser simulator awake\n";
@@ -38,7 +38,7 @@ void *userSimulator(void *arg)
             out << "User " << node << " will perform " << numActions << " actions." << " | Degree: " << graph[node].size() << '\n';
             for(int j=0; j<numActions; j++)
             {
-                srand(time(NULL) + j + node + *(int*)arg);
+                srand(time(NULL) + j + node);
                 int type = rand() % 3;
                 action a(node, ++counter[type][node], type);
                 // out << a;
