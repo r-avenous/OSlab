@@ -13,18 +13,37 @@ ostream& operator<<(ostream& outf, action a)
     printTime(a.timeStamp, outf); 
     return outf;
 }
-
+unordered_map<int, unordered_map<int, int>> actionCompareCache;         //cache for actionCompare ; stores common neighbours of a user with the user whose feed queue is being updated
 bool feedQueue::actionCompare::operator()(const action& a, const action& b)
 {
-    set<int> neighbours(graph[fq->userID].begin(), graph[fq->userID].end());
     int aScore = 0, bScore = 0;
-    for(int aNeighbours: graph[a.userID])
+    if(actionCompareCache[fq->userID].find(a.userID) != actionCompareCache[fq->userID].end())
     {
-        if(neighbours.find(aNeighbours) != neighbours.end()) aScore++;
+        aScore = actionCompareCache[fq->userID][a.userID];
     }
-    for(int bNeighbours: graph[b.userID])
+    else
     {
-        if(neighbours.find(bNeighbours) != neighbours.end()) bScore++;
+        set<int> neighbours(graph[fq->userID].begin(), graph[fq->userID].end());
+        for(int aNeighbours: graph[a.userID])
+        {
+            if(neighbours.find(aNeighbours) != neighbours.end()) aScore++;
+        }
+        actionCompareCache[fq->userID][a.userID] = aScore;
+        actionCompareCache[a.userID][fq->userID] = aScore;
     }
-    return aScore < bScore;
+    if(actionCompareCache[fq->userID].find(b.userID) != actionCompareCache[fq->userID].end())
+    {
+        bScore = actionCompareCache[fq->userID][b.userID];
+    }
+    else
+    {
+        set<int> neighbours(graph[fq->userID].begin(), graph[fq->userID].end());
+        for(int bNeighbours: graph[b.userID])
+        {
+            if(neighbours.find(bNeighbours) != neighbours.end()) bScore++;
+        }
+        actionCompareCache[fq->userID][b.userID] = bScore;
+        actionCompareCache[b.userID][fq->userID] = bScore;
+    }
+    return aScore < bScore;     //return true if aScore < bScore
 }
