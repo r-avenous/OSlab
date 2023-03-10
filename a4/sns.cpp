@@ -20,6 +20,7 @@ void sig_handler(int signo) // signal handler; not required here but good to hav
 
 int main()
 {
+    time_t t;
     signal(SIGINT, sig_handler);
     // read csv file and store in array
     ifstream file(GRAPHFILE);
@@ -42,6 +43,7 @@ int main()
     nodes.clear();      // clear set
     for(int i=0; i<n; i++)
     {
+        srand((unsigned) time(&t) + i);
         // assign random type 0 or 1
         int type = rand() % 2;      // type 0 or 1
         feedQueues[i] = feedQueue(type, i);     // create feed queue for each node
