@@ -1,1 +1,17 @@
 Design specifications :
+
+1) ACTION : (struct)
+
+Attributes :
+- userID (int)          // ID of the user who performed the action
+- actionID (int)        // ID of the action
+- actionType (int)      // Type of the action (POST, LIKE, COMMENT)
+- timeStamp (time_t)    // Time of the action
+
+2) FEEDQUEUE: (class)
+
+Attributes :
+- type (int)            // Type specifying order of reading elements in queue 
+- userID (int)          // ID of user
+- lock (pthread_mutex_t)    // Lock for the queue
+

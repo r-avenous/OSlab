@@ -12,11 +12,13 @@ extern pthread_cond_t visCond;
 void *readPost(void *arg)
 {
     int index = *(int*)arg;
-    Out out("RP Thread " + to_string(index) + ".txt");
     while(1)
     {
         pthread_mutex_lock(&visLock);
-        pthread_cond_wait(&visCond, &visLock);
+        Out out("RP Thread " + to_string(index) + ".log");
+        
+        while(visited.size() == 0)
+            pthread_cond_wait(&visCond, &visLock);
         if(visited.size() == 0)
         {
             pthread_mutex_unlock(&visLock);

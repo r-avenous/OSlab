@@ -20,17 +20,17 @@ void* pushUpdate(void* arg)
     while(1)
     {
         pthread_mutex_lock(&pushUpdateQueueLock);
+        Out out("PU Thread " + to_string(index) + ".log");
         
         while(pushUpdateQueue.empty())
             pthread_cond_wait(&pushUpdateQueueCond, &pushUpdateQueueLock);
 
-        Out out("PU Thread " + to_string(index) + ".txt");
         if(pushUpdateQueue.size() > 0)
         {
             action a = pushUpdateQueue.back();
             pushUpdateQueue.pop_back();
             out << "PU Thread " << index << " | ";
-            out << "Push Update received" << " : " << a;
+            out << "Push Update received" << " : " << a << "\n";
             pthread_mutex_unlock(&pushUpdateQueueLock);
             for(int neighbor: graph[a.userID])
             {

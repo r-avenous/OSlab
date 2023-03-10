@@ -43,7 +43,7 @@ class Out
     public:
         Out(string filename = LOGFILE)
         {
-            log.open(filename);
+            log.open(filename, ios::out | ios::app);
         }
         template <typename T>
         Out& operator<<(T const& value)

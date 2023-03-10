@@ -8,7 +8,7 @@ run:	sns
 	./sns
 
 clean:
-	rm -f sns
+	rm -f sns *.log
 
 debug:	sns.cpp musae_git_edges.csv
 	$(CC) $(flags) -g sns.cpp -o sns

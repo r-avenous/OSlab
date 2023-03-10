@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Mar 10 11:17:34 2023
+# Make data base, printed on Fri Mar 10 13:41:29 2023
 
 # Variables
 
@@ -89,7 +91,7 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 6921
+GIO_LAUNCHED_DESKTOP_FILE_PID = 21462
 # automatic
 %F = $(notdir $%)
 # environment
@@ -191,7 +193,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 6921
+VSCODE_PID = 21462
 # variable set hash-table stats:
 # Load=91/1024=9%, Rehash=0, Collisions=7/116=6%
 
@@ -201,9 +203,9 @@ VSCODE_PID = 6921
 
 # Directories
 
-# . (device 66311, inode 4612831): 56 files, no impossibilities.
+# . (device 66311, inode 4612831): 44 files, no impossibilities.
 
-# 56 files, no impossibilities in 1 directories.
+# 44 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -241,7 +243,7 @@ debug: sns.cpp musae_git_edges.csv
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2023-03-09 19:58:50.892434396
+#  Last modified 2023-03-10 11:21:41.565673606
 #  File has been updated.
 #  Successfully updated.
 
@@ -275,13 +277,10 @@ clean:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'makefile', line 11):
-	rm -f sns
+	rm -f sns *.log
 
 # Not a target:
 readPost.cpp:
- 
-make: *** No rule to make target 'all'.  Stop.
-
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -296,6 +295,7 @@ sns: sns.cpp musae_git_edges.csv userSimulator.cpp helper.cpp pushUpdate.cpp rea
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+ 
 #  recipe to execute (from 'makefile', line 5):
 	$(CC) $(flags) sns.cpp helper.cpp userSimulator.cpp pushUpdate.cpp readPost.cpp -o sns -lm -lpthread
 
@@ -307,12 +307,12 @@ sns: sns.cpp musae_git_edges.csv userSimulator.cpp helper.cpp pushUpdate.cpp rea
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 64 / storage = 943 B / avg = 14 B
-# current buf: size = 8162 B / used = 943 B / count = 64 / avg = 14 B
+# strcache buffers: 1 (0) / strings = 52 / storage = 744 B / avg = 14 B
+# current buf: size = 8162 B / used = 744 B / count = 52 / avg = 14 B
 
-# strcache performance: lookups = 82 / hit rate = 21%
+# strcache performance: lookups = 70 / hit rate = 25%
 # hash-table stats:
-# Load=64/8192=1%, Rehash=0, Collisions=5/82=6%
-# Finished Make data base on Fri Mar 10 11:17:34 2023
+# Load=52/8192=1%, Rehash=0, Collisions=4/70=6%
+# Finished Make data base on Fri Mar 10 13:41:29 2023
 
  
