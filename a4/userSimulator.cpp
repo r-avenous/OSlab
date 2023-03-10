@@ -9,9 +9,9 @@ extern Out out;
 extern unordered_map<int, int> counter[3];
 extern unordered_map<int, vector<action>> wallQueue;
 
-vector<action> pushUpdateQueue;
-pthread_mutex_t pushUpdateQueueLock = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t pushUpdateQueueCond = PTHREAD_COND_INITIALIZER;
+vector<action> pushUpdateQueue;         // pushUpdateQueue
+pthread_mutex_t pushUpdateQueueLock = PTHREAD_MUTEX_INITIALIZER;        // lock for pushUpdateQueue
+pthread_cond_t pushUpdateQueueCond = PTHREAD_COND_INITIALIZER;          // condition variable for pushUpdateQueue
 
 #define TIMEOUT 20
 #define PROPORTIONALITY 1
@@ -40,13 +40,13 @@ void *userSimulator(void *arg)
                 int type = rand() % 3;
                 action a(node, ++counter[type][node], type);
                 // out << a;
-                pthread_mutex_lock(&pushUpdateQueueLock);
-                pushUpdateQueue.push_back(a);
+                pthread_mutex_lock(&pushUpdateQueueLock);       // lock pushUpdateQueue
+                pushUpdateQueue.push_back(a);            // push action to pushUpdateQueue (critical section)
                 out << a;
-                pthread_cond_broadcast(&pushUpdateQueueCond);
-                pthread_mutex_unlock(&pushUpdateQueueLock);
+                pthread_cond_broadcast(&pushUpdateQueueCond);       // broadcast to all threads waiting on pushUpdateQueueCond
+                pthread_mutex_unlock(&pushUpdateQueueLock);     // unlock pushUpdateQueue
                 // xp[j].push_back(a);
-                wallQueue[node].push_back(a);
+                wallQueue[node].push_back(a);       // push action to wallQueue
             }
         }
         // for(auto p: xp)
