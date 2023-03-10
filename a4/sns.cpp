@@ -51,12 +51,14 @@ int main()
     cout << "Creating pushUpdate" << endl;
     for(int i=0; i<25; i++)
     {       // create 25 pushUpdate threads
-        pthread_create(&pushUpdateThread[i], NULL, pushUpdate, (void*)&i);
+        int *index = new int(i+1);
+        pthread_create(&pushUpdateThread[i], NULL, pushUpdate, (void*)index);
     }
     cout << "Creating readPost" << endl;
     for(int i=0; i<10; i++)
     {       // create 10 readPost threads
-        pthread_create(&readPostThread[i], NULL, readPost, (void*)&i);
+        int *index = new int(i+1);
+        pthread_create(&readPostThread[i], NULL, readPost, (void*)index);
     }
     cout << "Executing readPost" << endl;
     for(int i=0; i<10; i++)
