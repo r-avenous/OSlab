@@ -6,7 +6,7 @@
 int n;
 unordered_map<int, vector<int>> graph;
 Out out;
-unordered_map<int, int> counter;
+unordered_map<int, int> counter[3];
 unordered_map<int, vector<action>> wallQueue;
 unordered_map<int, feedQueue> feedQueues;
 void sig_handler(int signo)
