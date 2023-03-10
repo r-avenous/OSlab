@@ -1,6 +1,17 @@
-Design specifications :
+DESIGN SPECIFICATIONS :
 
-1) ACTION : (struct)
+Data Structures :
+
+1) GRAPH (graph) :
+
+    - Implemented as an unordered map of nodes (known by their userIDs) with their neighbor's userIDs.
+
+2) COUNTER (counter) : 
+
+    - Implemented as an unordered map of userIDs with their total no. of actions performed.
+    - Used to set actionID value for a user's new action.
+
+3) ACTION (action, struct) :
 
 Attributes :
 - userID (int)          // ID of the user who performed the action
@@ -8,10 +19,41 @@ Attributes :
 - actionType (int)      // Type of the action (POST, LIKE, COMMENT)
 - timeStamp (time_t)    // Time of the action
 
-2) FEEDQUEUE: (class)
+4) WALL QUEUE (wallQueue):
+
+    - Implemented as an unordered map of userIDs with the vector of actions performed by them.
+    - Vector used because of the need to store actions in chronological order.
+
+5) FEED QUEUE (feedQueue, class):
 
 Attributes :
-- type (int)            // Type specifying order of reading elements in queue 
+
+- type (int)            // type specifies user's preferred order of reading elements in queue 
 - userID (int)          // ID of user
 - lock (pthread_mutex_t)    // Lock for the queue
+- feed (vector of actions) :   
 
+    - Vector of actions (stores neighbors' updates only if type = "CHRONOLOGICAL")
+    - Not used if type = "PRIORITY"
+    - Dynamic sized array of actions (hence, no need to specify max size)
+    - New updates are pushed to vector and latest updates are popped from it
+    - Vector used because of the need to store actions in chronological order.
+
+- pq (priority queue of actions) :
+
+    - Priority queue of actions (stores neighbors' updates only if type = "PRIORITY")
+    - Priority between two actions is decided by the no. of common neighbors between given user and the user performing the action
+    - Not used if type = "CHRONOLOGICAL"
+    - Dynamic sized priority queue of actions (hence, no need to specify max size)
+    - New updates are pushed to priority queue and highest priority updates are removed from it
+
+NOTE : 
+
+We have not implemented a separate structure for each node, but we added the relevant node features in the corresponding feedQueue (like, type, userID)
+    
+6) PUSH UPDATE QUEUE (pushUpdateQueue) :
+
+    - Implemented as a vector of actions.
+    - Stores updates for all users in a single queue.
+    - Vector used because of the need to store actions in chronological order.
+    - Accessed by multiple pushUpdate threads to push updates to feed queues of relevant users.
