@@ -1,7 +1,7 @@
 lcm=1
-while read -r n
+while read n
 do
-	if [ "$n" == "" ];
+	if [ "$n" == "" ]
 	then
 		continue
 	fi

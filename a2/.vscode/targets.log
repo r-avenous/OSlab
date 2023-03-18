@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Mar 17 11:41:03 2023
+# Make data base, printed on Thu Mar 16 18:57:56 2023
 
 # Variables
 
@@ -37,7 +35,7 @@ XAUTHORITY = /home/shreyas/.Xauthority
 # environment
 XMODIFIERS = @im=ibus
 # makefile
-CURDIR := /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3
+CURDIR := /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a2
 # makefile
 SHELL = /bin/sh
 # environment
@@ -45,11 +43,11 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:50638
+JOURNAL_STREAM = 8:51969
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
-# makefile (from 'Makefile', line 1)
-MAKEFILE_LIST :=  Makefile
+# makefile (from 'makefile', line 1)
+MAKEFILE_LIST :=  makefile
 # environment
 GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # 'override' directive
@@ -59,7 +57,7 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/home/shreyas/.local/share/flatpak/exports/sha
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 11737
+MANAGERPID = 7947
 # environment
 VSCODE_CWD = /home/shreyas
 # environment
@@ -70,12 +68,10 @@ XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
 PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/shreyas:/home/shreyas
-# makefile (from 'Makefile', line 2)
-flags = -Wall -std=c++11
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/11943,unix/shreyas:/tmp/.ICE-unix/11943
+SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/8152,unix/shreyas:/tmp/.ICE-unix/8152
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -83,7 +79,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 05628aa04a36415bb3ee5f4c59cc2b74
+INVOCATION_ID = 7fba3359e4ee41dcadca8108bcaf1af0
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -91,17 +87,17 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 22175
+GIO_LAUNCHED_DESKTOP_FILE_PID = 278488
 # automatic
 %F = $(notdir $%)
 # environment
 DISPLAY = :0
 # environment
-PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a3
+PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a2
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 11893
+SSH_AGENT_PID = 8103
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -115,7 +111,7 @@ VSCODE_CODE_CACHE_PATH = /home/shreyas/.config/Code/CachedData/e8a3071ea4344d9d4
 # environment
 LOGNAME = shreyas
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
@@ -132,8 +128,6 @@ MAKECMDGOALS := all
 QT_IM_MODULE = ibus
 # environment
 SHLVL = 0
-# makefile (from 'Makefile', line 1)
-CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # default
@@ -193,9 +187,9 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 22175
+VSCODE_PID = 278488
 # variable set hash-table stats:
-# Load=91/1024=9%, Rehash=0, Collisions=7/116=6%
+# Load=89/1024=9%, Rehash=0, Collisions=7/114=6%
 
 # Pattern-specific Variable Values
 
@@ -203,21 +197,15 @@ VSCODE_PID = 22175
 
 # Directories
 
-# . (device 66311, inode 4612828): 24 files, no impossibilities.
+# . (device 66311, inode 4612827): 15 files, no impossibilities.
 
-# 24 files, no impossibilities in 1 directories.
+# 15 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
-
-# Not a target:
-consumerOP.cpp:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
 
 # Not a target:
 all:
@@ -227,17 +215,23 @@ all:
 #  File has not been updated.
 
 # Not a target:
-Makefile:
+utility.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+utility.hpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+makefile:
 #  Implicit rule search has been done.
 #  Last modified 2023-03-09 08:26:41.800263072
 #  File has been updated.
 #  Successfully updated.
-
-# Not a target:
-producer.cpp:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
 
 # Not a target:
 main.cpp:
@@ -255,18 +249,15 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 10):
-	ls | grep -P "^[0-9]\.txt$" | xargs -d"\n" rm -f
-	rm -f main producer consumer 
+#  recipe to execute (from 'makefile', line 5):
+	rm terminal
 
-output: main.cpp producer.cpp consumerOP.cpp
+output: utility.cpp main.cpp utility.hpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 5):
-	$(CC) $(flags) main.cpp -o main
-	$(CC) $(flags) producer.cpp -o producer
-	$(CC) $(flags) consumerOP.cpp -o consumer
+#  recipe to execute (from 'makefile', line 2):
+	g++ -o terminal main.cpp utility.cpp -lreadline
 
 # files hash-table stats:
 # Load=9/1024=1%, Rehash=0, Collisions=0/22=0%
@@ -276,12 +267,14 @@ output: main.cpp producer.cpp consumerOP.cpp
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 31 / storage = 477 B / avg = 15 B
-# current buf: size = 8162 B / used = 477 B / count = 31 / avg = 15 B
+# strcache buffers: 1 (0) / strings = 22 / storage = 266 B / avg = 12 B
+# current buf: size = 8162 B / used = 266 B / count = 22 / avg = 12 B
 
-# strcache performance: lookups = 40 / hit rate = 22%
+# strcache performance: lookups = 31 / hit rate = 29%
 # hash-table stats:
-# Load=31/8192=0%, Rehash=0, Collisions=1/40=2%
-# Finished Make data base on Fri Mar 17 11:41:03 2023
+# Load=22/8192=0%, Rehash=0, Collisions=3/31=10%
+# Finished Make data base on Thu Mar 16 18:57:56 2023
 
  
+make: *** No rule to make target 'all'.  Stop.
+

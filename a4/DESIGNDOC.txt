@@ -8,8 +8,8 @@ Implemented as an unordered map of nodes (known by their userIDs) with their nei
 
 2) COUNTER (counter) :
 
-- Implemented as an array of unordered map (of size 3 for each action type) of userIDs with their total no. of actions performed.
-- Used to set actionID value for a user's new action.
+    - Implemented as an unordered map of userIDs with their total no. of actions performed.
+    - Used to set actionID value for a user's new action.
 
 3) ACTION (action, struct) :
 
@@ -39,14 +39,13 @@ Struct defined in feedQueue class
 Defines a function to compare the priorities of two actions based on the no. of common  neighbors between a given user and the user performing the action.
 This function is used as the comparator function for the priority queue defined in feedQueue. (explained below)
 
-6) FEED QUEUE (feedQueue, class):
+5) FEED QUEUE (feedQueue, class):
 
 Attributes :
 
-- type (int)        	// type specifies user's preferred order of reading elements in queue
-- userID (int)      	// ID of user
-- lock (pthread_mutex_t)	// Lock for the queue
-- comp (actionCompare)  	// struct to compare two actions
+- type (int)            // type specifies user's preferred order of reading elements in queue 
+- userID (int)          // ID of user
+- lock (pthread_mutex_t)    // Lock for the queue
 - feed (vector of actions) :   
 
 Vector of actions (stores neighbors' updates only if type = "CHRONOLOGICAL")

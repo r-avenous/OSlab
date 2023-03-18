@@ -1,5 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/divyansh/6th sem/temp OS/a4'
-g++ -Wall -std=c++11 sns.cpp helper.cpp userSimulator.cpp pushUpdate.cpp readPost.cpp -o sns -lm -lpthread
-make: Leaving directory '/home/divyansh/6th sem/temp OS/a4'
- 

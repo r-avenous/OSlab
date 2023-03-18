@@ -235,7 +235,7 @@ void add_history(char* s)
     last_cmd = "";
 
     fphist = fopen(history_file, "a");
-    printf("%d\n", fputs(s, fphist));
+    fputs(s, fphist);
     putc('\n', fphist);
     fclose(fphist);
 
