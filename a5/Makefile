@@ -1,5 +1,5 @@
 hotel:	main.o
-	g++ -o hotel main.o cleaner.o guest.o -lpthread
+	g++ -o hotel main.o cleaner.o guest.o -lpthread -lrt
 
 main.o: main.cpp guest.o cleaner.o
 	g++ -c main.cpp

@@ -3,14 +3,15 @@
 
 pthread_mutex_t cleaner_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t guest_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t hotel_mutex = PTHREAD_MUTEX_INITIALIZER;
 int x, y, n;
-vector<Room> hotel;
+Hotel hotel;
 
 void sig_handler(int signo)
 {
     if (signo == SIGINT)
     {
-        cout << "\nSIGINT received\n";
+        cout << "\nSIGINT received\nExiting ...\n";
         exit(0);
     }
 }
@@ -37,11 +38,18 @@ int main(int argc, char* argv[]){
     n = atoi(argv[3]);
 
     printf("Creating the hotel with %d rooms ...\n", n);
-    for (int i=0; i<n; i++){
+    for (int i=0; i<n; i++)
+    {
         Room room;
         room.is_occupied = false;
-        hotel.push_back(room);
+        room.time_occupied = 0;
+        sem_init(&room.sem, 0, 2);
+        hotel.rooms.push_back(room);
     }
+
+    hotel.occupancy = 0;
+    hotel.num_need_cleaning = 0;
+    printf("Initial hotel occupancy: %d\n", hotel.occupancy);
 
     pthread_t cleanerThread[x], guestThread[y];
     printf("Creating guest and cleaner threads ...\n");
