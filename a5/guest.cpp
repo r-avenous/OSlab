@@ -1,10 +1,15 @@
 #include "guest.hpp"
 
+extern pthread_mutex_t guest_mutex;
+
 void guest(int num)
 {
-    srand(time(NULL));
-    cout << "I am guest " << num << endl;
+    pthread_mutex_lock(&guest_mutex);
+    srand(time(NULL) + num);
+    printf("I am guest %d\n", num);
     int sleep_time = rand() % 11 + 10;
-    cout << "Guest " << num << " will sleep for " << sleep_time << " seconds" << endl;
+    printf("Guest %d will sleep for %d seconds\n", num, sleep_time);
+    pthread_mutex_unlock(&guest_mutex);
     sleep(sleep_time);
+
 }
