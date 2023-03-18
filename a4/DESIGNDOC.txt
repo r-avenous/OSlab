@@ -4,65 +4,113 @@ Data Structures :
 
 1) GRAPH (graph) :
 
-    - Implemented as an unordered map of nodes (known by their userIDs) with their neighbor's userIDs.
+Implemented as an unordered map of nodes (known by their userIDs) with their neighbor's userIDs.
 
-2) COUNTER (counter) : 
+2) COUNTER (counter) :
 
     - Implemented as an unordered map of userIDs with their total no. of actions performed.
-    - Used to set actionID value for a user's new action. 
+    - Used to set actionID value for a user's new action.
 
 3) ACTION (action, struct) :
 
 Attributes :
-- userID (int)          // ID of the user who performed the action
-- actionID (int)        // ID of the action
-- actionType (int)      // Type of the action (POST, LIKE, COMMENT)
-- timeStamp (time_t)    // Time of the action
+- userID (int)      	   [ ID of the user who performed the action ]
+- actionID (int)    	   [ ID of the action ]
+- actionType (int)  	   [ Type of the action (POST, LIKE, COMMENT) ]
+- timeStamp (time_t)	   [ Time of the action ]
 
 4) WALL QUEUE (wallQueue):
 
-    - Implemented as an unordered map of userIDs with the vector of actions performed by them.
-    - Vector used because of the need to store actions in chronological order.
+Implemented as an unordered map of userIDs with the vector of actions performed by them.
+Vector used because of the need to store actions in chronological order.
+
+No definite size limit (depends on the number of iterations of user simulator thread)
+But we can do analysis for one iteration:
+Max_size_limit = 143 ( calculated by calculating maximum possible action by one node)
+Avg_size_limit = 83 (calculated by averaging actions for all nodes)
+
 
 5) ACTION_COMPARE (actionCompare, struct) :
 
-- fq (feedQueue*)       // pointer to feedQueue
+Attributes :
+- fq (feedQueue*)          [ Pointer to feedQueue ]
 
-    - Struct defined in feedQueue class
-    - Defines a function to compare the priorities of two actions based on the no. of common neighbors between given user and user performing the action.
-    - This function is used as the comparatr function for the priority queue defined in feedQueue. (explained below)
+Struct defined in feedQueue class
+Defines a function to compare the priorities of two actions based on the no. of common  neighbors between a given user and the user performing the action.
+This function is used as the comparator function for the priority queue defined in feedQueue. (explained below)
 
-6) FEED QUEUE (feedQueue, class):
+5) FEED QUEUE (feedQueue, class):
 
 Attributes :
 
 - type (int)            // type specifies user's preferred order of reading elements in queue 
 - userID (int)          // ID of user
 - lock (pthread_mutex_t)    // Lock for the queue
-- comp (actionCompare)      // struct to compare two actions
 - feed (vector of actions) :   
 
-    - Vector of actions (stores neighbors' updates only if type = "CHRONOLOGICAL")
-    - Not used if type = "PRIORITY"
-    - Dynamic sized array of actions (hence, no need to specify max size)
-    - New updates are pushed to vector and latest updates are popped from it
-    - Vector used because of the need to store actions in chronological order.
+Vector of actions (stores neighbors' updates only if type = "CHRONOLOGICAL")
+Not used if type = "PRIORITY"
+Dynamic sized array of actions (hence, no need to specify max size)
+New updates are pushed to vector and latest updates are popped from it
+Vector used because of the need to store actions in chronological order.
 
 - pq (priority queue of actions) :
 
-    - Priority queue of actions (stores neighbors' updates only if type = "PRIORITY")
-    - Priority between two actions is decided by the no. of common neighbors between given user and the user performing the action
-    - Not used if type = "CHRONOLOGICAL"
-    - Dynamic sized priority queue of actions (hence, no need to specify max size)
-    - New updates are pushed to priority queue and highest priority updates are removed from it
+Priority queue of actions (stores neighbors' updates only if type = "PRIORITY")
+Priority between two actions is decided by the no. of common neighbors between given user and the user performing the action
+Cache is used to store previously calculated number of common neighbours
+Not used if type = "CHRONOLOGICAL"
+Dynamic sized priority queue of actions (hence, no need to specify max size)
+New updates are pushed to priority queue and highest priority updates are removed from it
 
-NOTE : 
+Max_size_limit: 	around 10,000 (calculating by summing actions of top 100 highest degree nodes)
+Avg_size_limit:  around 830 (calculated by multiplying average actions per node(83) * average degree of a node(10))
 
-We have not implemented a separate structure for each node, but we added the relevant node features in the corresponding feedQueue (like, type, userID)
+NOTE :
+
+We have not implemented a separate structure for each node, but we added the relevant node features in the corresponding feedQueue. (like, type, userID)
     
 6) PUSH UPDATE QUEUE (pushUpdateQueue) :
 
-    - Implemented as a vector of actions.
-    - Stores updates for all users in a single queue.
-    - Vector used because of the need to store actions in chronological order.
-    - Accessed by multiple pushUpdate threads to push updates to feed queues of relevant users.
+Implemented as a vector of actions.
+Stores updates for all users in a single queue.
+Vector used because of the need to store actions in chronological order.
+Accessed by multiple pushUpdate threads to push updates to feed queues of relevant users.
+
+Max_Size_bound :  around 10,000, sum of actions possible for top 100 highest possible degree nodes (upper bound on size of push update queue) 
+( This is calculated by assuming that no pushupdate thread is scheduled before the usersimulation thread completes one iteration)
+
+Avg_size_bound : is around 8300 (calculated by taking average action of a node and multiplying it by 100)
+( This is also calculated by assuming that no pushupdate thread is scheduled before the usersimulation thread completes one iteration)
+
+7) VISITED QUEUE (visited):
+Implemented as Unordered set
+Stores IDs of the nodes whose feed queues are updated by the Push update threads
+Unordered set is used for storing ID of the nodes whose feed queue are updated by the Push update threads because feed queue of the same node may be updated by multiple threads, but by maintaining a set only one occurrence of the node is stored which increases the efficiency by reducing the number of Read post threads required.
+
+Avg_size_bound: 26,000 (calculated by summing disjoint neighbours of top 100 highest degree nodes)
+NOTE: this is an approximate as there may exist another set of 100 nodes having more number of disjoint neighbours
+Max_size_bound: 37,700 (total number of nodes)
+
+
+
+
+No. of locks = 1 (for push update queues) + 1 (for common queue between pushupdate and readpost threads) + 37700 (for feed queue of each node)
+
+Race condition: Lock for push update queue:
+-> avoids race condition as at a time it allows access to only one thread ( out of 1 Usersimulator thread and 25 push update threads) accesses the common queue
+-> Concurrency: It allows concurrency between the push update threads as whenever the usersimulator thread pushes an action in the queue, the broadcast message is given to all free push update threads and one out of them dequeues the queue (and processes the action) (if any free push update thread available). Push update  thread continues after popping one action and subsequently pushing this action to all feed queues of neighbours which has nothing to do with the user simulator thread.
+
+Lock between push update and read post threads:
+-> Race condition: avoids race condition as at a time only one thread ( out of 10 Read post threads and 25 push update threads) accesses the common queue
+-> Concurrency: It allows concurrency between the Read post and Push update threads as whenever the Push update thread enters the node whose feed queue it updates, the broadcast message is given to all free Read post threads and one out of them takes the ID of one element of the set (and processes its feed queue) (if any free Read post thread is available). Read post threads continue printing the new actions in respective feed queues without any intervention from user simulator but has some intervention from the push update because every feed queue has its lock.
+
+/*
+NOTE: Here we used set for storing ID of the nodes whose feed queue are updated by the Push update threads because feed queue of the same node may be updated by multiple threads, but by maintaining a set only one occurrence of the node is stored which increases the efficiency by reducing the number of Read post threads required.
+*/
+
+Lock for each feed queue:
+-> Race condition: avoids race condition (which may arise if multiple Read post threads or Push update threads try to access a feed queue at the same time) as at a time it allows access to only one thread ( out of 10 Read post threads and 25 push update threads) accesses the common queue
+-> Concurrency: it is used for mutual exclusive access to the feed queue and not for concurrency
+
+NOTE: 37,700 might seem like a large number of locks but at any instance of time only a small portion of it (depending upon feed queue of how many nodes are accessed by the Push update and Read post threads) are used.

@@ -8,4 +8,4 @@ NR == FNR {invalid[i] = tolower($0) ; i++ ; next}
 !/^[a-zA-Z][a-zA-Z0-9]*$/ {out=1}
 !/[0-9]/ {out=1}
 {for (j=0 ; j<i;j++){if(tolower($0) ~ invalid[j]) out=1}}
-{if((out+0)==1) {printf("NO\n")>"validation.txt";out=0} else{ printf("YES\n")> "validation.txt"}}' fruits.txt $1
+{if((out+0)==1) {print"NO">"validation.txt";out=0} else{ print"YES"> "validation.txt"}}' fruits.txt $1
