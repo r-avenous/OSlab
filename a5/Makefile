@@ -1,14 +1,14 @@
-hotel:	cleaner.o guest.o main.o
+hotel:	main.o
 	g++ -o hotel main.o cleaner.o guest.o -lpthread
 
 main.o: main.cpp guest.o cleaner.o
-	g++ -c main.cpp -lpthread
+	g++ -c main.cpp
 
-guest.o: guest.cpp guest.hpp
-	g++ -c guest.cpp -lpthread
+guest.o: guest.cpp utils.hpp guest.hpp
+	g++ -c guest.cpp
 
-cleaner.o: cleaner.cpp cleaner.hpp
-	g++ -c cleaner.cpp -lpthread
+cleaner.o: cleaner.cpp utils.hpp cleaner.hpp
+	g++ -c cleaner.cpp
 
 clean:
 	rm *.o hotel

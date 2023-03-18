@@ -1,7 +1,3 @@
-#include <iostream>
-#include <stdlib.h>
-#include <unistd.h>
+#include "utils.hpp"
 
-using namespace std;
-
-void cleaner(int num);
+void cleaner(int id);

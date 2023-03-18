@@ -1,8 +1,3 @@
-#include <iostream>
-#include <stdlib.h>
-#include <unistd.h>
-#include <time.h>
+#include "utils.hpp"
 
-using namespace std;
-
-void guest(int num);
+void guest(int id);

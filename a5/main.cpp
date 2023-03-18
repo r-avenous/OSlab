@@ -1,16 +1,10 @@
-#include <iostream>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <semaphore.h>
-#include "cleaner.hpp"
 #include "guest.hpp"
-#include <signal.h>
-
-using namespace std;
+#include "cleaner.hpp"
 
 pthread_mutex_t cleaner_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t guest_mutex = PTHREAD_MUTEX_INITIALIZER;
+int x, y, n;
+vector<Room> hotel;
 
 void sig_handler(int signo)
 {
@@ -23,24 +17,31 @@ void sig_handler(int signo)
 
 void* cleaner_func(void* arg){
 
-    int cleaner_num = *(int*)arg;
-    cleaner(cleaner_num);
+    int cleaner_id = *(int*)arg;
+    cleaner(cleaner_id);
     return NULL;
 }
 
 void* guest_func(void* arg){
 
-    int guest_num = *(int*)arg;
-    guest(guest_num);
+    int guest_id = *(int*)arg;
+    guest(guest_id);
     return NULL;
 }
 
 int main(int argc, char* argv[]){
 
     signal(SIGINT, sig_handler);
-    int x = atoi(argv[1]);
-    int y = atoi(argv[2]);
-    int n = atoi(argv[3]);
+    x = atoi(argv[1]);
+    y = atoi(argv[2]);
+    n = atoi(argv[3]);
+
+    printf("Creating the hotel with %d rooms ...\n", n);
+    for (int i=0; i<n; i++){
+        Room room;
+        room.is_occupied = false;
+        hotel.push_back(room);
+    }
 
     pthread_t cleanerThread[x], guestThread[y];
     printf("Creating guest and cleaner threads ...\n");
@@ -63,5 +64,6 @@ int main(int argc, char* argv[]){
     for (int i=0; i<y; i++){
         pthread_join(guestThread[i], NULL);
     }
+    printf("Exiting ...\n");
     return 0;
 }
