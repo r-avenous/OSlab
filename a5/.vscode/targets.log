@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Mar 19 18:51:16 2023
+# Make data base, printed on Sun Mar 19 19:05:15 2023
 
 # Variables
 
@@ -45,7 +43,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:51871
+JOURNAL_STREAM = 8:52758
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -59,13 +57,13 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/home/shreyas/.local/share/flatpak/exports/sha
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 15686
+MANAGERPID = 4827
 # environment
 VSCODE_CWD = /home/shreyas
 # environment
 PAM_KWALLET5_LOGIN = /run/user/1000/kwallet5.socket
 # environment
-XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session2
+XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session1
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -73,7 +71,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/15913,unix/shreyas:/tmp/.ICE-unix/15913
+SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/5035,unix/shreyas:/tmp/.ICE-unix/5035
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -81,7 +79,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = d9128bbe852645ce845efbe70c74a2fc
+INVOCATION_ID = 18041380e0e74ee9aab4dca6c3b7da22
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -89,7 +87,7 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 16701
+GIO_LAUNCHED_DESKTOP_FILE_PID = 9113
 # automatic
 %F = $(notdir $%)
 # environment
@@ -99,7 +97,7 @@ PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a5
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 15868
+SSH_AGENT_PID = 4983
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -113,7 +111,7 @@ VSCODE_CODE_CACHE_PATH = /home/shreyas/.config/Code/CachedData/e8a3071ea4344d9d4
 # environment
 LOGNAME = shreyas
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
@@ -189,7 +187,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 16701
+VSCODE_PID = 9113
 # variable set hash-table stats:
 # Load=89/1024=9%, Rehash=0, Collisions=7/114=6%
 
@@ -287,6 +285,9 @@ guest.o: guest.cpp utils.hpp guest.hpp
 #  File has not been updated.
 
 clean:
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -308,12 +309,12 @@ main.o: main.cpp guest.o cleaner.o
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 22 / storage = 220 B / avg = 10 B
-# current buf: size = 8162 B / used = 220 B / count = 22 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 21 / storage = 210 B / avg = 10 B
+# current buf: size = 8162 B / used = 210 B / count = 21 / avg = 10 B
 
-# strcache performance: lookups = 44 / hit rate = 50%
+# strcache performance: lookups = 44 / hit rate = 52%
 # hash-table stats:
-# Load=22/8192=0%, Rehash=0, Collisions=1/44=2%
-# Finished Make data base on Sun Mar 19 18:51:16 2023
+# Load=21/8192=0%, Rehash=0, Collisions=1/44=2%
+# Finished Make data base on Sun Mar 19 19:05:15 2023
 
  
