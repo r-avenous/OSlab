@@ -28,16 +28,26 @@ void cleaner(int id){
 
     // clean the room
     int clean_time = PROPORTIONALITY * hotel.rooms[room_id].time_occupied + PROPORTIONALITY;
-    printf("Cleaner [%d] cleaning room [%d] for %d seconds ...\n", id, room_id+1, clean_time);
-    sleep(clean_time);
 
     // update the hotel and room details
     hotel.rooms[room_id].is_dirty = false;
     hotel.rooms[room_id].time_occupied = 0;
     hotel.rooms[room_id].num_times_occupied = 0;
     sem_post(&hotel.clean_rooms_sem);
-    printf("Room [%d]!\n is cleaned!", room_id+1);
+
+    // if cleaners have cleaned all the rooms, set is_cleaning to false
+    int val;
+    sem_getvalue(&hotel.clean_rooms_sem, &val);
+
+    if (val == n)
+        hotel.is_cleaning = false;
 
     pthread_mutex_unlock(&hotel_mutex);
+
+    printf("Cleaner [%d] cleaning room [%d] for %d seconds ...\n", id, room_id+1, clean_time);
+    sleep(clean_time);
+    
+    printf("Room [%d]!\n is cleaned!", room_id+1);
+
     // pthread_mutex_unlock(&cleaner_mutex);
 }
