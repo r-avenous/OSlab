@@ -12,42 +12,52 @@ void cleaner(int id){
     // pthread_mutex_lock(&cleaner_mutex);
     printf("I am cleaner [%d]\n", id);
 
-    pthread_mutex_lock(&hotel_mutex);
+    while(1){
 
-    while (!hotel.is_cleaning)
-        pthread_cond_wait(&clean_cond, &hotel_mutex);
+        pthread_mutex_lock(&hotel_mutex);
+        printf("Cleaner [%d] looking to clean rooms ...\n", id);
 
-    // select a random room for cleaning
-    int room_id;
-    while (1){
+        while (!hotel.is_cleaning)
+            pthread_cond_wait(&clean_cond, &hotel_mutex);
 
-        room_id = rand() % n;
-        if (hotel.rooms[room_id].is_dirty)
-            break;
+        // if cleaners have cleaned all the rooms, set is_cleaning to false
+        int val;
+        sem_getvalue(&hotel.clean_rooms_sem, &val);
+
+        if (val == n)
+        {
+            if (hotel.is_cleaning)
+                hotel.is_cleaning = false;
+                
+            pthread_mutex_unlock(&hotel_mutex);
+            continue;
+        }
+
+        // select a random room for cleaning
+        int room_id;
+        while (1){
+
+            room_id = rand() % n;
+            if (hotel.rooms[room_id].is_dirty)
+                break;
+        }
+
+        // clean the room
+        int clean_time = PROPORTIONALITY * hotel.rooms[room_id].time_occupied + PROPORTIONALITY;
+
+        // update the hotel and room details
+        hotel.rooms[room_id].is_dirty = false;
+        hotel.rooms[room_id].time_occupied = 0;
+        hotel.rooms[room_id].num_times_occupied = 0;
+        sem_post(&hotel.clean_rooms_sem);
+        
+        pthread_mutex_unlock(&hotel_mutex);
+
+        printf("Cleaner [%d] cleaning room [%d] for %d seconds ...\n", id, room_id+1, clean_time);
+        sleep(clean_time);
+        
+        printf("Room [%d] is cleaned!\n", room_id+1);
+
+        // pthread_mutex_unlock(&cleaner_mutex);
     }
-
-    // clean the room
-    int clean_time = PROPORTIONALITY * hotel.rooms[room_id].time_occupied + PROPORTIONALITY;
-
-    // update the hotel and room details
-    hotel.rooms[room_id].is_dirty = false;
-    hotel.rooms[room_id].time_occupied = 0;
-    hotel.rooms[room_id].num_times_occupied = 0;
-    sem_post(&hotel.clean_rooms_sem);
-
-    // if cleaners have cleaned all the rooms, set is_cleaning to false
-    int val;
-    sem_getvalue(&hotel.clean_rooms_sem, &val);
-
-    if (val == n)
-        hotel.is_cleaning = false;
-
-    pthread_mutex_unlock(&hotel_mutex);
-
-    printf("Cleaner [%d] cleaning room [%d] for %d seconds ...\n", id, room_id+1, clean_time);
-    sleep(clean_time);
-    
-    printf("Room [%d]!\n is cleaned!", room_id+1);
-
-    // pthread_mutex_unlock(&cleaner_mutex);
 }

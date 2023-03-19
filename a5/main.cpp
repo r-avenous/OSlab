@@ -1,8 +1,8 @@
 #include "guest.hpp"
 #include "cleaner.hpp"
 
-pthread_mutex_t cleaner_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t guest_mutex = PTHREAD_MUTEX_INITIALIZER;
+// pthread_mutex_t cleaner_mutex = PTHREAD_MUTEX_INITIALIZER;
+// pthread_mutex_t guest_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t hotel_mutex = PTHREAD_MUTEX_INITIALIZER;
 int x, y, n;
 Hotel hotel;

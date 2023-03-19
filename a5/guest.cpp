@@ -2,7 +2,7 @@
 
 pthread_cond_t clean_cond = PTHREAD_COND_INITIALIZER;
 
-extern pthread_mutex_t guest_mutex;
+// extern pthread_mutex_t guest_mutex;
 extern pthread_mutex_t hotel_mutex;
 extern int x, y, n;
 extern Hotel hotel;
@@ -30,12 +30,12 @@ bool allocate_rooms(Guest guest, int& room_no){
     printf("Current hotel occupancy: %d\n", hotel.occupancy);
     bool room_found = false;
 
-    int val;
-    sem_getvalue(&hotel.clean_rooms_sem, &val);
-    printf("Semaphore value : %d\n", val);
+    int num_clean_rooms;
+    sem_getvalue(&hotel.clean_rooms_sem, &num_clean_rooms);
+    printf("No. of clean rooms : %d\n", num_clean_rooms);
 
-    // if all rooms of the hotel have at least two guests, it needs cleaning - so no rooms are allocated
-    if (val == 0){
+    // If no clean rooms are left, or cleaning is undergoing, no rooms are allocated
+    if (num_clean_rooms == 0 || hotel.is_cleaning){
 
         printf("Inside val condition\n");
         // THIS PART NEEDS TO RUN ONLY ONCE, FOR THE FIRST TIME ALL ROOMS NEED CLEANING !!
@@ -45,27 +45,27 @@ bool allocate_rooms(Guest guest, int& room_no){
             printf("\n\nAll rooms need cleaning!\n\n");
             evict_guests();
             printf("\nCleaning staff will be notified!\n");
-            pthread_cond_signal(&clean_cond);
+            pthread_cond_broadcast(&clean_cond);
         }
+
         room_no = -1;
         pthread_mutex_unlock(&hotel_mutex);
-        printf("Returning no room found!\n");
+        printf("Cleaning in progress, room allocation deferred until further notice!\n");
         return false;
     }
 
     if (hotel.occupancy < n)
     {
-        printf("*****1st condition*****\n");
         for (int i=0; i<n; i++)
         {
-            if (!hotel.rooms[i].is_occupied)
+            if (!hotel.rooms[i].is_occupied && !hotel.rooms[i].is_dirty)
             {
                 room_found = true;
                 hotel.rooms[i].is_occupied = true;
                 hotel.rooms[i].guest = guest;
                 hotel.rooms[i].num_times_occupied++;
 
-                if (hotel.rooms[i].num_times_occupied >= 2 && !hotel.rooms[i].is_dirty)
+                if (hotel.rooms[i].num_times_occupied == 2)
                 {
                     hotel.rooms[i].is_dirty = true;
                     sem_wait(&hotel.clean_rooms_sem);
@@ -84,14 +84,14 @@ bool allocate_rooms(Guest guest, int& room_no){
 
         for (int i=0; i<n; i++)
         {
-            if (hotel.rooms[i].guest.priority < guest.priority)
+            if (hotel.rooms[i].guest.priority < guest.priority && !hotel.rooms[i].is_dirty)
             {
                 room_found = true;
                 printf("Displacing Guest [%d] with low priority [%d] from room [%d] ...\n", hotel.rooms[i].guest.id, hotel.rooms[i].guest.priority, i+1);
                 hotel.rooms[i].guest = guest;
                 hotel.rooms[i].num_times_occupied++;
             
-                if (hotel.rooms[i].num_times_occupied >= 2 && !hotel.rooms[i].is_dirty)
+                if (hotel.rooms[i].num_times_occupied == 2)
                 {
                     hotel.rooms[i].is_dirty = true;
                     sem_wait(&hotel.clean_rooms_sem);
@@ -106,7 +106,7 @@ bool allocate_rooms(Guest guest, int& room_no){
     }
 
     if (!room_found){
-        printf("No low priority guests found! Guest [%d] will be removed!\n", guest.id);
+        printf("No suitable rooms found! Guest [%d] will be removed!\n", guest.id);
         room_no = 0;
     }
 
@@ -173,6 +173,5 @@ void guest(int id)
             stay_in_room(guest, room_no);
 
         // pthread_mutex_unlock(&guest_mutex);
-
     }
 }
