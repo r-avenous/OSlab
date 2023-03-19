@@ -12,13 +12,13 @@ void sig_handler(int signo)
     if (signo == SIGINT)
     {
         printf("\nSIGINT received");
-        printf("Destroying mutexes ...");
+        printf("\nDestroying mutexes ...");
 
         pthread_mutex_destroy(&hotel_mutex);
         // pthread_mutex_destroy(&guest_mutex);
         // pthread_mutex_destroy(&cleaner_mutex);
 
-        printf("Exiting ...\n");
+        printf("\nExiting ...\n");
         exit(0);
     }
 }
@@ -81,10 +81,10 @@ int main(int argc, char* argv[]){
         pthread_join(guestThread[i], NULL);
     }
 
-    printf("Destroying mutexes ...");
+    printf("\nDestroying mutexes ...");
     pthread_mutex_destroy(&hotel_mutex);
     // pthread_mutex_destroy(&guest_mutex);
     // pthread_mutex_destroy(&cleaner_mutex);
-    printf("Exiting ...\n");
+    printf("\nExiting ...\n");
     return 0;
 }

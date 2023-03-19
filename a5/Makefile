@@ -11,4 +11,4 @@ cleaner.o: cleaner.cpp utils.hpp cleaner.hpp
 	g++ -c cleaner.cpp
 
 clean:
-	rm *.o hotel.exe
+	rm *.o hotel
