@@ -11,7 +11,14 @@ void sig_handler(int signo)
 {
     if (signo == SIGINT)
     {
-        cout << "\nSIGINT received\nExiting ...\n";
+        printf("\nSIGINT received");
+        printf("Destroying mutexes ...");
+
+        pthread_mutex_destroy(&hotel_mutex);
+        // pthread_mutex_destroy(&guest_mutex);
+        // pthread_mutex_destroy(&cleaner_mutex);
+
+        printf("Exiting ...\n");
         exit(0);
     }
 }
@@ -43,12 +50,13 @@ int main(int argc, char* argv[]){
         Room room;
         room.is_occupied = false;
         room.time_occupied = 0;
-        sem_init(&room.sem, 0, 2);
+        room.num_times_occupied = 0;
         hotel.rooms.push_back(room);
     }
 
     hotel.occupancy = 0;
-    hotel.num_need_cleaning = 0;
+    hotel.is_cleaning = false;
+    sem_init(&hotel.clean_rooms_sem, 0, n);
     printf("Initial hotel occupancy: %d\n", hotel.occupancy);
 
     pthread_t cleanerThread[x], guestThread[y];
@@ -72,6 +80,11 @@ int main(int argc, char* argv[]){
     for (int i=0; i<y; i++){
         pthread_join(guestThread[i], NULL);
     }
+
+    printf("Destroying mutexes ...");
+    pthread_mutex_destroy(&hotel_mutex);
+    // pthread_mutex_destroy(&guest_mutex);
+    // pthread_mutex_destroy(&cleaner_mutex);
     printf("Exiting ...\n");
     return 0;
 }

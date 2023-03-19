@@ -19,6 +19,12 @@ public:
     int priority;
     int stay_time;
 
+    Guest(){
+        id = -1;
+        priority = -1;
+        stay_time = 0;
+    }
+
     Guest& operator=(Guest &g){
         id = g.id;
         priority = g.priority;
@@ -29,16 +35,18 @@ public:
 
 typedef struct _room{
     bool is_occupied;
+    bool is_dirty;
     Guest guest;
     int time_occupied;
-    sem_t sem;
+    int num_times_occupied;
 }Room;
 
 typedef struct _hotel{
 
     vector<Room> rooms;
     int occupancy;
-    int num_need_cleaning;
+    sem_t clean_rooms_sem;
+    bool is_cleaning;
 }Hotel;
 
 #endif
