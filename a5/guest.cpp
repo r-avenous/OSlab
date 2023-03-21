@@ -42,7 +42,9 @@ void is_time_to_clean(){
             evict_guests_from_room(room);
             hotel.dirty_and_empty_rooms.push_back(room);
         }
+        printf("All rooms are dirty. Cleaning all rooms...\n");
         for(int i=0;i<n;i++){
+            
             sem_post(&hotel.start_cleaning_sem);
         }
     }
@@ -62,9 +64,22 @@ void is_time_to_clean(){
 }
 
 // bool allocate_rooms(Guest guest, int& room_no){
-void allocate_rooms(Guest guest){
-    int flag = 0;
+void allocate_rooms(Guest& guest){
+    int flag = 0,flag2=0;
     while(1){
+        if(!flag){
+            pthread_mutex_lock(&hotel_mutex);
+            if(hotel.nondirty_and_empty_rooms.size()!=0) flag2 =1;
+            if(!flag2 && (guest.priority>(*hotel.nondirty_and_occupied_rooms.begin()).guest.priority)) flag2 = 1;
+            if(!flag2 && (guest.priority>(*hotel.dirty_and_occupied_rooms.begin()).guest.priority)) flag2 = 1;
+            pthread_mutex_unlock(&hotel_mutex);
+            if(flag2){
+                flag2 == 0;
+            }
+            else{
+                sem_wait(&hotel.clean_rooms_sem);
+            }
+        }
         pthread_mutex_lock(&hotel_mutex);
         if(hotel.nondirty_and_empty_rooms.size()!=0){
             if(flag==2){
@@ -75,6 +90,10 @@ void allocate_rooms(Guest guest){
             }
             Room room = hotel.nondirty_and_empty_rooms.back();
             hotel.nondirty_and_empty_rooms.pop_back();
+            printf("Guest %d allocated room\n", guest.id);
+            int val;
+            sem_getvalue(&hotel.clean_rooms_sem, &val);
+            printf("semaphore value: %d\n", val);
             room.guest = guest;
             room.num_times_occupied++;
             room.time_occupied += guest.stay_time; 
@@ -92,6 +111,7 @@ void allocate_rooms(Guest guest){
             }
             sleep(guest.stay_time);
             if(guest.is_evicted==1){
+                printf("Guest %d is evicted\n", guest.id);
                 guest.is_evicted = 0;
                 return;
             }
@@ -103,6 +123,16 @@ void allocate_rooms(Guest guest){
                 pthread_mutex_unlock(&hotel_mutex);
                 sem_post(&hotel.clean_rooms_sem);
             }
+            else if(room.num_times_occupied==2){
+                pthread_mutex_lock(&hotel_mutex);
+                auto it = hotel.dirty_and_occupied_rooms.find(room);
+                hotel.dirty_and_occupied_rooms.erase(room);
+                // evict_guests_from_room(room);
+                printf("This room is dirty and occupied. Pushing it to dirty and empty rooms\n");
+                hotel.dirty_and_empty_rooms.push_back(room);
+                pthread_mutex_unlock(&hotel_mutex);
+                // hotel.dirty_and_empty_rooms.push_back(room);
+            }
             return;
         }
         if(guest.priority>(*hotel.nondirty_and_occupied_rooms.begin()).guest.priority){
@@ -111,9 +141,11 @@ void allocate_rooms(Guest guest){
             hotel.nondirty_and_occupied_rooms.erase(it);
             room.num_times_occupied++;
             room.time_occupied += guest.stay_time;
+            printf("guest %d evicted and should be added\n", room.guest.id);
             evict_guests_from_room(room);
             room.guest = guest;
             hotel.dirty_and_occupied_rooms.insert(room);
+            printf("Guest %d allocated room\n", guest.id);
             // sem_wait(&hotel.clean_rooms_sem);
             pthread_mutex_unlock(&hotel_mutex);
             is_time_to_clean();
@@ -131,6 +163,7 @@ void allocate_rooms(Guest guest){
             Room room = *it;
             hotel.dirty_and_occupied_rooms.erase(it);
             // room.guest = NULL;
+            printf("guest %d evicted and not added\n", room.guest.id);
             evict_guests_from_room(room);
             hotel.dirty_and_empty_rooms.push_back(room);
             pthread_mutex_unlock(&hotel_mutex);
@@ -144,7 +177,9 @@ void allocate_rooms(Guest guest){
         }
         pthread_mutex_unlock(&hotel_mutex);
         flag = 2;
-        sem_wait(&hotel.clean_rooms_sem);
+        printf("Going in sem wait\n");
+        // sem_wait(&hotel.clean_rooms_sem);
+        printf("Came out of sem wait\n");
     }
 
     // pthread_mutex_lock(&hotel_mutex);

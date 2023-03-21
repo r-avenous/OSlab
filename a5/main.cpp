@@ -52,9 +52,9 @@ void* guest_func(void* arg){
 int main(int argc, char* argv[]){
 
     signal(SIGINT, sig_handler);
-    x = atoi(argv[1]);
-    y = atoi(argv[2]);
-    n = atoi(argv[3]);
+    y = atoi(argv[1]);
+    n = atoi(argv[2]);
+    x = atoi(argv[3]);
 
     printf("Creating the hotel with %d rooms ...\n", n);
     for (int i=0; i<n; i++)
@@ -88,10 +88,10 @@ int main(int argc, char* argv[]){
         pthread_create(&guestThread[i], NULL, guest_func, (void*)temp);
     }
 
-    printf("Joining guest and cleaner threads ...\n");
     for (int i=0; i<x; i++){
         pthread_join(cleanerThread[i], NULL);
     }
+    printf("Joined guest and cleaner threads ...\n");
 
     for (int i=0; i<y; i++){
         pthread_join(guestThread[i], NULL);

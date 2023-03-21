@@ -49,20 +49,28 @@ typedef struct _room{
     
 }Room;
 
-bool operator<(const Room &r1, const Room &r2){
-    return r1.guest.priority < r2.guest.priority;
-}
+// bool operator<(const Room &r1, const Room &r2);
+//     // return r1.guest.priority < r2.guest.priority;
 
-bool operator==(const Room &r1, const Room &r2){
-    return r1.guest.id == r2.guest.id;
-}
+
+// bool operator==(const Room &r1, const Room &r2);
+//     // return r1.guest.id == r2.guest.id;
+
+// auto RoomCMP = [](const Room &r1, const Room &r2){ return r1.guest.priority < r2.guest.priority;};
+struct roomcmp
+{
+    bool operator() (Room r1, Room r2) const
+    {
+        return r1.guest.priority < r2.guest.priority;
+    }
+};
 
 typedef struct _hotel{
 
     vector<Room> nondirty_and_empty_rooms;
     vector<Room> dirty_and_empty_rooms;
-    set<Room> nondirty_and_occupied_rooms;
-    set<Room> dirty_and_occupied_rooms;
+    set<Room, roomcmp> nondirty_and_occupied_rooms;
+    set<Room, roomcmp> dirty_and_occupied_rooms;
     sem_t start_cleaning_sem;
     // vector<Room> nondirty_and_occupied_rooms;
     // vector<Room> dirty_and_occupied_rooms;

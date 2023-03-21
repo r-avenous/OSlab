@@ -15,13 +15,16 @@ void cleaner(int id){
         sem_wait(&hotel.start_cleaning_sem);
         pthread_mutex_lock(&hotel_mutex);
         if(hotel.dirty_and_empty_rooms.size()!=0){
+            printf("I am cleaner [%d] and I am cleaning\n", id);
             Room room = hotel.dirty_and_empty_rooms.back();
             hotel.dirty_and_empty_rooms.pop_back();
             room.num_times_occupied = 0;
+            int prev_time = room.time_occupied;
             room.time_occupied = 0;
             // guest eviction???
             pthread_mutex_unlock(&hotel_mutex);
-            sleep(PROPORTIONALITY * room.time_occupied);
+            printf("room time occupied = %d", prev_time);
+            sleep(PROPORTIONALITY * prev_time);
             pthread_mutex_lock(&hotel_mutex);
             hotel.nondirty_and_empty_rooms.push_back(room);
             if(hotel.dirty_and_empty_rooms.size()==n){
