@@ -42,11 +42,14 @@ void is_time_to_clean(){
             evict_guests_from_room(room);
             hotel.dirty_and_empty_rooms.push_back(room);
         }
+        printf("no of dirty and occupied rooms = %d, no of dirty and empty rooms = %d\n", hotel.dirty_and_occupied_rooms.size(), hotel.dirty_and_empty_rooms.size());
         printf("All rooms are dirty. Cleaning all rooms...\n");
         for(int i=0;i<n;i++){
-            
             sem_post(&hotel.start_cleaning_sem);
         }
+    int val;
+        sem_getvalue(&hotel.clean_rooms_sem, &val);
+        printf("sem value = %d\n", val);
     }
     pthread_mutex_unlock(&hotel_mutex);
     // if(hotel.dirty_and_occupied_rooms.size()==0){
@@ -67,17 +70,31 @@ void is_time_to_clean(){
 void allocate_rooms(Guest& guest){
     int flag = 0,flag2=0;
     while(1){
-        if(!flag){
+        if(flag == 0){
             pthread_mutex_lock(&hotel_mutex);
-            if(hotel.nondirty_and_empty_rooms.size()!=0) flag2 =1;
-            if(!flag2 && (guest.priority>(*hotel.nondirty_and_occupied_rooms.begin()).guest.priority)) flag2 = 1;
-            if(!flag2 && (guest.priority>(*hotel.dirty_and_occupied_rooms.begin()).guest.priority)) flag2 = 1;
+            printf("HI I am Guest %d. I got the lock\n. My flag2 value is: %d\n", guest.id, flag2);
+            if(hotel.nondirty_and_empty_rooms.size()!=0) {
+                flag2 =1;
+                printf("flag2 got changed here1");
+            }
+            if(!flag2 && (hotel.nondirty_and_occupied_rooms.size()!=0) && (guest.priority>(*hotel.nondirty_and_occupied_rooms.begin()).guest.priority)) {
+                flag2 = 1;
+                printf("flag2 got changed here2");
+            }
+            if(!flag2 && (hotel.dirty_and_occupied_rooms.size()!=0) && (guest.priority>(*hotel.dirty_and_occupied_rooms.begin()).guest.priority)) {
+                flag2 = 1;
+                printf("flag2 got changed here3");
+            }
             pthread_mutex_unlock(&hotel_mutex);
+            printf("HI I AM guest %d. I got unlocked. Flag2 value = %d\n", guest.id, flag2);
             if(flag2){
-                flag2 == 0;
+                flag2 = 0;
             }
             else{
+                printf("Going into sem wait, Guest %d\n", guest.id);
+                flag = 2;
                 sem_wait(&hotel.clean_rooms_sem);
+                printf("Guest %d got the semaphore\n", guest.id);
             }
         }
         pthread_mutex_lock(&hotel_mutex);
@@ -86,7 +103,9 @@ void allocate_rooms(Guest& guest){
                 flag = 0;
             }
             else{
+                printf("Going into sem wait, Guest %d\n", guest.id);
                 sem_wait(&hotel.clean_rooms_sem);
+                printf("Guest %d got the semaphore\n", guest.id);
             }
             Room room = hotel.nondirty_and_empty_rooms.back();
             hotel.nondirty_and_empty_rooms.pop_back();
@@ -109,6 +128,7 @@ void allocate_rooms(Guest& guest){
             if(room.num_times_occupied==2){
                 is_time_to_clean();
             }
+            printf("Guest %d is sleeping\n", guest.id);
             sleep(guest.stay_time);
             if(guest.is_evicted==1){
                 printf("Guest %d is evicted\n", guest.id);
@@ -117,10 +137,13 @@ void allocate_rooms(Guest& guest){
             }
             if(room.num_times_occupied==1){
                 pthread_mutex_lock(&hotel_mutex);
+                printf("Guest %d is checking out\n", guest.id);
                 auto it = hotel.nondirty_and_occupied_rooms.find(room);
-                hotel.nondirty_and_occupied_rooms.erase(room);
+                printf("%d\n",(it == hotel.nondirty_and_occupied_rooms.end()));
+                hotel.nondirty_and_occupied_rooms.erase(it);
                 hotel.nondirty_and_empty_rooms.push_back(room);
                 pthread_mutex_unlock(&hotel_mutex);
+                printf("now posting to clean rooms\n");
                 sem_post(&hotel.clean_rooms_sem);
             }
             else if(room.num_times_occupied==2){

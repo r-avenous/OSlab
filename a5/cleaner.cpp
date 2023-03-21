@@ -23,11 +23,11 @@ void cleaner(int id){
             room.time_occupied = 0;
             // guest eviction???
             pthread_mutex_unlock(&hotel_mutex);
-            printf("room time occupied = %d", prev_time);
+            printf("room (to be cleaned) time occupied = %d", prev_time);
             sleep(PROPORTIONALITY * prev_time);
             pthread_mutex_lock(&hotel_mutex);
             hotel.nondirty_and_empty_rooms.push_back(room);
-            if(hotel.dirty_and_empty_rooms.size()==n){
+            if(hotel.nondirty_and_empty_rooms.size()==n){
                 for(int i=0;i<n;i++){
                     sem_post(&hotel.clean_rooms_sem);
                 }

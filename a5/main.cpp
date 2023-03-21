@@ -1,8 +1,9 @@
 #include "guest.hpp"
 #include "cleaner.hpp"
 
-pthread_mutex_t cleaner_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t guest_mutex = PTHREAD_MUTEX_INITIALIZER;
+// pthread_mutex_t cleaner_mutex = PTHREAD_MUTEX_INITIALIZER;
+// pthread_mutex_t guest_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t priority_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t hotel_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_t *cleanerThread, *guestThread;
 int x, y, n;
@@ -37,6 +38,7 @@ void* cleaner_func(void* arg){
 void* guest_func(void* arg){
     srand(time(NULL) + *(int*)arg);
     int priority;
+    pthread_mutex_lock(&priority_lock);
     while(1){
         priority = (rand()%y)+1;
         if(priorities.find(priority)==priorities.end()){
@@ -44,6 +46,7 @@ void* guest_func(void* arg){
             break;
         }
     }
+    pthread_mutex_unlock(&priority_lock);
     int guest_id = *(int*)arg;
     guest(guest_id, priority);
     return NULL;
@@ -61,6 +64,7 @@ int main(int argc, char* argv[]){
     {
         Room room;
         //room.is_occupied = false;
+        room.room_id = i;
         room.time_occupied = 0;
         room.num_times_occupied = 0;
         //hotel.rooms.push_back(room);

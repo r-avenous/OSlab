@@ -39,6 +39,7 @@ public:
 };
 
 typedef struct _room{
+    int room_id;
     // bool is_occupied;
     // bool is_dirty;
     // int is_evicted;
