@@ -64,7 +64,7 @@ int main(int argc, char* argv[]){
     {
         Room room;
         //room.is_occupied = false;
-        room.room_id = i;
+        room.room_id = i+1;
         room.time_occupied = 0;
         room.num_times_occupied = 0;
         //hotel.rooms.push_back(room);
