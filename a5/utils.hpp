@@ -115,6 +115,19 @@ typedef struct _hotel{
         }
         return Room();
     }
+    int cleanRoom()
+    {
+        Room room = dirtyRooms.back();
+        dirtyRooms.pop_back();
+        int t = room.time_occupied;
+        room.num_times_occupied = 0;
+        room.time_occupied = 0;
+        Guest g = Guest();
+        room.guest = g;
+        printf("Room %d is cleaned\n" , room.room_id);
+        nondirty_and_empty_rooms.push_back(room);
+        return t;
+    }
 }Hotel;
 
 #endif
