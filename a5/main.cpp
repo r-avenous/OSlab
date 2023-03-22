@@ -75,6 +75,7 @@ int main(int argc, char* argv[]){
     //hotel.is_cleaning = false;
     sem_init(&hotel.clean_rooms_sem, 0, n);
     sem_init(&hotel.start_cleaning_sem, 0, 0);
+    sem_init(&hotel.net_occ_sem, 0, 2*n);
     // printf("Initial hotel occupancy: %d\n", hotel.occupancy);
 
     // pthread_t cleanerThread[x], guestThread[y];

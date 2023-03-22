@@ -81,12 +81,12 @@ typedef struct _hotel{
     vector<Room> dirty_and_empty_rooms, dirtyRooms;
     set<Room, roomcmp> nondirty_and_occupied_rooms;
     set<Room, roomcmp> dirty_and_occupied_rooms;
-    sem_t start_cleaning_sem;
+    sem_t start_cleaning_sem, net_occ_sem;
     // vector<Room> nondirty_and_occupied_rooms;
     // vector<Room> dirty_and_occupied_rooms;
     // int occupancy;
     sem_t clean_rooms_sem;
-    // bool is_cleaning;
+    bool is_cleaning = false;
     Room getCleanRoom()
     {
         Room room = nondirty_and_empty_rooms.back();
