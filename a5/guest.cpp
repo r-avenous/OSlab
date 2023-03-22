@@ -50,7 +50,8 @@ void guest(int id, int priority)
             continue;
         }
         
-        int curCleanRooms = sem_getvalue(&hotel.clean_rooms_sem, NULL);
+        int curCleanRooms;
+        sem_getvalue(&hotel.clean_rooms_sem, &curCleanRooms);
         if(curCleanRooms)
         {
             sem_wait(&hotel.clean_rooms_sem);
@@ -65,11 +66,13 @@ void guest(int id, int priority)
             if(curNetOcc == 1)
             {
                 printf("Evicting all guests\n");
+                hotel.is_cleaning = true;
                 for(int i=0; i<n; i++)
                 {
                     if(guestThread[i] != pthread_self())
                         pthread_kill(guestThread[i], SIGUSR1);
                 }
+                pthread_cond_broadcast(&clean_cond);
                 pthread_mutex_unlock(&hotel_mutex);
                 continue;
             }

@@ -55,9 +55,10 @@ void* guest_func(void* arg){
 int main(int argc, char* argv[]){
 
     signal(SIGINT, sig_handler);
-    y = atoi(argv[1]);
-    n = atoi(argv[2]);
-    x = atoi(argv[3]);
+    // x = staff | y = guests | n = rooms
+    x = atoi(argv[1]);
+    y = atoi(argv[2]);
+    n = atoi(argv[3]);
 
     printf("Creating the hotel with %d rooms ...\n", n);
     for (int i=0; i<n; i++)
