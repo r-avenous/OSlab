@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Mar 20 00:11:17 2023
+# Make data base, printed on Tue Mar 21 14:36:24 2023
 
 # Variables
 
@@ -45,7 +45,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:52758
+JOURNAL_STREAM = 8:52570
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -59,7 +59,7 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/home/shreyas/.local/share/flatpak/exports/sha
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 4827
+MANAGERPID = 8234
 # environment
 VSCODE_CWD = /home/shreyas
 # environment
@@ -73,7 +73,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/5035,unix/shreyas:/tmp/.ICE-unix/5035
+SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/8433,unix/shreyas:/tmp/.ICE-unix/8433
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -81,7 +81,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 18041380e0e74ee9aab4dca6c3b7da22
+INVOCATION_ID = c15b33ca7ebb4ea7be9be2179417de52
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -89,7 +89,7 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 187715
+GIO_LAUNCHED_DESKTOP_FILE_PID = 18699
 # automatic
 %F = $(notdir $%)
 # environment
@@ -99,7 +99,7 @@ PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a5
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 4983
+SSH_AGENT_PID = 8390
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -189,7 +189,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 187715
+VSCODE_PID = 18699
 # variable set hash-table stats:
 # Load=89/1024=9%, Rehash=0, Collisions=7/114=6%
 
@@ -199,9 +199,9 @@ VSCODE_PID = 187715
 
 # Directories
 
-# . (device 66311, inode 4620474): 15 files, no impossibilities.
+# . (device 66311, inode 4620502): 13 files, no impossibilities.
 
-# 15 files, no impossibilities in 1 directories.
+# 13 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -237,7 +237,7 @@ cleaner.hpp:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2023-03-19 18:51:15.376193947
+#  Last modified 2023-03-19 23:34:31
 #  File has been updated.
 #  Successfully updated.
 
@@ -281,7 +281,6 @@ guest.o: guest.cpp utils.hpp guest.hpp
 	g++ -c guest.cpp
 
 # Not a target:
- 
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -309,12 +308,13 @@ main.o: main.cpp guest.o cleaner.o
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 21 / storage = 210 B / avg = 10 B
-# current buf: size = 8162 B / used = 210 B / count = 21 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 23 / storage = 223 B / avg = 9 B
+# current buf: size = 8162 B / used = 223 B / count = 23 / avg = 9 B
 
-# strcache performance: lookups = 44 / hit rate = 52%
+# strcache performance: lookups = 42 / hit rate = 45%
 # hash-table stats:
-# Load=21/8192=0%, Rehash=0, Collisions=1/44=2%
-# Finished Make data base on Mon Mar 20 00:11:17 2023
+ 
+# Load=23/8192=0%, Rehash=0, Collisions=1/42=2%
+# Finished Make data base on Tue Mar 21 14:36:24 2023
 
  
