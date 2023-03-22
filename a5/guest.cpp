@@ -103,6 +103,24 @@ void guest(int id, int priority)
         evict_guests_from_room(r);
         printf("Guest %d allocated room %d with %d priority replaces %d with %d priority\n", guest.id, r.room_id, guest.priority, r.guest.id, r.guest.priority);
         hotel.occupy(r, guest);
+
+        int curNetOcc;
+        sem_getvalue(&hotel.net_occ_sem, &curNetOcc);
+        sem_wait(&hotel.net_occ_sem);
+        printf("Occ sem decremented to %d\n", curNetOcc-1);
+        if(curNetOcc == 1)
+        {
+            printf("Evicting all guests\n");
+            hotel.is_cleaning = true;
+            for(int i=0; i<n; i++)
+            {
+                if(guestThread[i] != pthread_self())
+                    pthread_kill(guestThread[i], SIGUSR1);
+            }
+            pthread_cond_broadcast(&clean_cond);
+            pthread_mutex_unlock(&hotel_mutex);
+            continue;
+        }
         pthread_mutex_unlock(&hotel_mutex);
 
         sleep(guest.stay_time);
