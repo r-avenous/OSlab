@@ -46,7 +46,16 @@ typedef struct _room{
     Guest guest;
     int time_occupied;
     int num_times_occupied;
-
+    _room(){
+        room_id = -1;
+        // is_occupied = false;
+        // is_dirty = false;
+        // is_evicted = 0;
+        Guest g = Guest();
+        guest = g;
+        time_occupied = 0;
+        num_times_occupied = 0;
+    }
     
 }Room;
 
@@ -69,7 +78,7 @@ struct roomcmp
 typedef struct _hotel{
 
     vector<Room> nondirty_and_empty_rooms;
-    vector<Room> dirty_and_empty_rooms;
+    vector<Room> dirty_and_empty_rooms, dirtyRooms;
     set<Room, roomcmp> nondirty_and_occupied_rooms;
     set<Room, roomcmp> dirty_and_occupied_rooms;
     sem_t start_cleaning_sem;
@@ -78,6 +87,34 @@ typedef struct _hotel{
     // int occupancy;
     sem_t clean_rooms_sem;
     // bool is_cleaning;
+    Room getCleanRoom()
+    {
+        Room room = nondirty_and_empty_rooms.back();
+        nondirty_and_empty_rooms.pop_back();
+        return room;
+    }
+    void occupy(Room &room, Guest guest)
+    {
+        room.guest = guest;
+        room.num_times_occupied++;
+        room.time_occupied += guest.stay_time; 
+        if(room.num_times_occupied==1)
+        {
+            nondirty_and_occupied_rooms.insert(room);
+        }
+        else
+        {
+            dirtyRooms.push_back(room);
+        }
+    }
+    Room getLeastPriorityRoom()
+    {
+        if(nondirty_and_occupied_rooms.size()!=0)
+        {
+            return *nondirty_and_occupied_rooms.begin();
+        }
+        return Room();
+    }
 }Hotel;
 
 #endif
