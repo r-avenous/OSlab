@@ -56,7 +56,7 @@ void guest(int id, int priority)
         {
             sem_wait(&hotel.clean_rooms_sem);
             Room r = hotel.getCleanRoom();
-            printf("Guest %d allocated room %d with %d priority\n", guest.id, r.room_id, guest.priority);
+            printf("Guest %d with %d priority allocated room %d\n", guest.id, guest.priority, r.room_id);
             hotel.occupy(r, guest);
 
             int curNetOcc;
