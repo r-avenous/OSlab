@@ -58,7 +58,9 @@ int main(int argc, char* argv[]){
     y = atoi(argv[1]);
     n = atoi(argv[2]);
     x = atoi(argv[3]);
-
+    for(int i=0;i<=y;i++){
+        hotel.is_evicted.push_back(0);
+    }
     printf("Creating the hotel with %d rooms ...\n", n);
     for (int i=0; i<n; i++)
     {

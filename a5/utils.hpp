@@ -20,20 +20,20 @@ public:
     int id;
     int priority;
     int stay_time;
-    int is_evicted;
+    // int is_evicted;
 
     Guest(){
         id = -1;
         priority = -1;
         stay_time = 0;
-        is_evicted = 0;
+        // is_evicted = 0;
     }
 
     Guest& operator=(Guest &g){
         id = g.id;
         priority = g.priority;
         stay_time = g.stay_time;
-        is_evicted = g.is_evicted;
+        // is_evicted = g.is_evicted;
         return *this;
     }
 };
@@ -77,6 +77,7 @@ typedef struct _hotel{
     // vector<Room> dirty_and_occupied_rooms;
     // int occupancy;
     sem_t clean_rooms_sem;
+    vector<int> is_evicted;
     // bool is_cleaning;
 }Hotel;
 
