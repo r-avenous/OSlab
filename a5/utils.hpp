@@ -105,6 +105,7 @@ typedef struct _hotel{
         else
         {
             dirtyRooms.push_back(room);
+            printf("Room %d is dirty\n" , room.room_id);
         }
     }
     Room getLeastPriorityRoom()
@@ -117,14 +118,16 @@ typedef struct _hotel{
     }
     int cleanRoom()
     {
+        if(dirtyRooms.size()==0) return 0;
         Room room = dirtyRooms.back();
+        printf("%d size\n", dirtyRooms.size());
         dirtyRooms.pop_back();
         int t = room.time_occupied;
         room.num_times_occupied = 0;
         room.time_occupied = 0;
         Guest g = Guest();
         room.guest = g;
-        printf("Room %d is cleaned\n" , room.room_id);
+        printf("Room %d is being cleaned\n", room.room_id);
         nondirty_and_empty_rooms.push_back(room);
         return t;
     }

@@ -16,7 +16,9 @@ void cleaner(int id)
         int t = hotel.cleanRoom();
         pthread_mutex_unlock(&hotel_mutex);
         
+        printf("Cleaning room for %d seconds\n", t);
         sleep(PROPORTIONALITY * t);
+        printf("Room cleaned\n");
 
         sem_post(&hotel.clean_rooms_sem);
         sem_post(&hotel.net_occ_sem);

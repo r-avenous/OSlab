@@ -1,4 +1,4 @@
 #include "utils.hpp"
-#define PROPORTIONALITY 0.5
+#define PROPORTIONALITY 1
 
 void cleaner(int id);
