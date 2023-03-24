@@ -15,7 +15,6 @@ void handle_signal(int sig){
 
 void evict_guests_from_room(Room& room)
 {
-    // room.guest.is_evicted = 1;
     pthread_kill(guestThread[(room.guest.id)-1], SIGUSR1);
 }
 
@@ -28,13 +27,13 @@ void guest(int id, int priority)
     Guest guest;
     guest.id = id;
     guest.priority = priority;
-    // guest.is_evicted = 0;
     printf("I am guest [%d] with %d priority!\n", guest.id, guest.priority);
 
     while (1)
     {        
-        int sleep_time = rand() % 11 + 10; 
-        printf("Guest [%d] will randomly sleep for %d seconds\n", guest.id, sleep_time);
+        srand(time(NULL) + id);
+        int sleep_time = rand() % 11 + 10; //???????
+        printf("Guest [%d] will sleep for %d seconds\n", guest.id, sleep_time);
         sleep(sleep_time);
 
         guest.stay_time = rand() % 21 + 10; 
