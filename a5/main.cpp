@@ -16,12 +16,11 @@ void sig_handler(int signo)
     {
         printf("\nSIGINT received");
         printf("\nDestroying mutexes ...");
-
         pthread_mutex_destroy(&hotel_mutex);
+
+        printf("\nDestroying semaphores ...");
         sem_destroy(&hotel.clean_rooms_sem);
         sem_destroy(&hotel.start_cleaning_sem);
-        // pthread_mutex_destroy(&guest_mutex);
-        // pthread_mutex_destroy(&cleaner_mutex);
 
         printf("\nExiting ...\n");
         exit(0);
@@ -55,6 +54,7 @@ void* guest_func(void* arg){
 int main(int argc, char* argv[]){
 
     signal(SIGINT, sig_handler);
+    
     // x = staff | y = guests | n = rooms
     x = atoi(argv[1]);
     y = atoi(argv[2]);
@@ -74,8 +74,9 @@ int main(int argc, char* argv[]){
 
     //hotel.occupancy = 0;
     //hotel.is_cleaning = false;
+    printf("Initializing semaphores ...\n");
     sem_init(&hotel.clean_rooms_sem, 0, n);
-    sem_init(&hotel.start_cleaning_sem, 0, 0);
+    // sem_init(&hotel.start_cleaning_sem, 0, 0);
     sem_init(&hotel.net_occ_sem, 0, 2*n);
     // printf("Initial hotel occupancy: %d\n", hotel.occupancy);
 
@@ -105,11 +106,11 @@ int main(int argc, char* argv[]){
 
     printf("\nDestroying mutexes ...");
     pthread_mutex_destroy(&hotel_mutex);
+
     printf("\nDestroying semaphores ...");
     sem_destroy(&hotel.clean_rooms_sem);
     sem_destroy(&hotel.start_cleaning_sem);
-    // pthread_mutex_destroy(&guest_mutex);
-    // pthread_mutex_destroy(&cleaner_mutex);
+
     printf("\nExiting ...\n");
     return 0;
 }
