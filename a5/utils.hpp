@@ -20,20 +20,20 @@ public:
     int id;
     int priority;
     int stay_time;
-    int is_evicted;
+    // int is_evicted;
 
     Guest(){
         id = -1;
         priority = -1;
         stay_time = 0;
-        is_evicted = 0;
+        // is_evicted = 0;
     }
 
     Guest& operator=(Guest &g){
         id = g.id;
         priority = g.priority;
         stay_time = g.stay_time;
-        is_evicted = g.is_evicted;
+        // is_evicted = g.is_evicted;
         return *this;
     }
 };
@@ -80,7 +80,7 @@ typedef struct _hotel{
     vector<Room> nondirty_and_empty_rooms;
     vector<Room> dirty_and_empty_rooms, dirtyRooms;
     set<Room, roomcmp> nondirty_and_occupied_rooms;
-    set<Room, roomcmp> dirty_and_occupied_rooms;
+    // set<Room, roomcmp> dirty_and_occupied_rooms;
     sem_t start_cleaning_sem, net_occ_sem;
     // vector<Room> nondirty_and_occupied_rooms;
     // vector<Room> dirty_and_occupied_rooms;
@@ -120,7 +120,7 @@ typedef struct _hotel{
     {
         if(dirtyRooms.size()==0) return 0;
         Room room = dirtyRooms.back();
-        printf("%d size\n", dirtyRooms.size());
+        // printf("%d size\n", dirtyRooms.size());
         dirtyRooms.pop_back();
         int t = room.time_occupied;
         room.num_times_occupied = 0;
