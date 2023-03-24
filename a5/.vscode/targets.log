@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Mar 21 14:36:24 2023
+# Make data base, printed on Thu Mar 23 14:50:49 2023
 
 # Variables
 
@@ -45,7 +43,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/share/code/code
 # environment
-JOURNAL_STREAM = 8:52570
+JOURNAL_STREAM = 8:47911
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 1)
@@ -59,7 +57,7 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/home/shreyas/.local/share/flatpak/exports/sha
 # environment
 DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
-MANAGERPID = 8234
+MANAGERPID = 6180
 # environment
 VSCODE_CWD = /home/shreyas
 # environment
@@ -73,7 +71,7 @@ PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/8433,unix/shreyas:/tmp/.ICE-unix/8433
+SESSION_MANAGER = local/shreyas:@/tmp/.ICE-unix/6385,unix/shreyas:/tmp/.ICE-unix/6385
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -81,7 +79,7 @@ XDG_MENU_PREFIX = gnome-
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = c15b33ca7ebb4ea7be9be2179417de52
+INVOCATION_ID = 9e1f4bfb7de84096b77c9f08da77516d
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -89,7 +87,7 @@ XDG_SESSION_DESKTOP = ubuntu:GNOME
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 18699
+GIO_LAUNCHED_DESKTOP_FILE_PID = 41582
 # automatic
 %F = $(notdir $%)
 # environment
@@ -99,7 +97,7 @@ PWD = /home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a5
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 8390
+SSH_AGENT_PID = 6335
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -113,7 +111,7 @@ VSCODE_CODE_CACHE_PATH = /home/shreyas/.config/Code/CachedData/e8a3071ea4344d9d4
 # environment
 LOGNAME = shreyas
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
@@ -189,7 +187,7 @@ GJS_DEBUG_OUTPUT = stderr
 # environment
 LANG = C
 # environment
-VSCODE_PID = 18699
+VSCODE_PID = 41582
 # variable set hash-table stats:
 # Load=89/1024=9%, Rehash=0, Collisions=7/114=6%
 
@@ -199,9 +197,9 @@ VSCODE_PID = 18699
 
 # Directories
 
-# . (device 66311, inode 4620502): 13 files, no impossibilities.
+# . (device 66311, inode 4620502): 21 files, no impossibilities.
 
-# 13 files, no impossibilities in 1 directories.
+# 21 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -237,7 +235,7 @@ cleaner.hpp:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2023-03-19 23:34:31
+#  Last modified 2023-03-22 22:15:43.977855643
 #  File has been updated.
 #  Successfully updated.
 
@@ -248,17 +246,23 @@ guest.hpp:
 #  File has not been updated.
 
 # Not a target:
+utils.cpp:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
 main.cpp:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
-hotel: main.o
+hotel: main.o utils.o guest.o cleaner.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 2):
-	g++ -o hotel main.o cleaner.o guest.o -lpthread
+	g++ -o hotel main.o cleaner.o guest.o utils.o -lpthread
 
 # Not a target:
 utils.hpp:
@@ -277,6 +281,9 @@ guest.o: guest.cpp utils.hpp guest.hpp
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 #  recipe to execute (from 'Makefile', line 8):
 	g++ -c guest.cpp
 
@@ -290,8 +297,15 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+#  recipe to execute (from 'Makefile', line 17):
+	rm -f *.o hotel
+
+utils.o: utils.cpp utils.hpp
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 #  recipe to execute (from 'Makefile', line 14):
-	rm *.o hotel
+	g++ -c utils.cpp
 
 main.o: main.cpp guest.o cleaner.o
 #  Implicit rule search has not been done.
@@ -301,20 +315,19 @@ main.o: main.cpp guest.o cleaner.o
 	g++ -c main.cpp
 
 # files hash-table stats:
-# Load=15/1024=1%, Rehash=0, Collisions=0/38=0%
+# Load=17/1024=2%, Rehash=0, Collisions=0/46=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 23 / storage = 223 B / avg = 9 B
-# current buf: size = 8162 B / used = 223 B / count = 23 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 27 / storage = 261 B / avg = 9 B
+# current buf: size = 8162 B / used = 261 B / count = 27 / avg = 9 B
 
-# strcache performance: lookups = 42 / hit rate = 45%
+# strcache performance: lookups = 57 / hit rate = 52%
 # hash-table stats:
- 
-# Load=23/8192=0%, Rehash=0, Collisions=1/42=2%
-# Finished Make data base on Tue Mar 21 14:36:24 2023
+# Load=27/8192=0%, Rehash=0, Collisions=1/57=2%
+# Finished Make data base on Thu Mar 23 14:50:49 2023
 
  
