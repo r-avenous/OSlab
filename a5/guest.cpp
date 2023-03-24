@@ -15,7 +15,7 @@ void handle_signal(int sig){
 
 void evict_guests_from_room(Room& room)
 {
-    room.guest.is_evicted = 1;
+    // room.guest.is_evicted = 1;
     pthread_kill(guestThread[(room.guest.id)-1], SIGUSR1);
 }
 
@@ -28,7 +28,7 @@ void guest(int id, int priority)
     Guest guest;
     guest.id = id;
     guest.priority = priority;
-    guest.is_evicted = 0;
+    // guest.is_evicted = 0;
     printf("I am guest [%d] with %d priority!\n", guest.id, guest.priority);
 
     while (1)

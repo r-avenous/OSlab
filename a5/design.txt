@@ -1,0 +1,81 @@
+class Guest
+{
+public:
+    int id;     // guest id
+    int priority;   //  guest priority
+    int stay_time;  //  guest stay time
+};
+
+typedef struct _room
+{
+    int room_id;        // room id
+    Guest guest;        // guest in the room
+    int time_occupied;  // total time occupied
+    int num_times_occupied;     // number of times occupied
+}Room;
+
+typedef struct _hotel
+{
+    vector<Room> nondirty_and_empty_rooms;      // rooms that are not dirty and empty (not occupied / occupied only once before)
+    vector<Room> dirtyRooms;                    // rooms that are dirty (occupied twice and now empty / currently 2nd occupancy is going on)
+    set<Room, roomcmp> nondirty_and_occupied_rooms;     // rooms that are not dirty and occupied (first occupancy is going on)
+
+    // semaphore for net occupancies 
+    // initialised with 2n; everytime a guest checks in, it is decremented
+    // everytime it is cleaned, it is incremented twice
+    sem_t net_occ_sem;             
+    // semaphore for number of clean rooms 
+    // initialised with n
+    // everytime a guest checks in, it is decremented
+    // everytime a guest checks out, it is incremented back only if it has only been occupied once
+    // everytime it is cleaned, it is incremented 
+    sem_t clean_rooms_sem;          
+
+    bool is_cleaning = false;       // flag to check if cleaning is going on
+
+    // used by Guest threads
+    Room getCleanRoom()             // get any clean room
+    {
+        Room room = nondirty_and_empty_rooms.back();    
+        nondirty_and_empty_rooms.pop_back();
+        return room;
+    }
+    // used by Guest threads
+    void occupy(Room &room, Guest guest)        // occupy any clean room
+    {
+        room.guest = guest;
+        room.num_times_occupied++;
+        room.time_occupied += guest.stay_time; 
+        if(room.num_times_occupied==1)          // if it is the first time the room is being occupied, add it to the set of nondirty_and_occupied_rooms
+        {
+            nondirty_and_occupied_rooms.insert(room);
+        }
+        else                    // if it is the second time the room is being occupied, add it to the vector of dirtyRooms
+        {
+            dirtyRooms.push_back(room);
+        }
+    }
+    // used by Guest threads
+    Room getLeastPriorityRoom()     // get the room with the least priority guest
+    {
+        if(nondirty_and_occupied_rooms.size()!=0)
+        {
+            return *nondirty_and_occupied_rooms.begin();
+        }
+        return Room();
+    }
+    // used by Cleaner threads
+    int cleanRoom()            // clean a room
+    {
+        if(dirtyRooms.size()==0) return 0;
+        Room room = dirtyRooms.back();
+        dirtyRooms.pop_back();
+        int t = room.time_occupied;
+        room.num_times_occupied = 0;
+        room.time_occupied = 0;
+        Guest g = Guest();
+        room.guest = g;
+        nondirty_and_empty_rooms.push_back(room);
+        return t;
+    }
+}Hotel;
