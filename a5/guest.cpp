@@ -35,11 +35,11 @@ void guest(int id, int priority)
 
     while (1)
     {        
-        int sleep_time = rand() % 11 + 1; //???????
+        int sleep_time = rand() % 11 + 10; //???????
         printf("Guest [%d] will sleep for %d seconds\n", guest.id, sleep_time);
         sleep(sleep_time);
 
-        guest.stay_time = rand() % 21 + 1; // ???????????
+        guest.stay_time = rand() % 21 + 10; // ???????????
         printf("Guest [%d] wants to stay for %d seconds\n", guest.id, guest.stay_time);
 
         pthread_mutex_lock(&hotel_mutex);
@@ -86,8 +86,11 @@ void guest(int id, int priority)
 
                 pthread_mutex_lock(&hotel_mutex);
                 auto it = hotel.nondirty_and_occupied_rooms.find(r);
-                hotel.nondirty_and_empty_rooms.push_back(r);
-                hotel.nondirty_and_occupied_rooms.erase(it);
+                if(it != hotel.nondirty_and_occupied_rooms.end())
+                {
+                    hotel.nondirty_and_empty_rooms.push_back(r);
+                    hotel.nondirty_and_occupied_rooms.erase(it);
+                }
                 pthread_mutex_unlock(&hotel_mutex);
             }
             continue;
@@ -101,8 +104,29 @@ void guest(int id, int priority)
             continue;
         }
         evict_guests_from_room(r);
+        auto it = hotel.nondirty_and_occupied_rooms.find(r);
+        hotel.nondirty_and_occupied_rooms.erase(it);
         printf("Guest %d allocated room %d with %d priority replaces %d with %d priority\n", guest.id, r.room_id, guest.priority, r.guest.id, r.guest.priority);
         hotel.occupy(r, guest);
+
+        int curNetOcc;
+        sem_getvalue(&hotel.net_occ_sem, &curNetOcc);
+        sem_wait(&hotel.net_occ_sem);
+        sem_wait(&hotel.clean_rooms_sem);
+        printf("Occ sem decremented to %d\n", curNetOcc-1);
+        if(curNetOcc == 1)
+        {
+            printf("Evicting all guests\n");
+            hotel.is_cleaning = true;
+            for(int i=0; i<n; i++)
+            {
+                if(guestThread[i] != pthread_self())
+                    pthread_kill(guestThread[i], SIGUSR1);
+            }
+            pthread_cond_broadcast(&clean_cond);
+            pthread_mutex_unlock(&hotel_mutex);
+            continue;
+        }
         pthread_mutex_unlock(&hotel_mutex);
 
         sleep(guest.stay_time);
