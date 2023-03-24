@@ -35,6 +35,7 @@ void guest(int id, int priority)
 
     while (1)
     {        
+        srand(time(NULL) + id);
         int sleep_time = rand() % 11 + 10; //???????
         printf("Guest [%d] will sleep for %d seconds\n", guest.id, sleep_time);
         sleep(sleep_time);
