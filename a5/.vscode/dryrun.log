@@ -3,6 +3,7 @@ make: Entering directory '/home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignm
 g++ -c guest.cpp
 g++ -c cleaner.cpp
 g++ -c main.cpp
-g++ -o hotel main.o cleaner.o guest.o -lpthread
+g++ -c utils.cpp
+g++ -o hotel main.o cleaner.o guest.o utils.o -lpthread
 make: Leaving directory '/home/shreyas/Desktop/IITKGP/3rd_yr/SEM6/OSLab/Assignments/a5'
  
