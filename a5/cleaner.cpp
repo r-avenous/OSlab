@@ -16,6 +16,7 @@ void cleaner(int id)
         int t = hotel.cleanRoom();
         pthread_mutex_unlock(&hotel_mutex);
         
+        if(t == 0) continue;
         printf("Cleaning room for %d seconds\n", t);
         sleep(PROPORTIONALITY * t);
         printf("Room cleaned\n");
