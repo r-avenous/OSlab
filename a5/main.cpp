@@ -1,8 +1,6 @@
 #include "guest.hpp"
 #include "cleaner.hpp"
 
-// pthread_mutex_t cleaner_mutex = PTHREAD_MUTEX_INITIALIZER;
-// pthread_mutex_t guest_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t priority_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t hotel_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_t *cleanerThread, *guestThread;
@@ -20,7 +18,7 @@ void sig_handler(int signo)
 
         printf("\nDestroying semaphores ...");
         sem_destroy(&hotel.clean_rooms_sem);
-        sem_destroy(&hotel.start_cleaning_sem);
+        sem_destroy(&hotel.net_occ_sem);
 
         printf("\nExiting ...\n");
         exit(0);
@@ -64,23 +62,16 @@ int main(int argc, char* argv[]){
     for (int i=0; i<n; i++)
     {
         Room room;
-        //room.is_occupied = false;
         room.room_id = i+1;
         room.time_occupied = 0;
         room.num_times_occupied = 0;
-        //hotel.rooms.push_back(room);
         hotel.nondirty_and_empty_rooms.push_back(room);
     }
 
-    //hotel.occupancy = 0;
-    //hotel.is_cleaning = false;
     printf("Initializing semaphores ...\n");
     sem_init(&hotel.clean_rooms_sem, 0, n);
-    // sem_init(&hotel.start_cleaning_sem, 0, 0);
     sem_init(&hotel.net_occ_sem, 0, 2*n);
-    // printf("Initial hotel occupancy: %d\n", hotel.occupancy);
 
-    // pthread_t cleanerThread[x], guestThread[y];
     cleanerThread = new pthread_t[x];
     guestThread = new pthread_t[y];
     printf("Creating guest and cleaner threads ...\n");
@@ -109,7 +100,7 @@ int main(int argc, char* argv[]){
 
     printf("\nDestroying semaphores ...");
     sem_destroy(&hotel.clean_rooms_sem);
-    sem_destroy(&hotel.start_cleaning_sem);
+    sem_destroy(&hotel.net_occ_sem);
 
     printf("\nExiting ...\n");
     return 0;
