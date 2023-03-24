@@ -29,9 +29,21 @@ void cleaner(int id){
             hotel.nondirty_and_empty_rooms.push_back(room);
             if(hotel.nondirty_and_empty_rooms.size()==n){
                 printf("Finished cleaning all rooms\n\n");
+                int val;
+                sem_getvalue(&hotel.clean_rooms_sem, &val);
+                printf("sem value before cleaning= %d\n", val);
+                // if(val<0){
+                //     val = -val;
+                // }
+                for(int i=0;i<=y;i++){
+                    hotel.is_evicted[i] = 0;
+                    // sem_post(&hotel.clean_rooms_sem);
+                }
                 for(int i=0;i<n;i++){
                     sem_post(&hotel.clean_rooms_sem);
                 }
+                sem_getvalue(&hotel.clean_rooms_sem, &val);
+                printf("sem value after cleaning= %d\n", val);
                 pthread_mutex_unlock(&hotel_mutex);
                 continue;
             }

@@ -452,8 +452,10 @@ void allocate_rooms(Guest& guest){
                 flag = 0;
             }
             else{
-                // printf("Going into sem wait, Guest %d\n", guest.id);
+                printf("Going into sem wait, Guest %d\n", guest.id);
+                pthread_mutex_unlock(&hotel_mutex);
                 sem_wait(&hotel.clean_rooms_sem);
+                pthread_mutex_lock(&hotel_mutex);
                 printf("Guest %d got the semaphore\n", guest.id);
             }
             Room room = hotel.nondirty_and_empty_rooms.back();
@@ -510,7 +512,7 @@ void allocate_rooms(Guest& guest){
                 auto it = hotel.dirty_and_occupied_rooms.find(room);
                 hotel.dirty_and_occupied_rooms.erase(room);
                 // evict_guests_from_room(room);
-                printf("This room is dirty and occupied. Pushing it to dirty and empty rooms\n");
+                printf("This room %d is dirty and occupied. Pushing it to dirty and empty rooms\n", room.room_id);
                 hotel.dirty_and_empty_rooms.push_back(room);
                 pthread_mutex_unlock(&hotel_mutex);
                 // hotel.dirty_and_empty_rooms.push_back(room);
@@ -536,8 +538,10 @@ void allocate_rooms(Guest& guest){
                 hotel.is_evicted[guest.id] = 0;
                 return;
             }
+            printf("Haha i %d replaced %d and now will stay for %d", guest.id, room.guest.id, guest.stay_time);
             sleep(guest.stay_time);
             if(hotel.is_evicted[guest.id]==1){
+                printf("Guest %d is evicted\n", guest.id);
                 hotel.is_evicted[guest.id] = 0;
                 return;
             }
@@ -545,18 +549,18 @@ void allocate_rooms(Guest& guest){
             // sem_post(&hotel.clean_rooms_sem);
             // continue;
         }
-        if((hotel.dirty_and_occupied_rooms.size()!=0) && (guest.priority>(*hotel.dirty_and_occupied_rooms.begin()).guest.priority)){
-            auto it = hotel.dirty_and_occupied_rooms.begin();
-            Room room = *it;
-            hotel.dirty_and_occupied_rooms.erase(it);
-            // room.guest = NULL;
-            printf("guest %d evicted and not added\n", room.guest.id);
-            evict_guests_from_room(room, guest);
-            hotel.dirty_and_empty_rooms.push_back(room);
-            pthread_mutex_unlock(&hotel_mutex);
-            // is_time_to_clean();
-            // flag = 1;
-        }
+        // if((hotel.dirty_and_occupied_rooms.size()!=0) && (guest.priority>(*hotel.dirty_and_occupied_rooms.begin()).guest.priority)){
+        //     auto it = hotel.dirty_and_occupied_rooms.begin();
+        //     Room room = *it;
+        //     hotel.dirty_and_occupied_rooms.erase(it);
+        //     // room.guest = NULL;
+        //     printf("guest %d evicted and not added\n", room.guest.id);
+        //     evict_guests_from_room(room, guest);
+        //     hotel.dirty_and_empty_rooms.push_back(room);
+        //     pthread_mutex_unlock(&hotel_mutex);
+        //     // is_time_to_clean();
+        //     // flag = 1;
+        // }
         // if(flag==1){
         //     flag = 2;
         //     continue;
@@ -590,10 +594,10 @@ void guest(int id, int priority)
 
     while (1)
     {        
-        int sleep_time = rand() % 11 + 1; //???????
+        int sleep_time = rand() % 11 + 10; //???????
         printf("Guest [%d] will sleep for %d seconds\n", guest.id, sleep_time);
         sleep(sleep_time);
-        guest.stay_time = rand() % 21 + 1; // ???????????
+        guest.stay_time = rand() % 21 + 10; // ???????????
         printf("Guest [%d] wants to stay for %d seconds\n", guest.id, guest.stay_time);
 
         int room_no;
