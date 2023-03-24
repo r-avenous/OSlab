@@ -12,14 +12,20 @@ void cleaner(int id)
     while(1)
     {
         pthread_mutex_lock(&hotel_mutex);
-        while(!hotel.is_cleaning) pthread_cond_wait(&clean_cond, &hotel_mutex);
-        int t = hotel.cleanRoom();
+
+        // while hotel has not started cleaning phase, wait
+        while(!hotel.is_cleaning) 
+            pthread_cond_wait(&clean_cond, &hotel_mutex);
+
+        int room_id;
+        int t = hotel.cleanRoom(room_id);
         pthread_mutex_unlock(&hotel_mutex);
         
         if(t == 0) continue;
-        printf("Cleaning room for %d seconds\n", t);
+        printf("Cleaner [%d] cleaning room [%d] for %d seconds\n", id, room_id, t);
         sleep(PROPORTIONALITY * t);
-        printf("Room cleaned\n");
+
+        printf("Room [%d] cleaned\n", room_id);
 
         sem_post(&hotel.clean_rooms_sem);
         sem_post(&hotel.net_occ_sem);
