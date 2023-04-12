@@ -6,12 +6,14 @@
 #include <queue>
 #include <unordered_map>
 #include <iostream>
+#include <stack>
+#include <unordered_set>
 
 using namespace std;
 
 #define ptr unsigned int
 #define PAGESIZE 4//128
-#define MEM_SIZE 40 * sizeof(element)//250 * (1 << 20)
+#define MEM_SIZE 200 * sizeof(element)//250 * (1 << 20)
 #define MAXPAGES ((MEM_SIZE/sizeof(element))/PAGESIZE)
 #define ERROR -1
 #define SUCCESS 0
@@ -42,7 +44,6 @@ class list
             this->size = 0;
         }
         list(ptr head, int size, vector<ptr> occ_pages);
-        ~list();
         list& operator=(const list &l);
         int getSize();
         int getElem(int index);
@@ -55,5 +56,18 @@ int freeElem(string lname);
 
 int getVal(string lname, int index, int &val);
 int printPages(string lname);
+void push_frame();
+void pop_frame();
+
+void printKeys();
+void print_list(string lname);
+
+class frame
+{
+    public:
+        int id;
+        unordered_set<string> localListNames;
+        frame();
+};
 
 #endif
