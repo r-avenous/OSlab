@@ -4,7 +4,7 @@ void* mem;
 queue<ptr> freePages;   // stores the starting location of free pages
 unordered_map<string, list> page_table;
 // unordered_map<string, list> temp = stack_frame.top()
-//stack_frame.pop()
+//stack_frame.pop(
 stack<frame> stack_frame;
 int f_counter = 0;
 
