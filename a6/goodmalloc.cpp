@@ -113,12 +113,17 @@ string findLName(string lname)
             return temp;
         }
     }
+    temp = lname + "__GLOBAL";
+    if(page_table.find(temp) != page_table.end())
+    {
+        return temp;
+    }
     return "__ERROR";
 }
 
-int createList(string lname, int num_elements)
+int createList(string _lname, int num_elements)
 {
-    lname = generateLName(lname);
+    string lname = generateLName(_lname);
     int num_pages = (num_elements + PAGESIZE - 1) / PAGESIZE;
     // cout << num_pages << ' ' << freePages.size() << '\n';
     if(num_pages > (int)freePages.size())
@@ -179,7 +184,7 @@ int createList(string lname, int num_elements)
     {
         auto top = stack_frame.top();
         stack_frame.pop();
-        top.localListNames.insert(lname);
+        top.localListNames.insert(_lname);
         stack_frame.push(top);
     }
     return SUCCESS;
@@ -253,11 +258,11 @@ void push_frame()
 void pop_frame()
 {
     auto top = stack_frame.top();
-    stack_frame.pop();
     for(auto s: top.localListNames)
     {
         freeElem(s);
     }
+    stack_frame.pop();
 }
 
 void print_list(string lname)
@@ -269,5 +274,14 @@ void print_list(string lname)
     {
         getVal(lname, i, val);
         cout << val << ' ';
+    }
+}
+
+void printStackKeys()
+{
+    auto top = stack_frame.top();
+    for(auto s: top.localListNames)
+    {
+        cout << s << ' ';
     }
 }

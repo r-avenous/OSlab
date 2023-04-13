@@ -5,69 +5,93 @@
 
 
 
-void mergeSort(string lname, int size)
+void mergeSort(string lname, int start, int size)
 {
+    // cout << start << ' ' << start + size - 1 << '\n';
     if(size == 1) return;
 
     push_frame();
     int mid = size/2;
-    string lname1 = "lname1";
-    string lname2 = "lname2";
+    // string lname1 = "lname1";
+    // string lname2 = "lname2";
     // string lname3 = lname + to_string(lcount++);
 
-    createList(lname1, mid);
-    createList(lname2, size-mid);
+    // createList(lname1, mid);
+    // createList(lname2, size-mid);
 
-    int temp;
+    // cout << "Keys\n";
+    // printKeys();
+    // cout << "\n\n";
+
+    // int temp;
 
     // copy values to smaller lists
-    for (int i=0; i<mid; i++)
-    {
-        getVal(lname, i, temp);
-        assignVal(lname1, i, temp);
-    }
+    // for (int i=0; i<mid; i++)
+    // {
+    //     getVal(lname, i, temp);
+    //     assignVal(lname1, i, temp);
+    // }
 
-    for (int i=mid; i<size; i++)
-    {
-        getVal(lname, i, temp);
-        assignVal(lname2, i-mid, temp);
+    // for (int i=mid; i<size; i++)
+    // {
+    //     getVal(lname, i, temp);
+    //     assignVal(lname2, i-mid, temp);
 
-    }
+    // }
 
     // sort smaller lists
-    mergeSort(lname1, mid);
-
-    mergeSort(lname2, size-mid);
+    // cout << "list1 before" ;
+    // print_list(lname1);
+    // cout << '\n';
+    mergeSort(lname, start, mid);
+    // cout << "list1 after" ;
+    // print_list(lname1);
+    // cout << '\n';
+    // cout << "list2 before";
+    // print_list(lname2);
+    // cout << '\n';
+    mergeSort(lname, (start+mid), size-mid);
+    // cout << "list2 after";
+    // print_list(lname2);
+    // cout << '\n';
     // createList(lname3, size);
-    int k=0,j=0,i;
+    int k=(start+mid),j=start,i;
     int t1, t2;
+    string lname1 = "lname1";
+    createList(lname1, size);
     for(i=0;i<size;i++)
     {
-        getVal(lname1,j,t1);
-        getVal(lname2,k,t2);
+        getVal(lname,j,t1);
+        getVal(lname,k,t2);
         if(t1>t2){
-            assignVal(lname, i, t2);
+            assignVal(lname1, i, t2);
             k++;
-            if(k>=(size-mid)) break;
+            if(k>=(start + size)) break;
             continue;
         }
-        assignVal(lname, i, t1);
+        assignVal(lname1, i, t1);
         j++;
-        if(j>=(mid)) break;
+        if(j>=(start + mid)) break;
     }
-    while(k<(size-mid)){
-        getVal(lname2,k,t2);
+    while(k<(start + size)){
+        getVal(lname,k,t2);
         i++;
-        assignVal(lname, i, t2);
+        assignVal(lname1, i, t2);
         k++;
     }
-    while(j<mid){
-        getVal(lname1,j,t1);
+    while(j<start + mid){
+        getVal(lname,j,t1);
         i++;
-        assignVal(lname, i, t1);
+        assignVal(lname1, i, t1);
         j++;
     }
-    pop_frame();
+    int v;
+    for(i=start;i<(start+size);i++){
+        getVal(lname1, (i-start), v);
+        assignVal(lname, i, v);
+    }
+    // freeElem(lname1);
+    // pop_frame();
 }
 
 int main()
@@ -98,31 +122,32 @@ int main()
     //     h = ((element*)mem + h)->_next;
     // }
 
-    int size = 5;
+    int size = 50000;
     // lcount = 12;
     string lname = "list12";
-    cout << "\nmerge wali list " << createList(lname, size) << '\n';
+    createList(lname, size);
 
-    assignVal(lname, 0, 4);
-    assignVal(lname, 1, 1);
-    assignVal(lname, 2, 2);
-    assignVal(lname, 3, 5);
-    assignVal(lname, 4, 3);
+    for(int i=0; i<size; i++)
+    {
+        srand(time(0)+i);
+        x = rand()%(2 * size) + 1;
+        assignVal(lname, i, x);
+    }
 
-    print_list(lname);
+    // print_list(lname);
 
-    printKeys();
+    // printKeys();
 
     // mergesort
-    mergeSort(lname, size);
-    cout << '\n';
+    mergeSort(lname, 0, size);
+    // cout << '\n';
     for(int i=0; i<size; i++)
     {
         getVal(lname, i, x);
-        cout << x << ' ';
+        cout << x << '\n';
     }
-    cout << '\n';
-
+    // cout << '\n';
+    // printKeys();
     return 0;
 }
 
