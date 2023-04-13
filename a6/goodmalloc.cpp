@@ -193,7 +193,8 @@ int createList(string _lname, int num_elements)
 int assignVal(string lname, int index, int val)
 {
     lname = findLName(lname);
-    if(page_table.find(lname) == page_table.end() || index > page_table[lname].getSize()){
+    if(page_table.find(lname) == page_table.end() || index > page_table[lname].getSize())
+    {
         return ERROR;
     }
     page_table[lname].setElem(index, val);
@@ -217,6 +218,7 @@ int freeElem(string lname)
     auto it = page_table.find(lname);
     if(it == page_table.end())
     {
+        exit(1);
         return ERROR;
     }
     for(int i=0; i<it->second.occupiedPages.size(); i++)
@@ -260,7 +262,17 @@ void pop_frame()
     auto top = stack_frame.top();
     for(auto s: top.localListNames)
     {
-        freeElem(s);
+        string lname = generateLName(s);
+        auto it = page_table.find(lname);
+        if(it == page_table.end())
+        {
+            continue;
+        }
+        for(int i=0; i<it->second.occupiedPages.size(); i++)
+        {
+            freePages.push(it->second.occupiedPages[i]);
+        }
+        page_table.erase(it);
     }
     stack_frame.pop();
 }

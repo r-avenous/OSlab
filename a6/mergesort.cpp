@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "goodmalloc.hpp"
+#include <time.h>
 
 // int lcount = 12;
 
@@ -91,7 +92,7 @@ void mergeSort(string lname, int start, int size)
         assignVal(lname, i, v);
     }
     // freeElem(lname1);
-    // pop_frame();
+    pop_frame();
 }
 
 int main()
@@ -121,7 +122,7 @@ int main()
     //     cout << ((element*)mem + h)->_data << ' ';
     //     h = ((element*)mem + h)->_next;
     // }
-
+    
     int size = 50000;
     // lcount = 12;
     string lname = "list12";
@@ -139,13 +140,18 @@ int main()
     // printKeys();
 
     // mergesort
+    // start timer
+    clock_t start = clock();
     mergeSort(lname, 0, size);
+    // end timer
+    clock_t end = clock();
     // cout << '\n';
-    for(int i=0; i<size; i++)
-    {
-        getVal(lname, i, x);
-        cout << x << '\n';
-    }
+    // for(int i=0; i<size; i++)
+    // {
+    //     getVal(lname, i, x);
+    //     cout << x << '\n';
+    // }
+    cout << "Time taken: " << (double)(end-start)/CLOCKS_PER_SEC << '\n';
     // cout << '\n';
     // printKeys();
     return 0;
