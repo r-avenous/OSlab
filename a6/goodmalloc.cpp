@@ -4,7 +4,7 @@ void* mem;
 queue<ptr> freePages;   // stores the starting location of free pages
 unordered_map<string, list> page_table;
 // unordered_map<string, list> temp = stack_frame.top()
-//stack_frame.pop()
+//stack_frame.pop(
 stack<frame> stack_frame;
 int f_counter = 0;
 
@@ -113,12 +113,17 @@ string findLName(string lname)
             return temp;
         }
     }
+    temp = lname + "__GLOBAL";
+    if(page_table.find(temp) != page_table.end())
+    {
+        return temp;
+    }
     return "__ERROR";
 }
 
-int createList(string lname, int num_elements)
+int createList(string _lname, int num_elements)
 {
-    lname = generateLName(lname);
+    string lname = generateLName(_lname);
     int num_pages = (num_elements + PAGESIZE - 1) / PAGESIZE;
     // cout << num_pages << ' ' << freePages.size() << '\n';
     if(num_pages > (int)freePages.size())
@@ -179,7 +184,7 @@ int createList(string lname, int num_elements)
     {
         auto top = stack_frame.top();
         stack_frame.pop();
-        top.localListNames.insert(lname);
+        top.localListNames.insert(_lname);
         stack_frame.push(top);
     }
     return SUCCESS;
@@ -188,7 +193,8 @@ int createList(string lname, int num_elements)
 int assignVal(string lname, int index, int val)
 {
     lname = findLName(lname);
-    if(page_table.find(lname) == page_table.end() || index > page_table[lname].getSize()){
+    if(page_table.find(lname) == page_table.end() || index > page_table[lname].getSize())
+    {
         return ERROR;
     }
     page_table[lname].setElem(index, val);
@@ -212,6 +218,7 @@ int freeElem(string lname)
     auto it = page_table.find(lname);
     if(it == page_table.end())
     {
+        exit(1);
         return ERROR;
     }
     for(int i=0; i<it->second.occupiedPages.size(); i++)
@@ -253,11 +260,21 @@ void push_frame()
 void pop_frame()
 {
     auto top = stack_frame.top();
-    stack_frame.pop();
     for(auto s: top.localListNames)
     {
-        freeElem(s);
+        string lname = generateLName(s);
+        auto it = page_table.find(lname);
+        if(it == page_table.end())
+        {
+            continue;
+        }
+        for(int i=0; i<it->second.occupiedPages.size(); i++)
+        {
+            freePages.push(it->second.occupiedPages[i]);
+        }
+        page_table.erase(it);
     }
+    stack_frame.pop();
 }
 
 void print_list(string lname)
@@ -269,5 +286,14 @@ void print_list(string lname)
     {
         getVal(lname, i, val);
         cout << val << ' ';
+    }
+}
+
+void printStackKeys()
+{
+    auto top = stack_frame.top();
+    for(auto s: top.localListNames)
+    {
+        cout << s << ' ';
     }
 }

@@ -12,8 +12,9 @@
 using namespace std;
 
 #define ptr unsigned int
-#define PAGESIZE 4//128
-#define MEM_SIZE 200 * sizeof(element)//250 * (1 << 20)
+#define PAGESIZE 128
+#define MEM_SIZE 250 * (1 << 20)
+// #define MEM_SIZE 2000 * sizeof(element)
 #define MAXPAGES ((MEM_SIZE/sizeof(element))/PAGESIZE)
 #define ERROR -1
 #define SUCCESS 0
@@ -60,6 +61,7 @@ void push_frame();
 void pop_frame();
 
 void printKeys();
+void printStackKeys();
 void print_list(string lname);
 
 class frame

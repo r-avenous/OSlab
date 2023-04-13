@@ -1,3 +1,3 @@
 test:
 	g++ mergesort.cpp goodmalloc.cpp
-	./a.out
+	./a.out > o.txt
