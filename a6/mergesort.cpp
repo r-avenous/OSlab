@@ -2,59 +2,20 @@
 #include "goodmalloc.hpp"
 #include <time.h>
 
-// int lcount = 12;
-
-
+#define LIST_SIZE 50000
+#define MAX_VAL 100000
 
 void mergeSort(string lname, int start, int size)
 {
-    // cout << start << ' ' << start + size - 1 << '\n';
     if(size == 1) return;
 
     push_frame();
     int mid = size/2;
-    // string lname1 = "lname1";
-    // string lname2 = "lname2";
-    // string lname3 = lname + to_string(lcount++);
 
-    // createList(lname1, mid);
-    // createList(lname2, size-mid);
-
-    // cout << "Keys\n";
-    // printKeys();
-    // cout << "\n\n";
-
-    // int temp;
-
-    // copy values to smaller lists
-    // for (int i=0; i<mid; i++)
-    // {
-    //     getVal(lname, i, temp);
-    //     assignVal(lname1, i, temp);
-    // }
-
-    // for (int i=mid; i<size; i++)
-    // {
-    //     getVal(lname, i, temp);
-    //     assignVal(lname2, i-mid, temp);
-
-    // }
-
-    // sort smaller lists
-    // cout << "list1 before" ;
-    // print_list(lname1);
-    // cout << '\n';
     mergeSort(lname, start, mid);
-    // cout << "list1 after" ;
-    // print_list(lname1);
-    // cout << '\n';
-    // cout << "list2 before";
-    // print_list(lname2);
-    // cout << '\n';
+
     mergeSort(lname, (start+mid), size-mid);
-    // cout << "list2 after";
-    // print_list(lname2);
-    // cout << '\n';
+    
     // createList(lname3, size);
     int k=(start+mid),j=start,i;
     int t1, t2;
@@ -91,7 +52,6 @@ void mergeSort(string lname, int start, int size)
         getVal(lname1, (i-start), v);
         assignVal(lname, i, v);
     }
-    // freeElem(lname1);
     pop_frame();
 }
 
@@ -99,61 +59,31 @@ int main()
 {
     createMem();
     int x;
-    // for(int i=0; i<10; i++)
-    // {
-    //     createList("list" + to_string(i), 2);
-    // }
-    // for(int i=0; i<10; i+=2)
-    // {
-    //     freeElem("list" + to_string(i));
-    // }
-    // createList("list11", 17);
 
-    // for(int i=0; i<17; i++) assignVal("list11", i, i);
-
-    // extern unordered_map<string, list> page_table;
-    // extern void* mem;
-
-    // printKeys();
-
-    // ptr h = page_table["list11__GLOBAL"].head;
-    // for(int i=0; i<17; i++)
-    // {
-    //     cout << ((element*)mem + h)->_data << ' ';
-    //     h = ((element*)mem + h)->_next;
-    // }
     
-    int size = 50000;
-    // lcount = 12;
-    string lname = "list12";
-    createList(lname, size);
+    string lname = "list1";
+    createList(lname, LIST_SIZE);
 
-    for(int i=0; i<size; i++)
+    for(int i=0; i<LIST_SIZE; i++)
     {
         srand(time(0)+i);
-        x = rand()%(2 * size) + 1;
+        x = rand()%(MAX_VAL) + 1;
         assignVal(lname, i, x);
     }
 
-    // print_list(lname);
+    cout << "Unsorted list: " << '\n';
+    print_list(lname);
 
-    // printKeys();
-
-    // mergesort
     // start timer
     clock_t start = clock();
-    mergeSort(lname, 0, size);
+    mergeSort(lname, 0, LIST_SIZE);
     // end timer
     clock_t end = clock();
-    // cout << '\n';
-    // for(int i=0; i<size; i++)
-    // {
-    //     getVal(lname, i, x);
-    //     cout << x << '\n';
-    // }
-    cout << "Time taken: " << (double)(end-start)/CLOCKS_PER_SEC << '\n';
-    // cout << '\n';
-    // printKeys();
+
+    cout << "\n\n\n\n\nSorted list: " << '\n';
+    print_list(lname);
+
+    cout << "\n\n\n\n\n\n\nTime taken: " << (double)(end-start)/CLOCKS_PER_SEC << "s" << '\n';
     return 0;
 }
 
