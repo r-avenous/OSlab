@@ -6,6 +6,11 @@ unordered_map<string, list> page_table;     // stores the list name and the list
 vector<frame> stack_frame;       // stores the frames
 int f_counter = 0;      // counter for the frame id
 
+int getNumUsedPages()      
+{
+    return (MAXPAGES - freePages.size());
+}
+
 void printKeys()    // prints the names of the lists in the page table
 {
     for (auto it = page_table.begin(); it != page_table.end(); it++)
@@ -126,6 +131,11 @@ string findLName(string lname)  // finds the name of the list according to the c
     {
         return temp;
     }
+    temp = lname + "__GLOBAL";    // if the list is not found in the current frame or the parent frame, then search in the global scope
+    if(page_table.find(temp) != page_table.end())
+    {
+        return temp;
+    }
     else        // if the list is not found in the current frame, then search in the parent frame
     {
         // auto top = stack_frame.back();
@@ -144,11 +154,6 @@ string findLName(string lname)  // finds the name of the list according to the c
                 return temp;
             }
         }
-    }
-    temp = lname + "__GLOBAL";    // if the list is not found in the current frame or the parent frame, then search in the global scope
-    if(page_table.find(temp) != page_table.end())
-    {
-        return temp;
     }
     return "__ERROR";   // if the list is not found in the global scope, then return an error
 }
@@ -209,7 +214,16 @@ int createList(string _lname, int num_elements)     // creates a list with name 
     return SUCCESS;
 }
 
-
+void clearAll()
+{
+    page_table.clear();
+    stack_frame.clear();
+    freePages = queue<ptr>();
+    for(int i=0; i<(int)MAXPAGES; i++)
+    {
+        freePages.push(i);
+    }
+}
 
 
 
@@ -293,8 +307,18 @@ int freeElem(string lname)      // frees the list 'lname'
     return SUCCESS;
 }
 
-void freeElem()         // design choice to free elements of the current frame ONLY
+void freeElem()         // design choice to free elements of the current frame ONLY or all global lists if the stack is empty
 {
+    if(stack_frame.empty())
+    {
+        while(!page_table.empty())
+        {
+            string x = page_table.begin()->first;
+            x = x.substr(0, x.find('_'));
+            freeElem(x);
+        }
+        return;
+    }
     auto it = stack_frame.back();
     // stack_frame.pop_back();
     for(auto itr = it.localListNames.begin(); itr != it.localListNames.end(); itr++){

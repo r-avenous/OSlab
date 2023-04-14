@@ -62,6 +62,8 @@ void pop_frame();       // pops the top frame from the stack
 void printKeys();       // prints the names of the lists in the page table
 void printStackKeys();    // prints the names of the lists in the stack
 void print_list(string lname);    // prints the list 'lname'
+int getNumUsedPages();      // returns the number of bytes in the memory
+void clearAll();        // clears all the lists
 
 class frame     // structure of a frame
 {

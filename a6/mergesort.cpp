@@ -4,9 +4,12 @@
 
 #define LIST_SIZE 50000
 #define MAX_VAL 100000
+int RUNS = 20;
+int maxUsage = -1;
 
 void mergeSort(string lname, int start, int size)
 {
+    maxUsage = max(maxUsage, getNumUsedPages());
     if(size == 1) return;
 
     push_frame();
@@ -52,7 +55,7 @@ void mergeSort(string lname, int start, int size)
         getVal(lname1, (i-start), v);
         assignVal(lname, i, v);
     }
-    pop_frame();
+    // pop_frame();
 }
 
 int main()
@@ -60,31 +63,39 @@ int main()
     createMem();
     int x;
 
-    
-    string lname = "list1";
-    createList(lname, LIST_SIZE);
-
-    for(int i=0; i<LIST_SIZE; i++)
+    double avg_time = 0;
+    int rr = RUNS;
+    while(rr--)
     {
-        srand(time(0)+i);
-        x = rand()%(MAX_VAL) + 1;
-        assignVal(lname, i, x);
+        string lname = "list1";
+        createList(lname, LIST_SIZE);
+
+        for(int i=0; i<LIST_SIZE; i++)
+        {
+            srand(time(0)+i);
+            x = rand()%(MAX_VAL) + 1;
+            assignVal(lname, i, x);
+        }
+
+        // cout << "Unsorted list: " << '\n';
+        // print_list(lname);
+
+        // start timer
+        clock_t start = clock();
+        mergeSort(lname, 0, LIST_SIZE);
+        // end timer
+        clock_t end = clock();
+
+        // cout << "\n\n\n\n\nSorted list: " << '\n';
+        print_list(lname);
+
+        // cout << "\n\n\n\n\n\n\nTime taken: " << (double)(end-start)/CLOCKS_PER_SEC << "s" << '\n';
+        avg_time += (double)(end-start)/CLOCKS_PER_SEC;
+        clearAll();
     }
 
-    cout << "Unsorted list: " << '\n';
-    print_list(lname);
-
-    // start timer
-    clock_t start = clock();
-    mergeSort(lname, 0, LIST_SIZE);
-    // end timer
-    clock_t end = clock();
-
-    cout << "\n\n\n\n\nSorted list: " << '\n';
-    print_list(lname);
-
-    cout << "\n\n\n\n\n\n\nTime taken: " << (double)(end-start)/CLOCKS_PER_SEC << "s" << '\n';
-
+    cout << "\n\n\n\n\n\n\nAvg Time taken: " << avg_time/RUNS << "s" << '\n';
+    cout << "Max page usage: " << maxUsage << " (" << (maxUsage * 100) / MAXPAGES << "%)\n";
 
     // {
     //     push_frame();
