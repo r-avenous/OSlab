@@ -1,5 +1,13 @@
-test: mergesort.cpp goodmalloc.cpp goodmalloc.hpp
-	g++ -Wall mergesort.cpp goodmalloc.cpp
+test: goodmalloc.o
+	ar rcs libmalloc.a goodmalloc.o
+	g++ -Wall -o mergesort mergesort.cpp -I. -L. -lmalloc
 
 run: test
-	./a.out > output.txt
+	touch output.txt
+	./mergesort > output.txt
+
+goodmalloc.o: goodmalloc.cpp goodmalloc.hpp
+	g++ -c goodmalloc.cpp
+
+clean: 
+	rm mergesort goodmalloc.o libmalloc.a output.txt
