@@ -84,6 +84,41 @@ int main()
     print_list(lname);
 
     cout << "\n\n\n\n\n\n\nTime taken: " << (double)(end-start)/CLOCKS_PER_SEC << "s" << '\n';
+
+
+    // {
+    //     push_frame();
+    //     createList("list1", 100);
+    //     {
+    //         push_frame();
+    //         cout << assignVal("list1", 0, 10) << '\n';
+    //         createList("list2", 100);
+    //         {
+    //             push_frame();
+    //             cout << getVal("list1", 0, x) << '\n';
+    //             createList("list3", 100);
+    //             createList("list4", 100);
+    //             printKeys();
+    //             cout << '\n';
+    //             cout << x << '\n';
+    //             {
+    //                 push_frame();
+    //                 createList("list5", 100);
+    //                 cout << assignVal("list2", 0, 20) << '\n';
+    //                 cout << getVal("list2", 0, x) << '\n';
+    //                 pop_frame();
+    //             }
+    //             freeElem("list1");
+    //             printKeys();
+    //             cout << '\n';
+    //             pop_frame();
+    //             printKeys();
+    //             cout << '\n';
+    //         }
+    //         pop_frame();
+    //     }
+    //     pop_frame();
+    // }
     return 0;
 }
 

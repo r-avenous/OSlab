@@ -52,6 +52,7 @@ class list      // structure of the linked list
 int createList(string lname, int size);     // creates a list of size 'size'
 int assignVal(string lname, int index, int val);    // assigns value 'val' to element at index 'index' in list 'lname'
 int freeElem(string lname);    // frees the list 'lname'
+void freeElem();
 
 int getVal(string lname, int index, int &val);   // gets the value of element at index 'index' in list 'lname' and stores it in 'val'
 int printPages(string lname);   // prints the pages occupied by list 'lname'

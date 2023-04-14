@@ -3,7 +3,7 @@
 void* mem;      // stores the starting location of the memory
 queue<ptr> freePages;   // stores the starting location of free pages
 unordered_map<string, list> page_table;     // stores the list name and the list object
-stack<frame> stack_frame;       // stores the frames
+vector<frame> stack_frame;       // stores the frames
 int f_counter = 0;      // counter for the frame id
 
 void printKeys()    // prints the names of the lists in the page table
@@ -114,7 +114,7 @@ string generateLName(string lname)  // generates the name of the list according 
     else        // if the stack is not empty, then append the frame id to the list name
     {
         lname += "__";
-        lname += to_string(stack_frame.top().id);
+        lname += to_string(stack_frame.back().id);
     }
     return lname;
 }
@@ -128,13 +128,21 @@ string findLName(string lname)  // finds the name of the list according to the c
     }
     else        // if the list is not found in the current frame, then search in the parent frame
     {
-        auto top = stack_frame.top();
-        stack_frame.pop();
-        temp = generateLName(lname);
-        stack_frame.push(top);
-        if(page_table.find(temp) != page_table.end())
+        // auto top = stack_frame.back();
+        // stack_frame.pop_back();
+        // temp = generateLName(lname);
+        // stack_frame.push_back(top);
+        // if(page_table.find(temp) != page_table.end())
+        // {
+        //     return temp;
+        // }
+        for(int i=stack_frame.size()-2; i>=0; i--)
         {
-            return temp;
+            temp = lname + "__" + to_string(stack_frame[i].id);
+            if(page_table.find(temp) != page_table.end())
+            {
+                return temp;
+            }
         }
     }
     temp = lname + "__GLOBAL";    // if the list is not found in the current frame or the parent frame, then search in the global scope
@@ -193,10 +201,10 @@ int createList(string _lname, int num_elements)     // creates a list with name 
     page_table[lname].head = page_table[lname].occupiedPages[0];        // sets the head of the list
     if(!stack_frame.empty())        // if the stack is not empty, then add the list name to the local list names of the current frame
     {
-        auto top = stack_frame.top();
-        stack_frame.pop();
+        auto top = stack_frame.back();
+        stack_frame.pop_back();
         top.localListNames.insert(_lname);
-        stack_frame.push(top);
+        stack_frame.push_back(top);
     }
     return SUCCESS;
 }
@@ -274,7 +282,7 @@ int freeElem(string lname)      // frees the list 'lname'
     auto it = page_table.find(lname);
     if(it == page_table.end())      // if the list is not found, then return an error
     {
-        exit(1);
+        exit(1);        // design choice
         return ERROR;
     }
     for(int i=0; i<(int)it->second.occupiedPages.size(); i++)       // adds the pages of the list to the free pages
@@ -283,6 +291,17 @@ int freeElem(string lname)      // frees the list 'lname'
     }
     page_table.erase(it);
     return SUCCESS;
+}
+
+void freeElem()         // design choice to free elements of the current frame ONLY
+{
+    auto it = stack_frame.back();
+    // stack_frame.pop_back();
+    for(auto itr = it.localListNames.begin(); itr != it.localListNames.end(); itr++){
+        freeElem(*itr);
+    }
+    it.localListNames.clear();
+    // stack_frame.push_back(it);
 }
 
 int printPages(string lname)        // prints the pages of the list 'lname'
@@ -310,12 +329,12 @@ frame::frame()      // constructor for the frame class
 void push_frame()       // pushes a new frame to the stack
 {
     frame new_frame;
-    stack_frame.push(new_frame);
+    stack_frame.push_back(new_frame);
 }
 
 void pop_frame()        // pops the top frame from the stack and frees the lists in the local list names of the frame
 {
-    auto top = stack_frame.top();
+    auto top = stack_frame.back();
     for(auto s: top.localListNames)
     {
         string lname = generateLName(s);
@@ -330,7 +349,7 @@ void pop_frame()        // pops the top frame from the stack and frees the lists
         }
         page_table.erase(it);
     }
-    stack_frame.pop();
+    stack_frame.pop_back();
 }
 
 void print_list(string lname)       // prints the list 'lname'
@@ -347,7 +366,7 @@ void print_list(string lname)       // prints the list 'lname'
 
 void printStackKeys()       // prints the local list names of the frames in the stack
 {
-    auto top = stack_frame.top();
+    auto top = stack_frame.back();
     for(auto s: top.localListNames)
     {
         cout << s << ' ';
