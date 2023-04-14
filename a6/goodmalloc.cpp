@@ -216,12 +216,21 @@ int createList(string _lname, int num_elements)     // creates a list with name 
 
 void clearAll()
 {
-    page_table.clear();
-    stack_frame.clear();
-    freePages = queue<ptr>();
-    for(int i=0; i<(int)MAXPAGES; i++)
+    while(!stack_frame.empty())     // pops all the frames from the stack
     {
-        freePages.push(i);
+        while(!stack_frame.back().localListNames.empty())     // pops all the lists from the current frame
+        {
+            string lname = *stack_frame.back().localListNames.begin();
+            freeElem(lname);
+            stack_frame.back().localListNames.erase(lname);
+        }
+        stack_frame.pop_back();
+    }
+    while(!page_table.empty())
+    {
+        string x = page_table.begin()->first;
+        x = x.substr(0, x.find('_'));
+        freeElem(x);
     }
 }
 

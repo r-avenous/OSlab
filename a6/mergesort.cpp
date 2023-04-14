@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define LIST_SIZE 50000
-#define MAX_VAL 100000
+#define MAX_VAL 2 * LIST_SIZE
 int RUNS = 20;
 int maxUsage = -1;
 
@@ -55,7 +55,7 @@ void mergeSort(string lname, int start, int size)
         getVal(lname1, (i-start), v);
         assignVal(lname, i, v);
     }
-    // pop_frame();
+    pop_frame();
 }
 
 int main()
@@ -77,8 +77,8 @@ int main()
             assignVal(lname, i, x);
         }
 
-        // cout << "Unsorted list: " << '\n';
-        // print_list(lname);
+        cout << "\nUnsorted list: " << '\n';
+        print_list(lname);
 
         // start timer
         clock_t start = clock();
@@ -86,7 +86,7 @@ int main()
         // end timer
         clock_t end = clock();
 
-        // cout << "\n\n\n\n\nSorted list: " << '\n';
+        cout << "\n\n\n\n\nSorted list: " << '\n';
         print_list(lname);
 
         // cout << "\n\n\n\n\n\n\nTime taken: " << (double)(end-start)/CLOCKS_PER_SEC << "s" << '\n';
