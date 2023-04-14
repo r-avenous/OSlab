@@ -20,7 +20,7 @@ using namespace std;
 
 void createMem();
 
-class element       // stuctue of each element in the list
+class element       // structure of each element in the list
 {
     public:
         ptr _next, _prev;    // pointers to next and previous elements
@@ -30,7 +30,7 @@ class element       // stuctue of each element in the list
         void set_data(int data);    // setter for data
 };
 
-class list      // structure of the list
+class list      // structure of the linked list
 {
     public:
         ptr head;       // pointer to the head of the list
